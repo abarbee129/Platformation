@@ -80,7 +80,7 @@ public class Mario extends Sprite {
 		
 		boolean in = false;
 		for(Shape s : obstacles) {
-			if(s.contains(x+MARIO_WIDTH/2, y+MARIO_HEIGHT)) {
+			if(s.intersects(x,y,MARIO_WIDTH,MARIO_HEIGHT)) {
 				in = true;
 			}
 		}
@@ -131,7 +131,7 @@ public class Mario extends Sprite {
 	private boolean wouldBeX(ArrayList<Shape> obstacles) {
 		boolean wouldBe = false;
 		for(Shape s : obstacles) {
-			if(s.contains(x+MARIO_WIDTH/2 + dt * (oldDx + ((ddx/2) * dt)), y+MARIO_HEIGHT)) {
+			if(s.intersects(x + dt * (oldDx + ((ddx/2) * dt)), y, MARIO_WIDTH, MARIO_HEIGHT)) {
 				wouldBe = true;
 			}
 		}
@@ -140,7 +140,7 @@ public class Mario extends Sprite {
 	private boolean wouldBeY(ArrayList<Shape> obstacles) {
 		boolean wouldBe = false;
 		for(Shape s : obstacles) {
-			if(s.contains(x+MARIO_WIDTH/2, y+MARIO_HEIGHT + dt * (oldDy + ((ddy/2) * dt)))) {
+			if(s.intersects(x, y + dt * (oldDy + ((ddy/2) * dt)), MARIO_WIDTH, MARIO_HEIGHT)) {
 				wouldBe = true;
 			}
 		}
