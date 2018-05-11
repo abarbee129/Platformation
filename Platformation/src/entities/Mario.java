@@ -5,6 +5,7 @@ import java.awt.*;
 import java.util.*;
 
 import processing.core.PImage;
+import worldGeometry.Platform;
 
 public class Mario extends Sprite {
 
@@ -75,34 +76,32 @@ public class Mario extends Sprite {
 		
 	}
 
-	public void act(ArrayList<Shape> obstacles) {
+	public void act(ArrayList<Platform> obstacles) {
 		// FALL (and stop when a platform is hit)
-		
-		boolean in = false;
-		for(Shape s : obstacles) {
-			if(s.intersects(x,y,MARIO_WIDTH,MARIO_HEIGHT)) {
-				in = true;
+		boolean inside = false;
+		for(Platform p : obstacles) {
+			double[] dims = p.getCBoxDimensions();
+			if(intersects(dims[0],dims[1] , dims[2], dims[3])) {
+				inside = true;
 			}
 		}
-		if(in) {
+		if(inside) {
 			isTouchingGround = true;
 		}
-		else {
-			accelerate(0, 1440*dt);
+		else {	
+		}
+		accelerate(0, 1440*dt);
+		int[] colDir = null;
+		Platform ycolliding = wouldBeY(obstacles);
+		if(ycolliding != null) {
+			colDir = ycolliding.getColDir(x, y);
+			super.moveToLocation(x, ycolliding.getCBoxDimensions()[1] + ycolliding.getCBoxDimensions()[3]*colDir[1]/2);
+			if(colDir[1] == -1) {
+				isTouchingGround = true;
+			}
+			accelerate(0,-dy);
 		}
 		
-		int c = 0;
-		while(!isTouchingGround && wouldBeX(obstacles) && c < 20) {
-			accelerate( -dx / 8,0);
-			c++;
-		}
-		c = 0;
-		while(wouldBeY(obstacles) && c < 80) {
-			if(dy > 0) {
-				accelerate(0, -dy / 8);
-			}
-			c++;
-		}
 		
 		
 		applyFriction();
@@ -128,23 +127,27 @@ public class Mario extends Sprite {
 		ddy += dy;
 	}
 	
-	private boolean wouldBeX(ArrayList<Shape> obstacles) {
-		boolean wouldBe = false;
-		for(Shape s : obstacles) {
-			if(s.intersects(x + dt * (oldDx + ((ddx/2) * dt)), y, MARIO_WIDTH, MARIO_HEIGHT)) {
-				wouldBe = true;
+	private Platform wouldBeX(ArrayList<Platform> obstacles) {
+		Platform colliding = null;
+		for(Platform p : obstacles) {
+			double[] dims = p.getCBoxDimensions();
+			Rectangle r = new Rectangle((int)dims[0],(int)dims[1], (int)dims[2], (int)dims[3]);
+			if(r.intersects(x + dt * (oldDx + ((ddx/2) * dt)), y, MARIO_WIDTH, MARIO_HEIGHT)) {
+				colliding = p;
 			}
 		}
-		return wouldBe;
+		return colliding;
 	}
-	private boolean wouldBeY(ArrayList<Shape> obstacles) {
-		boolean wouldBe = false;
-		for(Shape s : obstacles) {
-			if(s.intersects(x, y + dt * (oldDy + ((ddy/2) * dt)), MARIO_WIDTH, MARIO_HEIGHT)) {
-				wouldBe = true;
+	private Platform wouldBeY(ArrayList<Platform> obstacles) {
+		Platform colliding = null;
+		for(Platform p : obstacles) {
+			double[] dims = p.getCBoxDimensions();
+			Rectangle r = new Rectangle((int)(dims[0] - dims[2]/2),(int)(dims[1] - dims[3]/2), (int)dims[2], (int)dims[3]);
+			if(r.intersects(x, y + dt * (oldDy + ((ddy/2) * dt)), MARIO_WIDTH, MARIO_HEIGHT)) {
+				colliding = p;
 			}
 		}
-		return wouldBe;
+		return colliding;
 	}
 	private void applyFriction() {
 		if (isMoving) {

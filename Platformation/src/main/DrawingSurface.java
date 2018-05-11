@@ -20,6 +20,7 @@ public class DrawingSurface extends PApplet {
 
 	private Mario mario;
 	private ArrayList<Shape> obstacles;
+	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
 	
 	private ArrayList<PImage> assets;
@@ -30,6 +31,7 @@ public class DrawingSurface extends PApplet {
 		keys = new ArrayList<Integer>();
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		obstacles = new ArrayList<Shape>();
+		platforms = new ArrayList<Platform>();
 		obstacles.add(new Rectangle(200,400,400,50));
 		obstacles.add(new Rectangle(0,250,100,50));
 		obstacles.add(new Rectangle(700,250,100,50));
@@ -37,7 +39,7 @@ public class DrawingSurface extends PApplet {
 		obstacles.add(new Rectangle(300,250,200,50));
 		
 		for(Shape s : obstacles) {
-			
+			platforms.add(new Platform(s));
 		}
 	}
 
@@ -97,7 +99,7 @@ public class DrawingSurface extends PApplet {
 		if (isPressed(KeyEvent.VK_UP))
 			mario.jump();
 
-		mario.act(obstacles);
+		mario.act(platforms);
 
 		if (!screenRect.intersects(mario))
 			spawnNewMario();
