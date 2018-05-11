@@ -89,14 +89,16 @@ public class Mario extends Sprite {
 			isTouchingGround = true;
 		}
 		else {	
+			
 		}
 		accelerate(0, 1440*dt);
+		
 		int[] colDir = null;
 		Platform ycolliding = wouldBeY(obstacles);
 		if(ycolliding != null) {
 			colDir = ycolliding.getColDir(x, y);
-			super.moveToLocation(x, ycolliding.getCBoxDimensions()[1] + ycolliding.getCBoxDimensions()[3]*colDir[1]/2);
-			if(colDir[1] == -1) {
+			super.moveToLocation(x, -1*MARIO_HEIGHT + ycolliding.getCBoxDimensions()[1] + ((0.5)*ycolliding.getCBoxDimensions()[3]*colDir[1]));
+			if(colDir[1] == -1 && dy > 0) {
 				isTouchingGround = true;
 			}
 			accelerate(0,-dy);
@@ -107,8 +109,12 @@ public class Mario extends Sprite {
 		applyFriction();
 		isMoving = false;
 		
-		
-		super.moveByAmount(dt * (oldDx + ((ddx/2) * dt)), dt * (oldDy + ((ddy/2) * dt)));
+		if(ycolliding == null) {
+			super.moveByAmount(dt * (oldDx + ((ddx/2) * dt)), dt * (oldDy + ((ddy/2) * dt)));
+		}
+		else {
+			super.moveByAmount(dt * (oldDx + ((ddx/2) * dt)), 0);
+		}
 		
 		oldDx = this.dx;
 		oldDy = this.dy;

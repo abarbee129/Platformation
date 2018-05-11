@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
 import entities.Mario;
+import entities.Player;
 import worldGeometry.Platform;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -18,7 +19,7 @@ public class DrawingSurface extends PApplet {
 
 	private Rectangle screenRect;
 
-	private Mario mario;
+	private Player player;
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
@@ -45,7 +46,7 @@ public class DrawingSurface extends PApplet {
 
 
 	public void spawnNewMario() {
-		mario = new Mario(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
 	}
 	
 	public void runMe() {
@@ -85,7 +86,7 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 
-		mario.draw(this);
+		player.draw(this);
 
 		popMatrix();
 
@@ -93,15 +94,15 @@ public class DrawingSurface extends PApplet {
 		// modifying stuff
 
 		if (isPressed(KeyEvent.VK_LEFT))
-			mario.walk(-1);
+			player.walk(-1);
 		if (isPressed(KeyEvent.VK_RIGHT))
-			mario.walk(1);
+			player.walk(1);
 		if (isPressed(KeyEvent.VK_UP))
-			mario.jump();
+			player.jump();
 
-		mario.act(platforms);
+		player.act(obstacles);
 
-		if (!screenRect.intersects(mario))
+		if (!screenRect.intersects(player))
 			spawnNewMario();
 	}
 
