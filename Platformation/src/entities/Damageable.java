@@ -1,6 +1,6 @@
 package entities;
 
-public interface DamageAble {
+public interface Damageable {
 	
 
 	
