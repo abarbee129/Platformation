@@ -1,5 +1,6 @@
 package entities;
 
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
 
@@ -8,8 +9,8 @@ import worldGeometry.Platform;
 
 public class Player extends Sprite{
 
-	public static final int MARIO_WIDTH = 40;
-	public static final int MARIO_HEIGHT = 60;
+	public static final int PLAYER_WIDTH = 40;
+	public static final int PLAYER_HEIGHT = 60;
 	
 	private double dx;
 	private double dy;
@@ -29,7 +30,7 @@ public class Player extends Sprite{
 
 	
 	public Player(PImage img, int x, int y) {
-		super(img, x, y, MARIO_WIDTH, MARIO_HEIGHT);
+		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 	}
 	
 	public void walk(int dir) {
@@ -90,7 +91,34 @@ public class Player extends Sprite{
 		ddy = 0;
 	}
 	public void act(ArrayList<Shape> shapes) {
-		
+		for(Shape s : shapes) {
+			Rectangle r = s.getBounds();
+			if(intersects(r)) {
+				double thisCX = x + PLAYER_WIDTH/2;
+				double thisCY = y + PLAYER_HEIGHT/2;
+				double xdif = thisCX - r.getCenterX();
+				double ydif = thisCY - r.getCenterY();
+				if(ydif < 0) {
+					// player is "above" the center of the platform	
+					super.moveByAmount(0, ydif+1);
+				}
+				else if(ydif > 0) {
+					// player is "below" the center of the platform	
+					super.moveByAmount(0, ydif);
+				}
+				if(xdif > 0) {
+					// player is "right" of the center of the platform	
+					super.moveByAmount(r.getWidth()/2 - xdif, 0);
+				}
+				else if(xdif < 0) {
+					// player is "left" of the center of the platform	
+					super.moveByAmount(-(r.getWidth()/2 + xdif), 0);
+				}
+				
+				
+			}
+			
+		}
 		
 		
 		accelerate(0, 1440*dt);
