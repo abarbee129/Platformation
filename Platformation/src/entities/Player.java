@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 import worldGeometry.Platform;
 
@@ -25,7 +26,7 @@ public class Player extends Sprite{
 	private boolean isMoving;
 	private double ticksFromZeroToHalf = 4.0;
 	private double ticksFromHalfToFull = 8.0;
-	private double ticksToStop = 1.0;
+	private double ticksToStop = 1.0;	
 	private int maxDx = 400;
 	private int maxDy = 240;
 
@@ -125,6 +126,18 @@ public class Player extends Sprite{
 		accelerate(0, 1440*dt);
 		move();
 		
+		
+		
+	}
+	@Override
+	public void draw(PApplet g) {
+		super.draw(g);
+		g.pushStyle();
+		g.noFill();
+		g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+		g.fill(255,0,0);
+		g.rect((float)x, (float)y, (float)5, (float)5);
+		g.popStyle();
 		
 		
 	}
