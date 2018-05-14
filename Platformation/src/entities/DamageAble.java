@@ -37,7 +37,7 @@ public interface DamageAble {
 	/**
 	 * This method replenished energy points if the energy of the object is depleted
 	 */
-	public boolean energyReplenish();
+	public void energyReplenish();
 	
 	/**
 	 * The method returns back the current Energy of the DamageAble object 
