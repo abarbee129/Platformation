@@ -1,9 +1,9 @@
 package entities;
 
-public interface DamageAble {
+public interface Damageable {
 	
-	double HP = 0.0;
-	double EP = 0.0;
+
+	
 	
 	/**
 	 * This method calculates the hit points reduced when the damage is taken
@@ -21,7 +21,7 @@ public interface DamageAble {
 	
 	/**
 	 * The method returns back the current HP of the DamageAble object 
-	 * @return HP
+	 * @return Hit Point
 	 */
 	public double getHP(); 
 	
@@ -37,7 +37,7 @@ public interface DamageAble {
 	/**
 	 * This method replenished energy points if the energy of the object is depleted
 	 */
-	public void energyReplenish();
+	public boolean energyReplenish();
 	
 	/**
 	 * The method returns back the current Energy of the DamageAble object 
