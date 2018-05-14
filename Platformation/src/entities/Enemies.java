@@ -86,9 +86,12 @@ public class Enemies extends Sprite implements DamageAble {
 	
 	
 	@Override
-	public double energyDepletion() {
+	public double energyDepletion(double usedEP) {
 		// TODO Auto-generated method stub
-		return 0;
+		
+		currentEP-=usedEP;
+		
+		return usedEP;
 	}
 
 	

@@ -28,9 +28,10 @@ public interface DamageAble {
 	
 	/**
 	 * This method calculates the energy points reduced when techniques are used
-	 *  @return Energy Points lost
+	 * @param usedEP is the energyPoints used
+	 *  @return Energy Points lost or the parameter
 	 */
-	public double energyDepletion();
+	public double energyDepletion(double usedEP);
 	
 	
 	

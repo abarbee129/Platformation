@@ -14,6 +14,23 @@ public class Player extends Sprite{
 	public static final int PLAYER_WIDTH = 40;
 	public static final int PLAYER_HEIGHT = 60;
 	
+	//
+	private double baseHP;
+	private double currentHP;
+
+	private double currentEP;
+	private double baseEP;
+	private boolean replenishing;
+
+	private boolean regen;
+	private double level;
+	private int skillPoints;
+	private double attackStat;
+	private double defStat;
+	private double EXP;
+
+	
+	// Collision/Physics fields
 	private double dx;
 	private double dy;
 	private double oldDx;
@@ -33,6 +50,13 @@ public class Player extends Sprite{
 	
 	public Player(PImage img, int x, int y) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+		baseHP = 100;
+		currentHP = 100;
+		baseEP = 200;
+		currentEP = 200;
+		attackStat = 10;
+		defStat =  10;
+		EXP = 0;
 	}
 	
 	public void walk(int dir) {
@@ -133,6 +157,7 @@ public class Player extends Sprite{
 		
 		
 	}
+
 	@Override
 	public void draw(PApplet g) {
 		super.draw(g);
@@ -146,36 +171,95 @@ public class Player extends Sprite{
 		
 	}
 
+	//---------------------------------RPG Elements------------------------------------------
+	
+	
 	public double damaged(double damageTaken) {
 		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public void regen() {
-		// TODO Auto-generated method stub
+		double damage = damageTaken*(10/(10+defStat));
+		
+		currentHP-=damage;
+		
+		return damage;
 		
 	}
 
-	public double getHP() {
+	
+	public void regen() {
 		// TODO Auto-generated method stub
-		return 0;
+		if(baseHP>currentHP)
+		{
+			currentHP+=0.1;
+		}
+		
 	}
 
-	public double energyDepletion() {
+	
+	public double getHP() {
 		// TODO Auto-generated method stub
-		return 0;
+		return currentHP;
 	}
+	
+	
+
+	public double energyDepletion(double usedEP) {
+		// TODO Auto-generated method stub
+		
+		currentEP-=usedEP;
+		return usedEP;
+	}
+	
+	
 
 	public boolean energyReplenish() {
 		// TODO Auto-generated method stub
-		return false;
+		while(currentEP<baseEP)
+		{
+			replenishing = true;
+			currentEP+=0.2;
+		}
+		
+		return replenishing;
 	}
 
+	
+	
 	public double getEP() {
 		// TODO Auto-generated method stub
-		return 0;
+		return currentEP;
 	}
 	
+	
+	public void useTechOne(Enemies e) 
+	{
+		double epCost = 5;
+
+	}
+	
+	
+	public void useTechTwo(Enemies e) 
+	{
+		double epCost = 30;
+
+	}
+	
+	
+	public void useTechThree(Enemies e) 
+	{
+		double epCost = 15;
+		if(e.intersects(this))
+		{
+			e.damaged(10+attackStat/2);
+		}
+
+	}
+	
+	
+	public void useTechFour(Enemies e) 
+	{
+		double epCost = 20;
+		
+	}
 	
 	
 	
