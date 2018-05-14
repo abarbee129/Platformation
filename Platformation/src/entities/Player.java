@@ -93,16 +93,19 @@ public class Player extends Sprite{
 		ddy = 0;
 	}
 	public void act(ArrayList<Shape> shapes) {
+		isTouchingGround = false;
 		for(Shape s : shapes) {
 			Rectangle r = s.getBounds();
 			if(intersects(r)) {
 				double thisCX = x + PLAYER_WIDTH/2;
 				double thisCY = y + PLAYER_HEIGHT/2;
-				double xdif = thisCX - r.getCenterX();
-				double ydif = thisCY - r.getCenterY();
+				double xdif = thisCX - (r.x+r.width/2);
+				double ydif = thisCY - (r.y+r.height/2);
 				if(ydif < 0) {
 					// player is "above" the center of the platform	
-					super.moveByAmount(0, ydif+1);
+					super.moveByAmount(0, (ydif-1) + (PLAYER_WIDTH/2 + r.height/2));
+					accelerate(0,-dy);
+					isTouchingGround = true;
 				}
 				else if(ydif > 0) {
 					// player is "below" the center of the platform	
@@ -122,8 +125,9 @@ public class Player extends Sprite{
 			
 		}
 		
-		
-		accelerate(0, 1440*dt);
+		if(!isTouchingGround) {
+			accelerate(0, 1440*dt);
+		}
 		move();
 		
 		
@@ -136,7 +140,7 @@ public class Player extends Sprite{
 		g.noFill();
 		g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
 		g.fill(255,0,0);
-		g.rect((float)x, (float)y, (float)5, (float)5);
+		g.rect((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)5, (float)5);
 		g.popStyle();
 		
 		

@@ -85,7 +85,7 @@ public class DrawingSurface extends PApplet {
 				rect(r.x,r.y,r.width,r.height);
 				pushStyle();
 				fill(255,0,0);
-				rect((float)r.x,(float)r.y,(float)10,(float)10);
+				rect((float)r.x+r.width/2,(float)r.y+r.height/2,(float)5,(float)5);
 				popStyle();
 			}
 		}
