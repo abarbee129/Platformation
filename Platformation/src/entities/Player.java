@@ -7,7 +7,8 @@ import java.util.ArrayList;
 import processing.core.PImage;
 import worldGeometry.Platform;
 
-public class Player extends Sprite implements Damageable{
+// add implements damageable once it exists
+public class Player extends Sprite{
 
 	public static final int PLAYER_WIDTH = 40;
 	public static final int PLAYER_HEIGHT = 60;
@@ -128,37 +129,31 @@ public class Player extends Sprite implements Damageable{
 		
 	}
 
-	@Override
 	public double damaged(double damageTaken) {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public void regen() {
 		// TODO Auto-generated method stub
 		
 	}
 
-	@Override
 	public double getHP() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public double energyDepletion() {
 		// TODO Auto-generated method stub
 		return 0;
 	}
 
-	@Override
 	public boolean energyReplenish() {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	@Override
 	public double getEP() {
 		// TODO Auto-generated method stub
 		return 0;
