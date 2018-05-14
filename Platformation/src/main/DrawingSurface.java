@@ -83,6 +83,10 @@ public class DrawingSurface extends PApplet {
 			if (s instanceof Rectangle) {
 				Rectangle r = (Rectangle)s;
 				rect(r.x,r.y,r.width,r.height);
+				pushStyle();
+				fill(255,0,0);
+				rect((float)r.x+r.width/2,(float)r.y+r.height/2,(float)5,(float)5);
+				popStyle();
 			}
 		}
 

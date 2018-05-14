@@ -1,15 +1,18 @@
 package entities;
 
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 import worldGeometry.Platform;
 
+// add implements damageable once it exists
 public class Player extends Sprite{
 
-	public static final int MARIO_WIDTH = 40;
-	public static final int MARIO_HEIGHT = 60;
+	public static final int PLAYER_WIDTH = 40;
+	public static final int PLAYER_HEIGHT = 60;
 	
 	private double dx;
 	private double dy;
@@ -23,13 +26,13 @@ public class Player extends Sprite{
 	private boolean isMoving;
 	private double ticksFromZeroToHalf = 4.0;
 	private double ticksFromHalfToFull = 8.0;
-	private double ticksToStop = 1.0;
+	private double ticksToStop = 1.0;	
 	private int maxDx = 400;
 	private int maxDy = 240;
 
 	
 	public Player(PImage img, int x, int y) {
-		super(img, x, y, MARIO_WIDTH, MARIO_HEIGHT);
+		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 	}
 	
 	public void walk(int dir) {
@@ -90,14 +93,87 @@ public class Player extends Sprite{
 		ddy = 0;
 	}
 	public void act(ArrayList<Shape> shapes) {
+		isTouchingGround = false;
+		for(Shape s : shapes) {
+			Rectangle r = s.getBounds();
+			if(intersects(r)) {
+				double thisCX = x + PLAYER_WIDTH/2;
+				double thisCY = y + PLAYER_HEIGHT/2;
+				double xdif = thisCX - (r.x+r.width/2);
+				double ydif = thisCY - (r.y+r.height/2);
+				if(ydif < 0) {
+					// player is "above" the center of the platform	
+					super.moveByAmount(0, (ydif-1) + (PLAYER_WIDTH/2 + r.height/2));
+					accelerate(0,-dy);
+					isTouchingGround = true;
+				}
+				else if(ydif > 0) {
+					// player is "below" the center of the platform	
+					super.moveByAmount(0, ydif);
+				}
+				if(xdif > 0) {
+					// player is "right" of the center of the platform	
+					super.moveByAmount(r.getWidth()/2 - xdif, 0);
+				}
+				else if(xdif < 0) {
+					// player is "left" of the center of the platform	
+					super.moveByAmount(-(r.getWidth()/2 + xdif), 0);
+				}
+				
+				
+			}
+			
+		}
 		
-		
-		
-		accelerate(0, 1440*dt);
+		if(!isTouchingGround) {
+			accelerate(0, 1440*dt);
+		}
 		move();
 		
 		
 		
+	}
+	@Override
+	public void draw(PApplet g) {
+		super.draw(g);
+		g.pushStyle();
+		g.noFill();
+		g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+		g.fill(255,0,0);
+		g.rect((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)5, (float)5);
+		g.popStyle();
+		
+		
+	}
+
+	public double damaged(double damageTaken) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public void regen() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public double getHP() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double energyDepletion() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public boolean energyReplenish() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public double getEP() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 	
