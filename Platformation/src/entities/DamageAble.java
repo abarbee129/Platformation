@@ -1,9 +1,13 @@
 package entities;
-
+/**
+ * 
+ * @author Atiq Sujela
+ *
+ *Interface that has all the methods for objects that can be damaged.
+ */
 public interface DamageAble {
 	
 
-	
 	
 	/**
 	 * This method calculates the hit points reduced when the damage is taken
