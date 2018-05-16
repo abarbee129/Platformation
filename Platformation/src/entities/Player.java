@@ -177,6 +177,32 @@ public class Player extends Sprite{
 
 
 	}
+	
+	public boolean doesCollideWith(double rx, double ry, int width, int height) {
+
+		if (x > rx - width/2 - this.width/2 && x < rx + width/2 + this.width / 2) {
+
+			if (y > ry - height/2 - this.height/2 && y < ry + height/2 + this.height / 2) {
+				return true;
+			}
+
+			else {
+				return false;
+			}
+		}
+
+		else {
+			return false;
+		}
+
+	}
+	public double getx() {
+		return x;
+	}
+	public double gety() {
+		return y;
+	}
+	
 	public void applyFriction() {
 		if (isMoving) {
 			if (isTouchingGround) {

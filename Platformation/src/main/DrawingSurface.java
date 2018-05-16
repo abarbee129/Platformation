@@ -40,7 +40,7 @@ public class DrawingSurface extends PApplet {
 		obstacles.add(new Rectangle(700,250,100,50));
 		obstacles.add(new Rectangle(375,300,50,100));
 		obstacles.add(new Rectangle(300,250,200,50));
-		booster[0] = new Booster(200,275);
+		booster[0] = new Booster(300,150);
 		booster[1] = new Booster(-100,-100);
 		
 		for(Shape s : obstacles) {
@@ -111,6 +111,14 @@ public class DrawingSurface extends PApplet {
 		if (isPressed(KeyEvent.VK_UP))
 			player.jump();
 
+		// check for booster collisions and accelerate
+		for (int i = 0; i < booster.length; i++) {
+			double[] dims = booster[i].getCBoxDimensions();
+			if (player.doesCollideWith(dims[0], dims[1], (int)dims[2], (int)dims[3])) {
+				player.accelerate(booster[i].getXBounceAcceleration(player.getx(), player.gety()), booster[i].getYBounceAcceleration(player.getx(), player.gety()));
+			}
+			else {}
+		}
 		player.act(obstacles);
 
 		if (!screenRect.intersects(player))

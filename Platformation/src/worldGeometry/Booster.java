@@ -23,7 +23,7 @@ public class Booster {
 	
 	
 	public void draw(PApplet g) {
-		g.rect((float)x-width/2, (float)y-height/2, (float)width, (float)height);	
+		g.rect((float)x, (float)y, (float)width, (float)height);	
 	}
 	
 	public double getXBounceAcceleration(double px, double py) {
