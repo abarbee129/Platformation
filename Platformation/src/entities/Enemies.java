@@ -1,5 +1,7 @@
 package entities;
 
+import javax.management.timer.Timer;
+
 import processing.core.PImage;
 
 public class Enemies extends Sprite implements DamageAble {
@@ -22,6 +24,8 @@ public class Enemies extends Sprite implements DamageAble {
 		HPCalculation(statPoints);
 		defCalculation(statPoints);
 		attackCalculation(statPoints);
+		this.level = level;
+		EXP = level*15;
 	}
 	
 	
@@ -56,6 +60,10 @@ public class Enemies extends Sprite implements DamageAble {
 		
 	}
 	
+	public void stunned()
+	{	
+		this.moveByAmount(0, 0);
+	}
 
 	@Override
 	public double damaged(double damageTaken) {

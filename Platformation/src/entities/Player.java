@@ -233,14 +233,25 @@ public class Player extends Sprite{
 	public void useTechOne(Enemies e) 
 	{
 		double epCost = 5;
-
+		
+		if(e.intersects(this))
+		{
+			e.damaged(10+attackStat/2);
+			e.stunned();
+		}
+		
 	}
 	
 	
 	public void useTechTwo(Enemies e) 
 	{
 		double epCost = 30;
-
+		if(e.intersects(this))
+		{
+			e.damaged(10+attackStat/2);
+			e.moveByAmount(10, 0);
+		}
+		
 	}
 	
 	
