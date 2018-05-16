@@ -40,10 +40,10 @@ public class DrawingSurface extends PApplet {
 		obstacles.add(new Rectangle(700,250,100,50));
 		obstacles.add(new Rectangle(375,300,50,100));
 		obstacles.add(new Rectangle(300,250,200,50));
-		booster[0] = new Booster(290,220); 
-		booster[1] = new Booster(470,220);
-		booster[2] = new Booster(370,230); 
-		booster[3] = new Booster(390,230);
+		booster[0] = new Booster(290,230); 
+		booster[1] = new Booster(290,500);
+		booster[2] = new Booster(290,500); 
+		booster[3] = new Booster(290,500);
 		 // cool
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
