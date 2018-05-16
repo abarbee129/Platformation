@@ -15,6 +15,8 @@ public class Enemies extends Sprite implements DamageAble {
 	private double attackStat;
 	private double defStat;
 	private double EXP;
+	private int stunTicks = 0;
+	private int c = 0;
 
 
 	public Enemies(PImage img, int x, int y, int w, int h, double level, double statPoints) {
@@ -60,9 +62,26 @@ public class Enemies extends Sprite implements DamageAble {
 		
 	}
 	
+
 	public void stunned()
 	{	
-		this.moveByAmount(0, 0);
+		if(stunTicks > 0) {
+			stunTicks--;
+			if(c%2 == 0) {
+				this.moveByAmount(1, 1);
+			}
+			
+			else{
+				this.moveByAmount(-1, -1);
+			}
+			
+		}
+		else
+		{
+			stunTicks = 5;
+		}
+	
+			
 	}
 
 	@Override
