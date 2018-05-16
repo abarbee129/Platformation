@@ -3,6 +3,8 @@ package worldGeometry;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import processing.core.PApplet;
+
 public class Booster {
 	
 	private double x = 500;
@@ -20,9 +22,8 @@ public class Booster {
 	}
 	
 	
-	public void draw(Graphics g) {
-		g.setColor(Color.BLUE);
-		g.fillRect((int)x-width/2, (int)y-height/2, width, height);
+	public void draw(PApplet g) {
+		g.rect((float)x-width/2, (float)y-height/2, (float)width, (float)height);	
 	}
 	
 	public double getXBounceAcceleration(double px, double py) {

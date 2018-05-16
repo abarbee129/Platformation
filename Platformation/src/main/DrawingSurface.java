@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import entities.Mario;
 import entities.Player;
+import worldGeometry.Booster;
 import worldGeometry.Platform;
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -18,6 +19,7 @@ public class DrawingSurface extends PApplet {
 	public static final int DRAWING_HEIGHT = 600;
 
 	private Rectangle screenRect;
+	private Booster[] booster = new Booster[2];
 
 	private Player player;
 	private ArrayList<Shape> obstacles;
@@ -38,6 +40,8 @@ public class DrawingSurface extends PApplet {
 		obstacles.add(new Rectangle(700,250,100,50));
 		obstacles.add(new Rectangle(375,300,50,100));
 		obstacles.add(new Rectangle(300,250,200,50));
+		booster[0] = new Booster(200,275);
+		booster[1] = new Booster(-100,-100);
 		
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
@@ -88,6 +92,9 @@ public class DrawingSurface extends PApplet {
 				rect((float)r.x+r.width/2,(float)r.y+r.height/2,(float)5,(float)5);
 				popStyle();
 			}
+		}
+		for(Booster b : booster) {
+			b.draw(this);
 		}
 
 		player.draw(this);
