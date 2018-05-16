@@ -40,7 +40,7 @@ public class DrawingSurface extends PApplet {
 		obstacles.add(new Rectangle(700,250,100,50));
 		obstacles.add(new Rectangle(375,300,50,100));
 		obstacles.add(new Rectangle(300,250,200,50));
-		booster[0] = new Booster(290,240); 
+		booster[0] = new Booster(310,230); 
 		booster[1] = new Booster(-100,-100);
 		 // cool
 		for(Shape s : obstacles) {
