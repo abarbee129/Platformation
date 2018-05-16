@@ -313,7 +313,7 @@ public class Player extends Sprite{
 		if(e.intersects(this))
 		{
 			e.damaged(10+attackStat/2);
-			e.moveByAmount(10, 0);
+			e.knockedBack(100, 600);;
 		}
 
 	}

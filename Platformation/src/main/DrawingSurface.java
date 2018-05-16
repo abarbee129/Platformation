@@ -6,6 +6,7 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import entities.Enemies;
 import entities.Mario;
 import entities.Player;
 import worldGeometry.Booster;
@@ -22,6 +23,7 @@ public class DrawingSurface extends PApplet {
 	private Booster[] booster = new Booster[4];
 
 	private Player player;
+	private Enemies e;
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
@@ -44,6 +46,7 @@ public class DrawingSurface extends PApplet {
 		booster[1] = new Booster(470,220);
 		booster[2] = new Booster(370,230); 
 		booster[3] = new Booster(390,230);
+
 		 // cool
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
@@ -54,6 +57,7 @@ public class DrawingSurface extends PApplet {
 	public void spawnNewMario() {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
 	}
+
 	
 	public void runMe() {
 		runSketch();
@@ -66,6 +70,8 @@ public class DrawingSurface extends PApplet {
 		assets.add(loadImage("mario.png"));
 		
 		spawnNewMario();
+		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50, 2, 1);
+
 	}
 
 	// The statements in draw() are executed until the 
@@ -100,6 +106,7 @@ public class DrawingSurface extends PApplet {
 		}
 
 		player.draw(this);
+		e.draw(this);
 
 		popMatrix();
 
@@ -122,6 +129,8 @@ public class DrawingSurface extends PApplet {
 			else {}
 		}
 		player.act(obstacles);
+		e.act(obstacles);
+		
 
 		if (!screenRect.intersects(player))
 			spawnNewMario();
