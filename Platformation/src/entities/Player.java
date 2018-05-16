@@ -13,7 +13,7 @@ public class Player extends Sprite{
 
 	public static final int PLAYER_WIDTH = 40;
 	public static final int PLAYER_HEIGHT = 60;
-	
+
 	//
 	private double baseHP;
 	private double currentHP;
@@ -29,7 +29,7 @@ public class Player extends Sprite{
 	private double defStat;
 	private double EXP;
 
-	
+
 	// Collision/Physics fields
 	private double dx;
 	private double dy;
@@ -38,7 +38,7 @@ public class Player extends Sprite{
 	private double dt = 1 / 60.0;
 	private double ddx;
 	private double ddy;
-	
+
 	private boolean isTouchingGround;
 	private boolean isMoving;
 	private double ticksFromZeroToHalf = 4.0;
@@ -46,8 +46,9 @@ public class Player extends Sprite{
 	private double ticksToStop = 1.0;	
 	private int maxDx = 400;
 	private int maxDy = 240;
+	private double fricMod = 0.5;
 
-	
+
 	public Player(PImage img, int x, int y) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		baseHP = 100;
@@ -58,8 +59,9 @@ public class Player extends Sprite{
 		defStat =  10;
 		EXP = 0;
 	}
-	
+
 	public void walk(int dir) {
+		isMoving = true;
 		double accelAmt = 0;
 		if (dir*dx >= 0 && dir*dx <=maxDx/2) {
 			accelAmt = maxDx / ticksFromZeroToHalf;
@@ -76,19 +78,19 @@ public class Player extends Sprite{
 			accelAmt *= dir;
 		}
 		else {
-			
+
 		}
 		if (!isTouchingGround) {
 			accelAmt = accelAmt * 2 / 3;
 		}
 		else {
-			
+
 		}
 		if (accelAmt + dx > maxDx) {accelAmt = maxDx - dx;}
 		else if(accelAmt + dx < -maxDx) {accelAmt = -maxDx - dx;}
 		accelerate(accelAmt, 0); 
 	}
-	
+
 	public void jump() {
 		if(isTouchingGround){
 			if(dy > -maxDy && dy < maxDy) {
@@ -97,7 +99,7 @@ public class Player extends Sprite{
 			isTouchingGround = false;
 		}
 	}
-	
+
 	public void accelerate (double dx, double dy) {
 		// This is a simple acceleate method that adds dx and dy to the current velocity.
 		this.dx += dx;
@@ -106,7 +108,7 @@ public class Player extends Sprite{
 		ddx += dx;
 		ddy += dy;
 	}
-	
+
 	public void move() {
 		double xchange = dt * (oldDx + ((ddx/2) * dt));
 		double ychange = dt * (oldDy + ((ddy/2) * dt));
@@ -117,6 +119,11 @@ public class Player extends Sprite{
 		ddy = 0;
 	}
 	public void act(ArrayList<Shape> shapes) {
+
+
+		if(!isTouchingGround) {
+			accelerate(0, 1440*dt);
+		}
 		isTouchingGround = false;
 		for(Shape s : shapes) {
 			Rectangle r = s.getBounds();
@@ -126,16 +133,17 @@ public class Player extends Sprite{
 				double xdif = thisCX - (r.x+r.width/2);
 				double ydif = thisCY - (r.y+r.height/2);
 				if(ydif < 0) {
-					// player is "above" the center of the platform	
-					super.moveByAmount(0, (ydif-1) + (PLAYER_WIDTH/2 + r.height/2));
+					// player is "above" the center of the platform
 					accelerate(0,-dy);
+					super.moveByAmount(0, -(ydif+1)-(PLAYER_HEIGHT/2 + r.height/2));
+
 					isTouchingGround = true;
 				}
 				else if(ydif > 0) {
 					// player is "below" the center of the platform	
 					super.moveByAmount(0, ydif);
 				}
-				if(xdif > 0) {
+				else if(xdif > 0) {
 					// player is "right" of the center of the platform	
 					super.moveByAmount(r.getWidth()/2 - xdif, 0);
 				}
@@ -143,19 +151,49 @@ public class Player extends Sprite{
 					// player is "left" of the center of the platform	
 					super.moveByAmount(-(r.getWidth()/2 + xdif), 0);
 				}
-				
-				
+
+
 			}
-			
+			else {
+				double thisCX = x + PLAYER_WIDTH/2;
+				double thisCY = y + PLAYER_HEIGHT/2;
+				double xdif = thisCX - (r.x+r.width/2);
+				double ydif = thisCY - (r.y+r.height/2);
+				if(Math.abs(-ydif - (PLAYER_HEIGHT/2 + r.height/2))<1) {
+					if(Math.abs(xdif)<1 + (PLAYER_WIDTH/2 + r.width/2)) {
+						isTouchingGround = true;
+					}
+				}
+				else {
+					
+				}
+			}
+
 		}
-		
-		if(!isTouchingGround) {
-			accelerate(0, 1440*dt);
-		}
+		applyFriction();
 		move();
-		
-		
-		
+		isMoving = false;
+
+
+
+	}
+	public void applyFriction() {
+		if (isMoving) {
+			if (isTouchingGround) {
+				accelerate(-dx/12*fricMod,0); 
+			}
+			else {
+				accelerate(-dx/12*fricMod,0); 	
+			}
+		}
+		else {
+			if (isTouchingGround) {
+				accelerate(-dx/2*fricMod,0); 
+			}
+			else {
+				accelerate(-dx/12*fricMod,0); 	
+			}
+		}
 	}
 
 	@Override
@@ -167,49 +205,49 @@ public class Player extends Sprite{
 		g.fill(255,0,0);
 		g.rect((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)5, (float)5);
 		g.popStyle();
-		
-		
+
+
 	}
 
 	//---------------------------------RPG Elements------------------------------------------
-	
-	
+
+
 	public double damaged(double damageTaken) {
 		// TODO Auto-generated method stub
 		double damage = damageTaken*(10/(10+defStat));
-		
+
 		currentHP-=damage;
-		
+
 		return damage;
-		
+
 	}
 
-	
+
 	public void regen() {
 		// TODO Auto-generated method stub
 		if(baseHP>currentHP)
 		{
 			currentHP+=0.1;
 		}
-		
+
 	}
 
-	
+
 	public double getHP() {
 		// TODO Auto-generated method stub
 		return currentHP;
 	}
-	
-	
+
+
 
 	public double energyDepletion(double usedEP) {
 		// TODO Auto-generated method stub
-		
+
 		currentEP-=usedEP;
 		return usedEP;
 	}
-	
-	
+
+
 
 	public boolean energyReplenish() {
 		// TODO Auto-generated method stub
@@ -218,31 +256,31 @@ public class Player extends Sprite{
 			replenishing = true;
 			currentEP+=0.2;
 		}
-		
+
 		return replenishing;
 	}
 
-	
-	
+
+
 	public double getEP() {
 		// TODO Auto-generated method stub
 		return currentEP;
 	}
-	
-	
+
+
 	public void useTechOne(Enemies e) 
 	{
 		double epCost = 5;
-		
+
 		if(e.intersects(this))
 		{
 			e.damaged(10+attackStat/2);
 			e.stunned();
 		}
-		
+
 	}
-	
-	
+
+
 	public void useTechTwo(Enemies e) 
 	{
 		double epCost = 30;
@@ -251,10 +289,10 @@ public class Player extends Sprite{
 			e.damaged(10+attackStat/2);
 			e.moveByAmount(10, 0);
 		}
-		
+
 	}
-	
-	
+
+
 	public void useTechThree(Enemies e) 
 	{
 		double epCost = 15;
@@ -264,14 +302,14 @@ public class Player extends Sprite{
 		}
 
 	}
-	
-	
+
+
 	public void useTechFour(Enemies e) 
 	{
 		double epCost = 20;
-		
+
 	}
-	
-	
-	
+
+
+
 }
