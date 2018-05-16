@@ -19,7 +19,7 @@ public class DrawingSurface extends PApplet {
 	public static final int DRAWING_HEIGHT = 600;
 
 	private Rectangle screenRect;
-	private Booster[] booster = new Booster[2];
+	private Booster[] booster = new Booster[4];
 
 	private Player player;
 	private ArrayList<Shape> obstacles;
@@ -40,8 +40,10 @@ public class DrawingSurface extends PApplet {
 		obstacles.add(new Rectangle(700,250,100,50));
 		obstacles.add(new Rectangle(375,300,50,100));
 		obstacles.add(new Rectangle(300,250,200,50));
-		booster[0] = new Booster(310,230); 
-		booster[1] = new Booster(-100,-100);
+		booster[0] = new Booster(290,220); 
+		booster[1] = new Booster(470,220);
+		booster[2] = new Booster(370,230); 
+		booster[3] = new Booster(390,230);
 		 // cool
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
