@@ -25,6 +25,7 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
+	private Enemies e;
 	
 	private ArrayList<PImage> assets;
 
@@ -53,6 +54,10 @@ public class DrawingSurface extends PApplet {
 
 	public void spawnNewMario() {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+	}
+	
+	public void spawnNewEnemy() {
+		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
 	}
 	
 	public void runMe() {
