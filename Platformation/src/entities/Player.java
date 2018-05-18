@@ -158,11 +158,11 @@ public class Player extends Sprite{
 				}
 				else if(xdif > 0 && oxdif > xdif) {
 					// player is "right" of the center of the platform	
-					super.moveByAmount(r.getWidth()/2 - xdif, 0);
+					super.moveByAmount(r.getWidth() - xdif, 0);
 				}
 				else if(xdif < 0 && oxdif < xdif) {
 					// player is "left" of the center of the platform	
-					super.moveByAmount(-(r.getWidth()/2 + xdif), 0);
+					super.moveByAmount(-(r.getWidth() + xdif), 0);
 				}
 
 
