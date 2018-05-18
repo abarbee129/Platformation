@@ -101,7 +101,7 @@ public class Player extends Sprite{
 	}
 
 	public void accelerate (double dx, double dy) {
-		// This is a simple acceleate method that adds dx and dy to the current velocity.
+		// This is a simple accelerate method that adds dx and dy to the current velocity.
 		this.dx += dx;
 		this.dy += dy;
 

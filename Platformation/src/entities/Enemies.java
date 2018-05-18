@@ -27,7 +27,9 @@ public class Enemies extends Player implements DamageAble {
 		HPCalculation(statPoints);
 		defCalculation(statPoints);
 		attackCalculation(statPoints);
+		EPCalculation(statPoints);
 		this.level = level;
+		
 		EXP = level*15;
 	}
 	
@@ -68,6 +70,7 @@ public class Enemies extends Player implements DamageAble {
 	{
 		super.accelerate(dx, dy); 
 	}
+	
 	public void stunned()
 	{	
 		if(stunTicks > 0) {
@@ -87,6 +90,11 @@ public class Enemies extends Player implements DamageAble {
 		}
 	
 			
+	}
+	
+	public void attack(Player p)
+	{
+		p.damaged(attackStat);
 	}
 
 	@Override
