@@ -61,7 +61,7 @@ public class Player extends Sprite{
 		currentEP = 200;
 		attackStat = 10;
 		defStat =  10;
-		EXP = 0;
+		EXP = 0; 
 	}
 
 	public void walk(int dir) {
