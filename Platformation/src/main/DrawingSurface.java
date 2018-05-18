@@ -58,7 +58,7 @@ public class DrawingSurface extends PApplet {
 	}
 	
 	public void spawnNewEnemy() {
-		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50, 2,1);
 	}
 	
 	public void runMe() {
