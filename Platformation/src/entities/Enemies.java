@@ -1,7 +1,10 @@
 package entities;
 
+import java.awt.Shape;
+
 import javax.management.timer.Timer;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 
 public class Enemies extends Player implements DamageAble {
@@ -71,6 +74,7 @@ public class Enemies extends Player implements DamageAble {
 		super.accelerate(dx, dy); 
 	}
 	
+
 	public void stunned()
 	{	
 		if(stunTicks > 0) {
@@ -165,5 +169,17 @@ public class Enemies extends Player implements DamageAble {
 	{
 		return replenishing;
 	}
+
+	public void draw(PApplet g)
+	{
+		super.draw(g);
+	}
+
+	public void action(Player player, Shape shape) {
+		// TODO Auto-generated method stub
+		walk(0);
+	}
+
+
 
 }

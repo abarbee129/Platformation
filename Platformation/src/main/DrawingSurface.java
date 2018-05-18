@@ -4,10 +4,12 @@ package main;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import entities.Enemies;
 import entities.Mario;
+import entities.MeleeEnemy;
 import entities.Player;
 import worldGeometry.Booster;
 import worldGeometry.Platform;
@@ -26,7 +28,7 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
-	private Enemies e;
+	private MeleeEnemy e;
 	
 	private ArrayList<PImage> assets;
 
@@ -58,7 +60,7 @@ public class DrawingSurface extends PApplet {
 	}
 	
 	public void spawnNewEnemy() {
-		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50, 2,1);
+		e = new MeleeEnemy(assets.get(0),4,100, 2,1);
 	}
 	
 	public void runMe() {
@@ -72,6 +74,7 @@ public class DrawingSurface extends PApplet {
 		assets.add(loadImage("mario.png"));
 		
 		spawnNewMario();
+		spawnNewEnemy();
 	}
 
 	// The statements in draw() are executed until the 
@@ -106,6 +109,8 @@ public class DrawingSurface extends PApplet {
 		}
 
 		player.draw(this);
+		e.draw(this);
+		
 
 		popMatrix();
 
@@ -128,6 +133,10 @@ public class DrawingSurface extends PApplet {
 			else {}
 		}
 		player.act(obstacles);
+		e.act(obstacles);
+
+		e.action(player, obstacles.get(1));
+
 
 		if (!screenRect.intersects(player))
 			spawnNewMario();
