@@ -30,7 +30,6 @@ public class MeleeEnemy extends Enemies {
 		}
 	}
 	
-	
 	public void moveToPlayer(Player p)
 	{
 		if(p.getCenterX()+2 < this.getCenterX())
