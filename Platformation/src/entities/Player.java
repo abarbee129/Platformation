@@ -54,7 +54,7 @@ public class Player extends Sprite{
 	public Player(PImage img, int x, int y) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
-		oy = new double[3];
+		oy = new double[3]; 
 		baseHP = 100;
 		currentHP = 100;
 		baseEP = 200;
