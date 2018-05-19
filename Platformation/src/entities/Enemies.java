@@ -1,11 +1,15 @@
 package entities;
 
+import java.awt.Shape;
+
 import javax.management.timer.Timer;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 
-public class Enemies extends Sprite implements DamageAble {
+public class Enemies extends Player implements DamageAble {
 
+	
 	private double HP;
 	private double currentEP;
 	private double baseEP;
@@ -19,14 +23,16 @@ public class Enemies extends Sprite implements DamageAble {
 	private int c = 0;
 
 
-	public Enemies(PImage img, int x, int y, int w, int h, double level, double statPoints) {
-		super(img, x, y, w, h);
+	public Enemies(PImage img, int x, int y, double level, double statPoints) {
+		super(img, x, y);
 		// TODO Auto-generated constructor stub
 		replenishing = false;
 		HPCalculation(statPoints);
 		defCalculation(statPoints);
 		attackCalculation(statPoints);
+		EPCalculation(statPoints);
 		this.level = level;
+		
 		EXP = level*15;
 	}
 	
@@ -63,6 +69,12 @@ public class Enemies extends Sprite implements DamageAble {
 	}
 	
 
+	public void knockedBack(double dx, double dy)
+	{
+		super.accelerate(dx, dy); 
+	}
+	
+
 	public void stunned()
 	{	
 		if(stunTicks > 0) {
@@ -82,6 +94,11 @@ public class Enemies extends Sprite implements DamageAble {
 		}
 	
 			
+	}
+	
+	public void attack(Player p)
+	{
+		p.damaged(attackStat);
 	}
 
 	@Override
@@ -125,7 +142,7 @@ public class Enemies extends Sprite implements DamageAble {
 	
 	
 	@Override
-	public void energyReplenish() {
+	public boolean energyReplenish() {
 		// TODO Auto-generated method stub
 		
 	
@@ -134,6 +151,7 @@ public class Enemies extends Sprite implements DamageAble {
 				replenishing = true;
 				currentEP+=0.1;
 			}
+			return replenishing;
 		
 	}
 	
@@ -151,5 +169,17 @@ public class Enemies extends Sprite implements DamageAble {
 	{
 		return replenishing;
 	}
+
+	public void draw(PApplet g)
+	{
+		super.draw(g);
+	}
+
+	public void action(Player player, Shape shape) {
+		// TODO Auto-generated method stub
+		walk(0);
+	}
+
+
 
 }

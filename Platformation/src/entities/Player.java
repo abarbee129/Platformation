@@ -28,6 +28,8 @@ public class Player extends Sprite{
 	private double attackStat;
 	private double defStat;
 	private double EXP;
+	
+	private double[] ox,oy;
 
 
 	// Collision/Physics fields
@@ -51,13 +53,15 @@ public class Player extends Sprite{
 
 	public Player(PImage img, int x, int y) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+		ox = new double[3];
+		oy = new double[3]; 
 		baseHP = 100;
 		currentHP = 100;
 		baseEP = 200;
 		currentEP = 200;
 		attackStat = 10;
 		defStat =  10;
-		EXP = 0;
+		EXP = 0; 
 	}
 
 	public void walk(int dir) {
@@ -101,7 +105,7 @@ public class Player extends Sprite{
 	}
 
 	public void accelerate (double dx, double dy) {
-		// This is a simple acceleate method that adds dx and dy to the current velocity.
+		// This is a simple accelerate method that adds dx and dy to the current velocity.
 		this.dx += dx;
 		this.dy += dy;
 
@@ -130,26 +134,35 @@ public class Player extends Sprite{
 			if(intersects(r)) {
 				double thisCX = x + PLAYER_WIDTH/2;
 				double thisCY = y + PLAYER_HEIGHT/2;
+				double oldCx = ox[1] + PLAYER_WIDTH/2;
+				double oldCy = oy[1] + PLAYER_HEIGHT/2;
+				double oxdif = oldCx - (r.x+r.width/2);
+				double oydif = oldCy - (r.y+r.height/2);
 				double xdif = thisCX - (r.x+r.width/2);
 				double ydif = thisCY - (r.y+r.height/2);
-				if(ydif < 0) {
+				if(ydif < 0 && oydif > ydif) {
+					// player is "above" the center of the platform
+					super.moveByAmount(0, ydif);
+
+				}
+				else if(ydif < 0) {
 					// player is "above" the center of the platform
 					accelerate(0,-dy);
 					super.moveByAmount(0, -(ydif+1)-(PLAYER_HEIGHT/2 + r.height/2));
 
 					isTouchingGround = true;
 				}
-				else if(ydif > 0) {
+				else if(ydif > 0 && oydif > ydif) {
 					// player is "below" the center of the platform	
-					super.moveByAmount(0, ydif);
+					super.moveByAmount(0, r.getHeight()/2-ydif);
 				}
-				else if(xdif > 0) {
+				else if(xdif > 0 && oxdif > xdif) {
 					// player is "right" of the center of the platform	
-					super.moveByAmount(r.getWidth()/2 - xdif, 0);
+					super.moveByAmount(r.getWidth() - xdif, 0);
 				}
-				else if(xdif < 0) {
+				else if(xdif < 0 && oxdif < xdif) {
 					// player is "left" of the center of the platform	
-					super.moveByAmount(-(r.getWidth()/2 + xdif), 0);
+					super.moveByAmount(-(r.getWidth() + xdif), 0);
 				}
 
 
@@ -173,8 +186,12 @@ public class Player extends Sprite{
 		applyFriction();
 		move();
 		isMoving = false;
-
-
+		ox[2] = ox[1];
+		oy[2] = oy[1];
+		ox[1] = ox[0];
+		oy[1] = oy[0];
+		ox[0] = x;
+		oy[0] = y;
 
 	}
 	
@@ -313,7 +330,7 @@ public class Player extends Sprite{
 		if(e.intersects(this))
 		{
 			e.damaged(10+attackStat/2);
-			e.moveByAmount(10, 0);
+			e.knockedBack(100, 600);;
 		}
 
 	}
