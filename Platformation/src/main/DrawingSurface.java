@@ -6,6 +6,7 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 
+import entities.Enemies;
 import entities.Mario;
 import entities.Player;
 import worldGeometry.Booster;
@@ -57,7 +58,7 @@ public class DrawingSurface extends PApplet {
 	}
 	
 	public void spawnNewEnemy() {
-		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50, 2, 2, 12, 1);
 	}
 	
 	public void runMe() {
@@ -105,6 +106,7 @@ public class DrawingSurface extends PApplet {
 		}
 
 		player.draw(this);
+		e.draw(this);
 
 		popMatrix();
 
