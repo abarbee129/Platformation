@@ -30,7 +30,7 @@ public class MeleeEnemy extends Enemies {
 		}
 	}
 	
-	public void moveToPlayer(Player p)
+	private void moveToPlayer(Player p)
 	{
 		if(p.getCenterX()+2 < this.getCenterX())
 		{
@@ -46,7 +46,7 @@ public class MeleeEnemy extends Enemies {
 		}
 	}
 	
-	public void idleWalk(Shape plat)
+	private void idleWalk(Shape plat)
 	{
 		
 		Rectangle platform = plat.getBounds();

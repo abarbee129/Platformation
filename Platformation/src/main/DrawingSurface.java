@@ -60,8 +60,7 @@ public class DrawingSurface extends PApplet {
 	}
 	
 	public void spawnNewEnemy() {
-		e = new Enemies(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50, 2, 2, 12, 1);
-		e = new MeleeEnemy(assets.get(0),4,100, 2,1);
+		e = new MeleeEnemy(assets.get(1),4,250-85, 2,1);
 	}
 	
 	public void runMe() {
@@ -72,8 +71,9 @@ public class DrawingSurface extends PApplet {
 	// execute once when the program begins
 	public void setup() {
 		//size(0,0,PApplet.P3D);
-		assets.add(loadImage("mario.png"));
-		
+		assets.add(loadImage("Player.png"));
+		assets.add(loadImage("Melee.png"));
+
 		spawnNewMario();
 		spawnNewEnemy();
 	}
