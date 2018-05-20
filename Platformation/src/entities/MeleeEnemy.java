@@ -20,13 +20,13 @@ public class MeleeEnemy extends Enemies {
 	
 	public void actions(Player p, Shape plat)
 	{
-		if(sightBox.contains(p))
+		if(sightBox.contains(p) )
 		{
-			moveToPlayer(p);
+			this.moveToPlayer(p);
 		}
 		else
 		{
-			idleWalk(plat);
+			this.idleWalk(plat);
 		}
 	}
 	

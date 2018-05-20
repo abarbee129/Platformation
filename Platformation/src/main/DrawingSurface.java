@@ -33,6 +33,8 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<PImage> assets;
 
 	public DrawingSurface() {
+		
+		
 		super();
 		assets = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
@@ -52,6 +54,10 @@ public class DrawingSurface extends PApplet {
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
 		}
+		
+		
+		
+		
 	}
 
 
