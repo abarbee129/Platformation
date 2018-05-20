@@ -113,6 +113,14 @@ public class Player extends Sprite{
 		ddy += dy;
 	}
 
+	public double getDx() {
+		return dx;
+	}
+	public double getDy() {
+		return dy;
+	}
+	
+	
 	public void move() {
 		double xchange = dt * (oldDx + ((ddx/2) * dt));
 		double ychange = dt * (oldDy + ((ddy/2) * dt));
