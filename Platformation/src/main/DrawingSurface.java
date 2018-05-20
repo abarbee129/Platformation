@@ -35,7 +35,8 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
-	private MeleeEnemy e;
+	private MeleeEnemy mE;
+	
 
 	private ArrayList<PImage> assets;
 
@@ -92,6 +93,10 @@ public class DrawingSurface extends PApplet {
 					else if( c == 'b') {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
+				//	else if(c == 'm')
+				//	{
+						//spawnNewMeleeEnemy();
+				//	}
 					else {
 
 					}
@@ -114,8 +119,8 @@ public class DrawingSurface extends PApplet {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
 	}
 
-	public void spawnNewEnemy() {
-		e = new MeleeEnemy(assets.get(1),4,250-85, 2,1);
+	public void spawnNewMeleeEnemy() {
+		mE = new MeleeEnemy(assets.get(1),4,250-85, 2,1);
 	}
 
 	public void runMe() {
@@ -130,7 +135,7 @@ public class DrawingSurface extends PApplet {
 		assets.add(loadImage("Melee.png"));
 
 		spawnNewMario();
-		spawnNewEnemy();
+		//spawnNewEnemy();
 	}
 
 	// The statements in draw() are executed until the 
@@ -166,7 +171,7 @@ public class DrawingSurface extends PApplet {
 		popStyle();
 
 		player.draw(this);
-		e.draw(this);
+		//e.draw(this);
 
 
 		popMatrix();
@@ -193,9 +198,9 @@ public class DrawingSurface extends PApplet {
 		}
 		
 		player.act(obstacles);
-		e.act(obstacles);
+		//e.act(obstacles);
 
-		e.action(player, obstacles.get(1));
+		//e.action(player, obstacles.get(1));
 
 
 		if (!screenRect.intersects(player))
