@@ -5,6 +5,11 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.CharBuffer;
 import java.util.ArrayList;
 
 import entities.Enemies;
@@ -21,15 +26,17 @@ public class DrawingSurface extends PApplet {
 	public static final int DRAWING_WIDTH = 800;
 	public static final int DRAWING_HEIGHT = 600;
 
+	public static final String fileSeparator = System.getProperty("file.separator");
+
 	private Rectangle screenRect;
-	private Booster[] booster = new Booster[4];
+	private ArrayList<Booster> boosters;
 
 	private Player player;
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
 	private MeleeEnemy e;
-	
+
 	private ArrayList<PImage> assets;
 
 	public DrawingSurface() {
@@ -38,9 +45,12 @@ public class DrawingSurface extends PApplet {
 		super();
 		assets = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
+		boosters = new ArrayList<Booster>();
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		obstacles = new ArrayList<Shape>();
-		platforms = new ArrayList<Platform>();
+		platforms = new ArrayList<Platform>(); 
+		initLevel("Levels" + fileSeparator + "Level1.txt");
+		/*
 		obstacles.add(new Rectangle(200,400,400,50));
 		obstacles.add(new Rectangle(0,250,100,50));
 		obstacles.add(new Rectangle(700,250,100,50));
@@ -50,7 +60,8 @@ public class DrawingSurface extends PApplet {
 		booster[1] = new Booster(290,500);
 		booster[2] = new Booster(290,500); 
 		booster[3] = new Booster(290,500);
-		 // cool
+		 */
+		// cool
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
 		}
@@ -60,15 +71,53 @@ public class DrawingSurface extends PApplet {
 		
 	}
 
+	public void initLevel(String fileName) {
+		try {
+			FileReader reader = new FileReader(fileName);
+			BufferedReader bReader = new BufferedReader(reader);
+			char[] chars = null;
+			double yoff = 0;
+			double xoff = 0;
+			int rows = 24;
+			double pHeight = DRAWING_HEIGHT/rows;
 
+
+			while(bReader.ready()) {
+				chars = bReader.readLine().toCharArray();
+				for(char c : chars) {
+					if(c == '#') {
+						obstacles.add(new Rectangle((int)xoff,(int)yoff,(int)pHeight,(int)pHeight));
+						
+					}
+					else if( c == 'b') {
+						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
+					}
+					else {
+
+					}
+					xoff+=pHeight/2;
+				}
+				yoff+= pHeight;
+				xoff = 0;
+
+
+			}
+
+
+		} 
+		catch (IOException e) {
+			e.printStackTrace();
+		} 
+
+	}
 	public void spawnNewMario() {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
 	}
-	
+
 	public void spawnNewEnemy() {
 		e = new MeleeEnemy(assets.get(1),4,250-85, 2,1);
 	}
-	
+
 	public void runMe() {
 		runSketch();
 	}
@@ -105,19 +154,20 @@ public class DrawingSurface extends PApplet {
 			if (s instanceof Rectangle) {
 				Rectangle r = (Rectangle)s;
 				rect(r.x,r.y,r.width,r.height);
-				pushStyle();
-				fill(255,0,0);
-				rect((float)r.x+r.width/2,(float)r.y+r.height/2,(float)5,(float)5);
-				popStyle();
 			}
 		}
-		for(Booster b : booster) {
-			b.draw(this);
+		pushStyle();
+		fill(0,0,255);
+		for(Booster b : boosters) {
+			if(b != null) {
+				b.draw(this);
+			}
 		}
+		popStyle();
 
 		player.draw(this);
 		e.draw(this);
-		
+
 
 		popMatrix();
 
@@ -132,13 +182,16 @@ public class DrawingSurface extends PApplet {
 			player.jump();
 
 		// check for booster collisions and accelerate
-		for (int i = 0; i < booster.length; i++) {
-			double[] dims = booster[i].getCBoxDimensions();
-			if (player.doesCollideWith(dims[0], dims[1], (int)dims[2], (int)dims[3])) {
-				player.accelerate(booster[i].getXBounceAcceleration(player.getx(), player.gety()), booster[i].getYBounceAcceleration(player.getx(), player.gety()));
+		for (Booster b : boosters) {
+			if(b!=null) {
+				double[] dims = b.getCBoxDimensions();
+				if (player.doesCollideWith(dims[0], dims[1], (int)dims[2], (int)dims[3])) {
+					player.accelerate(b.getXBounceAcceleration(player.getx(), player.gety()), b.getYBounceAcceleration(player.getx(), player.gety()));
+				}
+				else {}
 			}
-			else {}
 		}
+		
 		player.act(obstacles);
 		e.act(obstacles);
 
