@@ -168,9 +168,10 @@ public class DrawingSurface extends PApplet {
 
 		player.draw(this);
 		for(MeleeEnemy me : meleeEnemies) {
-			me.draw(this);
+			me.actions(player, obstacles.get(1));
 			me.act(obstacles);
-			me.action(player, obstacles.get(1));
+			me.draw(this);
+
 		}
 
 

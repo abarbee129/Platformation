@@ -14,12 +14,13 @@ public class MeleeEnemy extends Enemies {
 	{
 		super(img, x, y, lvl, statPoint);
 
-		sightBox = new Rectangle(x-100,y,x+100, PLAYER_HEIGHT);
+		sightBox = new Rectangle(x-200,y-10,PLAYER_WIDTH+400, PLAYER_HEIGHT+10);
 
 	}
 
 	public void actions(Player p, Shape plat)
 	{
+		sightBox = new Rectangle((int)x-200,(int)y-30,(int)PLAYER_WIDTH+400, (int)PLAYER_HEIGHT+60);
 		if(sightBox.contains(p) )
 		{
 			this.moveToPlayer(p);
@@ -32,21 +33,22 @@ public class MeleeEnemy extends Enemies {
 
 	private void moveToPlayer(Player p)
 	{
-		if(p.getCenterX()+2 < this.getCenterX())
+		if(p.getx() < this.getx())
 		{
 			
-			walk(1);
+			walk(-1);
+			accelerate(-super.getDx()/4,0);
 			
 			
 		}
-		else if(p.getCenterX()+p.width+2 > this.getCenterX())
+		else if(p.getx() > this.getx())
 		{
-			walk(-1);
-			
+			walk(1);
+			accelerate(-super.getDx()/4,0);
 		}
 		else 
 		{
-			walk(0);
+			//walk(0);
 			
 			
 		}
@@ -63,12 +65,12 @@ public class MeleeEnemy extends Enemies {
 
 		if(this.getX() > xPlat+4 && moved==false)
 		{
-			walk(1);
+			//walk(1);
 			
 		}
 		else if(this.getX() < width-4 && moved == true)
 		{
-			walk(-1);
+			//walk(-1);
 			
 		}
 		else if(this.getX() <= xPlat)

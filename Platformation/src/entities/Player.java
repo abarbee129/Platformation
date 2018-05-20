@@ -49,10 +49,24 @@ public class Player extends Sprite{
 	private int maxDx = 400;
 	private int maxDy = 240;
 	private double fricMod = 0.5;
+	double slow = 1;
 
 
 	public Player(PImage img, int x, int y) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+		ox = new double[3];
+		oy = new double[3]; 
+		baseHP = 100;
+		currentHP = 100;
+		baseEP = 200;
+		currentEP = 200;
+		attackStat = 10;
+		defStat =  10;
+		EXP = 0; 
+	}
+	public Player(PImage img, int x, int y,double slow) {
+		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+		this.slow = slow;
 		ox = new double[3];
 		oy = new double[3]; 
 		baseHP = 100;
@@ -122,8 +136,8 @@ public class Player extends Sprite{
 	
 	
 	public void move() {
-		double xchange = dt * (oldDx + ((ddx/2) * dt));
-		double ychange = dt * (oldDy + ((ddy/2) * dt));
+		double xchange = slow*dt * (oldDx + ((ddx/2) * dt));
+		double ychange = slow*dt * (oldDy + ((ddy/2) * dt));
 		super.moveByAmount(xchange, ychange);
 		oldDx = this.dx;
 		oldDy = this.dy;

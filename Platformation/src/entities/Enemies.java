@@ -24,7 +24,7 @@ public class Enemies extends Player implements DamageAble {
 
 
 	public Enemies(PImage img, int x, int y, double level, double statPoints) {
-		super(img, x, y);
+		super(img, x, y,0.5);
 		// TODO Auto-generated constructor stub
 		replenishing = false;
 		HPCalculation(statPoints);
@@ -177,7 +177,7 @@ public class Enemies extends Player implements DamageAble {
 
 	public void action(Player player, Shape shape) {
 		// TODO Auto-generated method stub
-		walk(0);
+		//walk(0);
 	}
 
 
