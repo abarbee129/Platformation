@@ -20,7 +20,8 @@ public class MeleeEnemy extends Enemies {
 
 	public void actions(Player p, Shape plat)
 	{
-		sightBox = new Rectangle((int)x-200,(int)y-30,(int)PLAYER_WIDTH+400, (int)PLAYER_HEIGHT+60);
+		// gotta reset the sight box every time because the enemy moves
+		sightBox = new Rectangle((int)x-200,(int)y-220,(int)PLAYER_WIDTH+400, (int)PLAYER_HEIGHT+230);
 		if(sightBox.contains(p) )
 		{
 			this.moveToPlayer(p);

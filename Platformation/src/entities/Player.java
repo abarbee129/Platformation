@@ -267,8 +267,6 @@ public class Player extends Sprite{
 		g.pushStyle();
 		g.noFill();
 		g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
-		g.fill(255,0,0);
-		g.rect((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)5, (float)5);
 		g.popStyle();
 
 
