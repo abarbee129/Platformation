@@ -266,7 +266,7 @@ public class Player extends Sprite{
 		super.draw(g);
 		g.pushStyle();
 		g.noFill();
-		g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+
 		g.popStyle();
 
 
