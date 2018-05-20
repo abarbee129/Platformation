@@ -197,9 +197,9 @@ public class Player extends Sprite{
 	
 	public boolean doesCollideWith(double rx, double ry, int width, int height) {
 
-		if (x > rx - width/2 - this.width/2 && x < rx + width/2 + this.width / 2) {
+		if (x > rx - this.width && x < rx + width ) {
 
-			if (y > ry - height/2 - this.height/2 && y < ry + height/2 + this.height / 2) {
+			if (y > ry  - this.height && y < ry + height) {
 				return true;
 			}
 

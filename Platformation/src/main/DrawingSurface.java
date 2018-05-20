@@ -29,7 +29,7 @@ public class DrawingSurface extends PApplet {
 	public static final String fileSeparator = System.getProperty("file.separator");
 
 	private Rectangle screenRect;
-	private Booster[] booster = new Booster[4];
+	private ArrayList<Booster> boosters;
 
 	private Player player;
 	private ArrayList<Shape> obstacles;
@@ -43,6 +43,7 @@ public class DrawingSurface extends PApplet {
 		super();
 		assets = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
+		boosters = new ArrayList<Booster>();
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		obstacles = new ArrayList<Shape>();
 		platforms = new ArrayList<Platform>(); 
@@ -79,8 +80,11 @@ public class DrawingSurface extends PApplet {
 				chars = bReader.readLine().toCharArray();
 				for(char c : chars) {
 					if(c == '#') {
-						System.out.println(xoff);
 						obstacles.add(new Rectangle((int)xoff,(int)yoff,(int)pHeight,(int)pHeight));
+						
+					}
+					else if( c == 'b') {
+						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
 					else {
 
@@ -144,17 +148,16 @@ public class DrawingSurface extends PApplet {
 			if (s instanceof Rectangle) {
 				Rectangle r = (Rectangle)s;
 				rect(r.x,r.y,r.width,r.height);
-				pushStyle();
-				fill(255,0,0);
-				rect((float)r.x+r.width/2,(float)r.y+r.height/2,(float)5,(float)5);
-				popStyle();
 			}
 		}
-		for(Booster b : booster) {
+		pushStyle();
+		fill(0,0,255);
+		for(Booster b : boosters) {
 			if(b != null) {
 				b.draw(this);
 			}
 		}
+		popStyle();
 
 		player.draw(this);
 		e.draw(this);
@@ -173,15 +176,16 @@ public class DrawingSurface extends PApplet {
 			player.jump();
 
 		// check for booster collisions and accelerate
-		for (int i = 0; i < booster.length; i++) {
-			if(booster[i]!=null) {
-				double[] dims = booster[i].getCBoxDimensions();
+		for (Booster b : boosters) {
+			if(b!=null) {
+				double[] dims = b.getCBoxDimensions();
 				if (player.doesCollideWith(dims[0], dims[1], (int)dims[2], (int)dims[3])) {
-					player.accelerate(booster[i].getXBounceAcceleration(player.getx(), player.gety()), booster[i].getYBounceAcceleration(player.getx(), player.gety()));
+					player.accelerate(b.getXBounceAcceleration(player.getx(), player.gety()), b.getYBounceAcceleration(player.getx(), player.gety()));
 				}
 				else {}
 			}
 		}
+		
 		player.act(obstacles);
 		e.act(obstacles);
 
