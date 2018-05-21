@@ -151,6 +151,7 @@ public class Enemies extends Player implements DamageAble {
 				replenishing = true;
 				currentEP+=0.1;
 			}
+			
 			return replenishing;
 		
 	}
