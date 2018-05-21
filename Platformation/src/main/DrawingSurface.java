@@ -147,7 +147,8 @@ public class DrawingSurface extends PApplet {
 
 		float ratioX = (float)width/DRAWING_WIDTH;
 		float ratioY = (float)height/DRAWING_HEIGHT;
-
+		double xoff = DRAWING_WIDTH/2 - player.getx();
+		this.translate((float)(xoff), 0);
 		scale(ratioX, ratioY);
 
 		fill(100);
@@ -199,11 +200,12 @@ public class DrawingSurface extends PApplet {
 		}
 		
 		player.act(obstacles);
-		
-
-
-		if (!screenRect.intersects(player))
+		if(player.gety() > DRAWING_HEIGHT) {
 			spawnNewMario();
+		}
+
+
+	
 	}
 
 
