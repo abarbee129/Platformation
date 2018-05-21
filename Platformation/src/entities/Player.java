@@ -393,6 +393,15 @@ public class Player extends Sprite{
 		shield = true;
 		
 	}
-
-
+	
+	public void endShield()
+	{
+		
+		shield = false;
+	}
+	
+	public boolean isShieldActive()
+	{
+		return shield;
+	}
 }
