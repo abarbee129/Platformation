@@ -9,7 +9,7 @@ import processing.core.PImage;
 import worldGeometry.Platform;
 
 // add implements damageable once it exists
-public class Player extends Sprite{
+public class Player extends Sprite implements Damageable{
 
 	public static final int PLAYER_WIDTH = 40;
 	public static final int PLAYER_HEIGHT = 60;

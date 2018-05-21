@@ -7,7 +7,7 @@ import javax.management.timer.Timer;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class Enemies extends Player implements DamageAble {
+public class Enemies extends Player implements Damageable {
 
 	
 	private double HP;

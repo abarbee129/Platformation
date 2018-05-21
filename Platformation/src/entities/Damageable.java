@@ -5,7 +5,7 @@ package entities;
  *
  *Interface that has all the methods for objects that can be damaged.
  */
-public interface DamageAble {
+public interface Damageable {
 	
 
 	
