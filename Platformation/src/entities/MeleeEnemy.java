@@ -44,6 +44,10 @@ public class MeleeEnemy extends Enemies {
 			
 			walk(-1);
 			accelerate(-super.getDx()/4,0);
+			if(p.gety() > this.gety())
+			{
+				jump();
+			}
 			
 			
 		}
@@ -51,11 +55,6 @@ public class MeleeEnemy extends Enemies {
 		{
 			walk(1);
 			accelerate(-super.getDx()/4,0);
-		}
-		else 
-		{
-			//walk(0);
-			
 			
 		}
 	}
