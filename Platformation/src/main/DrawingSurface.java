@@ -150,11 +150,12 @@ public class DrawingSurface extends PApplet {
 		double xoff = DRAWING_WIDTH/2 - player.getx();
 		this.translate((float)(xoff), 0);
 		scale(ratioX, ratioY);
-
+		screenRect = new Rectangle((int)(player.getx()-DRAWING_WIDTH/2),0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		fill(100);
 		for (Shape s : obstacles) {
-			if (s instanceof Rectangle) {
+			if (s instanceof Rectangle && s.intersects(screenRect)) {
 				Rectangle r = (Rectangle)s;
+				
 				rect(r.x,r.y,r.width,r.height);
 			}
 		}
