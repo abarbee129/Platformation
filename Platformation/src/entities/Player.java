@@ -21,7 +21,7 @@ public class Player extends Sprite{
 	private double currentEP;
 	private double baseEP;
 	private boolean replenishing;
-
+	private boolean shield;
 	private boolean regen;
 	private double level;
 	private int skillPoints;
@@ -56,6 +56,7 @@ public class Player extends Sprite{
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
+		shield = false;
 		baseHP = 100;
 		currentHP = 100;
 		baseEP = 200;
@@ -64,11 +65,13 @@ public class Player extends Sprite{
 		defStat =  10;
 		EXP = 0; 
 	}
+	
 	public Player(PImage img, int x, int y,double slow) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		this.slow = slow;
 		ox = new double[3];
 		oy = new double[3]; 
+		shield = false;
 		baseHP = 100;
 		currentHP = 100;
 		baseEP = 200;
@@ -279,8 +282,11 @@ public class Player extends Sprite{
 		// TODO Auto-generated method stub
 		double damage = damageTaken*(10/(10+defStat));
 
-		currentHP-=damage;
-
+		if(isGameOver() == false && !shield) 
+		{
+			currentHP -= damage;
+		}
+		
 		return damage;
 
 	}
@@ -372,7 +378,21 @@ public class Player extends Sprite{
 		double epCost = 20;
 
 	}
+	public boolean isGameOver()
+	{
+		if(currentHP <= 0)
+		{
+			return true;
+		}
+		return false;
+	}
 
+	public void startShield()
+	{
+		energyDepletion(0.5);
+		shield = true;
+		
+	}
 
 
 }

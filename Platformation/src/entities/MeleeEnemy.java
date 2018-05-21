@@ -30,6 +30,11 @@ public class MeleeEnemy extends Enemies {
 		{
 			this.idleWalk(plat);
 		}
+		
+		if(p.intersects(this))
+		{
+			attack(p);
+		}
 	}
 
 	private void moveToPlayer(Player p)
@@ -85,6 +90,8 @@ public class MeleeEnemy extends Enemies {
 
 
 	}
+	
+	
 
 
 

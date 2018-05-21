@@ -99,6 +99,7 @@ public class Enemies extends Player implements DamageAble {
 	public void attack(Player p)
 	{
 		p.damaged(attackStat);
+		System.out.println(p.getHP());
 	}
 
 	@Override
@@ -108,6 +109,10 @@ public class Enemies extends Player implements DamageAble {
 		double damage = damageTaken*(10/(10+defStat));
 		
 		HP-=damage;
+		
+		if(HP<=0) {
+			disapear();
+		}
 		
 		return damage;
 	}
@@ -178,6 +183,11 @@ public class Enemies extends Player implements DamageAble {
 	public void action(Player player, Shape shape) {
 		// TODO Auto-generated method stub
 		//walk(0);
+	}
+	
+	public void disapear()
+	{
+		
 	}
 
 
