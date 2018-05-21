@@ -296,7 +296,7 @@ public class Player extends Sprite implements Damageable{
 		// TODO Auto-generated method stub
 		if(baseHP>currentHP)
 		{
-			currentHP+=0.1;
+			currentHP+=0.2;
 			
 			System.out.println(currentHP);
 		}
@@ -391,9 +391,16 @@ public class Player extends Sprite implements Damageable{
 
 	public void startShield()
 	{
-		energyDepletion(0.5);
-		regen();
-		shield = true;
+		if(currentEP>0 && replenishing!=true)
+		{
+			energyDepletion(0.5);
+			regen();
+			shield = true;
+		}
+		else
+		{
+			endShield();
+		}
 		
 	}
 	
@@ -411,6 +418,26 @@ public class Player extends Sprite implements Damageable{
 	public void obtainEXP(double exp) 
 	{
 		// TODO Auto-generated method stub
-		EXP += exp;
+		if(EXP<(50+(50*level)))
+		{
+			EXP += exp;
+		}
+		else
+		{
+			levelUP();
+			EXP = 0;
+		}
+	}
+	
+	private void levelUP()
+	{
+		level+=1;
+		skillPoints+=3;
+		baseHP+=5;
+		
+		baseEP+=10;
+		attackStat+=5;
+		defStat+=3;
+		
 	}
 }
