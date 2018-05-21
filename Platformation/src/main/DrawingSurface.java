@@ -184,6 +184,10 @@ public class DrawingSurface extends PApplet {
 			player.walk(1);
 		if (isPressed(KeyEvent.VK_UP))
 			player.jump();
+		if (isPressed(KeyEvent.VK_DOWN))
+			player.startShield();
+		
+		
 
 		// check for booster collisions and accelerate
 		for (Booster b : boosters) {

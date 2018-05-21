@@ -297,6 +297,8 @@ public class Player extends Sprite implements Damageable{
 		if(baseHP>currentHP)
 		{
 			currentHP+=0.1;
+			
+			System.out.println(currentHP);
 		}
 
 	}
@@ -390,6 +392,7 @@ public class Player extends Sprite implements Damageable{
 	public void startShield()
 	{
 		energyDepletion(0.5);
+		regen();
 		shield = true;
 		
 	}
