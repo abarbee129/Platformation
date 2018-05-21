@@ -116,10 +116,6 @@ public class DrawingSurface extends PApplet {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
 	}
 
-	public void spawnNewMeleeEnemy() {
-		meleeEnemies.add(new MeleeEnemy(assets.get(1),4,250-85, 2,1));
-	}
-
 	public void runMe() {
 		runSketch();
 	}
