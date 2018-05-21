@@ -143,9 +143,9 @@ public class DrawingSurface extends PApplet {
 
 		float ratioX = (float)width/DRAWING_WIDTH;
 		float ratioY = (float)height/DRAWING_HEIGHT;
+		scale(ratioX, ratioY);
 		double xoff = DRAWING_WIDTH/2 - player.getx();
 		this.translate((float)(xoff), 0);
-		scale(ratioX, ratioY);
 		screenRect = new Rectangle((int)(player.getx()-DRAWING_WIDTH/2),0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		fill(100);
 		for (Shape s : obstacles) {
