@@ -189,7 +189,7 @@ public class DrawingSurface extends PApplet {
 		}
 		else {
 			player.endShield();
-		}
+		} 
 		
 		
 
