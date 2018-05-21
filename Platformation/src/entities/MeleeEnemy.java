@@ -6,63 +6,77 @@ import java.awt.geom.Rectangle2D;
 import processing.core.PImage;
 import worldGeometry.Platform;
 
-public class MeleeEnemy extends Enemies {
-	
+public class MeleeEnemy extends Enemy {
+
 	private Rectangle2D sightBox;
 	private boolean moved;
 	public MeleeEnemy( PImage img ,int x, int y, int lvl, int statPoint)
 	{
 		super(img, x, y, lvl, statPoint);
-		
-		sightBox = new Rectangle(x-100,y, x+100, PLAYER_HEIGHT);
-		
+
+		sightBox = new Rectangle(x-200,y-10,PLAYER_WIDTH+400, PLAYER_HEIGHT+10);
+
 	}
-	
+
 	public void actions(Player p, Shape plat)
 	{
-		if(sightBox.contains(p))
+		// gotta reset the sight box every time because the enemy moves
+		sightBox = new Rectangle((int)x-200,(int)y-220,(int)PLAYER_WIDTH+400, (int)PLAYER_HEIGHT+250);
+		if(sightBox.contains(p) )
 		{
-			moveToPlayer(p);
+			this.moveToPlayer(p);
 		}
 		else
 		{
-			idleWalk(plat);
+			this.idleWalk(plat);
+		}
+		
+		if(p.intersects(this))
+		{
+			attack(p);
 		}
 	}
-	
-	public void moveToPlayer(Player p)
+
+	private void moveToPlayer(Player p)
 	{
-		if(p.getCenterX()+2 < this.getCenterX())
+		if(p.getx() < this.getx())
 		{
-			this.walk(-1);
+			
+			walk(-1);
+			accelerate(-super.getDx()/4,0);
+			if(p.gety() > this.gety())
+			{
+				jump();
+			}
+			
+			
 		}
-		else if(p.getCenterX()+p.width+2 > this.getCenterX())
+		else if(p.getx() > this.getx())
 		{
-			this.walk(1);
-		}
-		else 
-		{
-			this.walk(0);
+			walk(1);
+			accelerate(-super.getDx()/4,0);
+			
 		}
 	}
-	
-	public void idleWalk(Shape plat)
+
+	private void idleWalk(Shape plat)
 	{
 		
 		Rectangle platform = plat.getBounds();
-		
+
 		double xPlat = platform.getX();
 		double width = platform.getWidth();
-		
-		
+
+
 		if(this.getX() > xPlat+4 && moved==false)
 		{
-			walk(1);
+			//walk(1);
 			
 		}
 		else if(this.getX() < width-4 && moved == true)
 		{
-			walk(-1);
+			//walk(-1);
+			
 		}
 		else if(this.getX() <= xPlat)
 		{
@@ -72,12 +86,14 @@ public class MeleeEnemy extends Enemies {
 		{
 			moved = false;
 		}
-		
-		
+
+
 	}
 	
 	
-	
-	
+
+
+
+
 
 }

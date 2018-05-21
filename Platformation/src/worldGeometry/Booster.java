@@ -10,8 +10,8 @@ public class Booster {
 	private double x = 500;
 	private double y = 600;
 	
-	private int width = 40;
-	private int height = 40;
+	private int width = 25;
+	private int height = 25;
 	
 	private int power = 10;
 	private double strength = 800;
@@ -19,6 +19,12 @@ public class Booster {
 	public Booster(double x, double y) {
 		this.x = x;
 		this.y = y;
+	}
+	public Booster(double x, double y,double w, double h) {
+		this.x = x;
+		this.y = y;
+		width = (int)w;
+		height = (int)h;
 	}
 	
 	

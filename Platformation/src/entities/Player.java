@@ -9,7 +9,7 @@ import processing.core.PImage;
 import worldGeometry.Platform;
 
 // add implements damageable once it exists
-public class Player extends Sprite{
+public class Player extends Sprite implements Damageable{
 
 	public static final int PLAYER_WIDTH = 40;
 	public static final int PLAYER_HEIGHT = 60;
@@ -21,7 +21,7 @@ public class Player extends Sprite{
 	private double currentEP;
 	private double baseEP;
 	private boolean replenishing;
-
+	private boolean shield;
 	private boolean regen;
 	private double level;
 	private int skillPoints;
@@ -49,12 +49,29 @@ public class Player extends Sprite{
 	private int maxDx = 400;
 	private int maxDy = 240;
 	private double fricMod = 0.5;
+	double slow = 1;
 
 
 	public Player(PImage img, int x, int y) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
+		shield = false;
+		baseHP = 100;
+		currentHP = 100;
+		baseEP = 200;
+		currentEP = 200;
+		attackStat = 10;
+		defStat =  10;
+		EXP = 0; 
+	}
+	
+	public Player(PImage img, int x, int y,double slow) {
+		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
+		this.slow = slow;
+		ox = new double[3];
+		oy = new double[3]; 
+		shield = false;
 		baseHP = 100;
 		currentHP = 100;
 		baseEP = 200;
@@ -113,9 +130,17 @@ public class Player extends Sprite{
 		ddy += dy;
 	}
 
+	public double getDx() {
+		return dx;
+	}
+	public double getDy() {
+		return dy;
+	}
+	
+	
 	public void move() {
-		double xchange = dt * (oldDx + ((ddx/2) * dt));
-		double ychange = dt * (oldDy + ((ddy/2) * dt));
+		double xchange = slow*dt * (oldDx + ((ddx/2) * dt));
+		double ychange = slow*dt * (oldDy + ((ddy/2) * dt));
 		super.moveByAmount(xchange, ychange);
 		oldDx = this.dx;
 		oldDy = this.dy;
@@ -197,9 +222,9 @@ public class Player extends Sprite{
 	
 	public boolean doesCollideWith(double rx, double ry, int width, int height) {
 
-		if (x > rx - width/2 - this.width/2 && x < rx + width/2 + this.width / 2) {
+		if (x > rx - this.width && x < rx + width ) {
 
-			if (y > ry - height/2 - this.height/2 && y < ry + height/2 + this.height / 2) {
+			if (y > ry  - this.height && y < ry + height) {
 				return true;
 			}
 
@@ -244,9 +269,7 @@ public class Player extends Sprite{
 		super.draw(g);
 		g.pushStyle();
 		g.noFill();
-		g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
-		g.fill(255,0,0);
-		g.rect((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)5, (float)5);
+
 		g.popStyle();
 
 
@@ -259,8 +282,11 @@ public class Player extends Sprite{
 		// TODO Auto-generated method stub
 		double damage = damageTaken*(10/(10+defStat));
 
-		currentHP-=damage;
-
+		if(isGameOver() == false && !shield) 
+		{
+			currentHP -= damage;
+		}
+		
 		return damage;
 
 	}
@@ -271,6 +297,8 @@ public class Player extends Sprite{
 		if(baseHP>currentHP)
 		{
 			currentHP+=0.1;
+			
+			System.out.println(currentHP);
 		}
 
 	}
@@ -311,7 +339,7 @@ public class Player extends Sprite{
 	}
 
 
-	public void useTechOne(Enemies e) 
+	public void useTechOne(Enemy e) 
 	{
 		double epCost = 5;
 
@@ -324,7 +352,7 @@ public class Player extends Sprite{
 	}
 
 
-	public void useTechTwo(Enemies e) 
+	public void useTechTwo(Enemy e) 
 	{
 		double epCost = 30;
 		if(e.intersects(this))
@@ -336,7 +364,7 @@ public class Player extends Sprite{
 	}
 
 
-	public void useTechThree(Enemies e) 
+	public void useTechThree(Enemy e) 
 	{
 		double epCost = 15;
 		if(e.intersects(this))
@@ -347,12 +375,42 @@ public class Player extends Sprite{
 	}
 
 
-	public void useTechFour(Enemies e) 
+	public void useTechFour(Enemy e) 
 	{
 		double epCost = 20;
 
 	}
+	public boolean isGameOver()
+	{
+		if(currentHP <= 0)
+		{
+			return true;
+		}
+		return false;
+	}
 
+	public void startShield()
+	{
+		energyDepletion(0.5);
+		regen();
+		shield = true;
+		
+	}
+	
+	public void endShield()
+	{
+		
+		shield = false;
+	}
+	
+	public boolean isShieldActive()
+	{
+		return shield;
+	}
 
-
+	public void obtainEXP(double exp) 
+	{
+		// TODO Auto-generated method stub
+		EXP += exp;
+	}
 }
