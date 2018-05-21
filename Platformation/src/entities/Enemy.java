@@ -14,6 +14,7 @@ public class Enemy extends Player implements Damageable {
 	private double currentEP;
 	private double baseEP;
 	private boolean replenishing;
+	private boolean isDead;
 
 	private double level;
 	private double attackStat;
@@ -185,9 +186,15 @@ public class Enemy extends Player implements Damageable {
 		//walk(0);
 	}
 	
-	public void disapear()
+	public double disapear()
 	{
-		
+		isDead = true;
+		return EXP;
+	}
+	
+	public boolean getIsDead()
+	{
+		return isDead;
 	}
 
 
