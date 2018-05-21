@@ -337,7 +337,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
-	public void useTechOne(Enemies e) 
+	public void useTechOne(Enemy e) 
 	{
 		double epCost = 5;
 
@@ -350,7 +350,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
-	public void useTechTwo(Enemies e) 
+	public void useTechTwo(Enemy e) 
 	{
 		double epCost = 30;
 		if(e.intersects(this))
@@ -362,7 +362,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
-	public void useTechThree(Enemies e) 
+	public void useTechThree(Enemy e) 
 	{
 		double epCost = 15;
 		if(e.intersects(this))
@@ -373,7 +373,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
-	public void useTechFour(Enemies e) 
+	public void useTechFour(Enemy e) 
 	{
 		double epCost = 20;
 
@@ -403,5 +403,11 @@ public class Player extends Sprite implements Damageable{
 	public boolean isShieldActive()
 	{
 		return shield;
+	}
+
+	public void obtainEXP(double exp) 
+	{
+		// TODO Auto-generated method stub
+		EXP += exp;
 	}
 }

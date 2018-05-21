@@ -6,7 +6,7 @@ import java.awt.geom.Rectangle2D;
 import processing.core.PImage;
 import worldGeometry.Platform;
 
-public class MeleeEnemy extends Enemies {
+public class MeleeEnemy extends Enemy {
 
 	private Rectangle2D sightBox;
 	private boolean moved;

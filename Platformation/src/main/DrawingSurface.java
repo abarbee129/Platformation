@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 
-import entities.Enemies;
+import entities.Enemy;
 import entities.Mario;
 import entities.MeleeEnemy;
 import entities.Player;
@@ -92,7 +92,7 @@ public class DrawingSurface extends PApplet {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
 					else if(c == 'm') {
-						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,2,1));
+						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,50,10));
 					}
 					else {
 

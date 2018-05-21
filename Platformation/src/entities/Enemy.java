@@ -7,7 +7,7 @@ import javax.management.timer.Timer;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class Enemies extends Player implements Damageable {
+public class Enemy extends Player implements Damageable {
 
 	
 	private double HP;
@@ -23,7 +23,7 @@ public class Enemies extends Player implements Damageable {
 	private int c = 0;
 
 
-	public Enemies(PImage img, int x, int y, double level, double statPoints) {
+	public Enemy(PImage img, int x, int y, double level, double statPoints) {
 		super(img, x, y,0.5);
 		// TODO Auto-generated constructor stub
 		replenishing = false;
