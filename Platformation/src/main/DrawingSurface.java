@@ -35,7 +35,7 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
-	private MeleeEnemy mE;
+	private ArrayList<MeleeEnemy> meleeEnemies; 
 	
 
 	private ArrayList<PImage> assets;
@@ -49,8 +49,8 @@ public class DrawingSurface extends PApplet {
 		boosters = new ArrayList<Booster>();
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		obstacles = new ArrayList<Shape>();
-		platforms = new ArrayList<Platform>(); 
-		initLevel("Levels" + fileSeparator + "Level1.txt");
+		platforms = new ArrayList<Platform>();
+		meleeEnemies = new ArrayList<MeleeEnemy>(); 
 		/*
 		obstacles.add(new Rectangle(200,400,400,50));
 		obstacles.add(new Rectangle(0,250,100,50));
@@ -81,8 +81,6 @@ public class DrawingSurface extends PApplet {
 			double xoff = 0;
 			int rows = 24;
 			double pHeight = DRAWING_HEIGHT/rows;
-
-
 			while(bReader.ready()) {
 				chars = bReader.readLine().toCharArray();
 				for(char c : chars) {
@@ -93,10 +91,9 @@ public class DrawingSurface extends PApplet {
 					else if( c == 'b') {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
-				//	else if(c == 'm')
-				//	{
-						//spawnNewMeleeEnemy();
-				//	}
+					else if(c == 'm') {
+						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,2,1));
+					}
 					else {
 
 					}
@@ -120,7 +117,7 @@ public class DrawingSurface extends PApplet {
 	}
 
 	public void spawnNewMeleeEnemy() {
-		mE = new MeleeEnemy(assets.get(1),4,250-85, 2,1);
+		meleeEnemies.add(new MeleeEnemy(assets.get(1),4,250-85, 2,1));
 	}
 
 	public void runMe() {
@@ -133,9 +130,8 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-
+		initLevel("Levels" + fileSeparator + "Level1.txt");
 		spawnNewMario();
-		//spawnNewEnemy();
 	}
 
 	// The statements in draw() are executed until the 
@@ -171,7 +167,12 @@ public class DrawingSurface extends PApplet {
 		popStyle();
 
 		player.draw(this);
-		//e.draw(this);
+		for(MeleeEnemy me : meleeEnemies) {
+			me.actions(player, obstacles.get(1));
+			me.act(obstacles);
+			me.draw(this);
+
+		}
 
 
 		popMatrix();
@@ -198,9 +199,7 @@ public class DrawingSurface extends PApplet {
 		}
 		
 		player.act(obstacles);
-		//e.act(obstacles);
-
-		//e.action(player, obstacles.get(1));
+		
 
 
 		if (!screenRect.intersects(player))
