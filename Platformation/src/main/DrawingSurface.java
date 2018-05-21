@@ -184,8 +184,12 @@ public class DrawingSurface extends PApplet {
 			player.walk(1);
 		if (isPressed(KeyEvent.VK_UP))
 			player.jump();
-		if (isPressed(KeyEvent.VK_DOWN))
+		if (isPressed(KeyEvent.VK_DOWN)) {
 			player.startShield();
+		}
+		else {
+			player.endShield();
+		}
 		
 		
 
