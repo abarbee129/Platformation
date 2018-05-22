@@ -70,9 +70,17 @@ public class Enemy extends Player implements Damageable {
 	}
 	
 
-	public void knockedBack(double dx, double dy)
+	public void knockedBack(double dx, double dy, Player p)
 	{
-		super.accelerate(dx, dy); 
+		if(p.getCenterX()>this.getCenterX())
+		{
+			super.accelerate(-dx, dy);
+		}
+		else
+		{
+			super.accelerate(dx, dy);
+		}
+			
 	}
 	
 
@@ -81,11 +89,11 @@ public class Enemy extends Player implements Damageable {
 		if(stunTicks > 0) {
 			stunTicks--;
 			if(c%2 == 0) {
-				this.moveByAmount(1, 1);
+				this.moveByAmount(0, 0);
 			}
 			
 			else{
-				this.moveByAmount(-1, -1);
+				this.moveByAmount(0, 0);
 			}
 			
 		}

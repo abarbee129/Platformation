@@ -376,7 +376,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			if(isFlipped)
 			{
-				accelerate(600,0);
+				accelerate(-600,0);
 			}
 			else
 			{
@@ -396,17 +396,16 @@ public class Player extends Sprite implements Damageable{
 
 	public void useTechTwo(Enemy e) 
 	{
-		Rectangle impact = new Rectangle((int)x-20, (int)y+10, (int)PLAYER_WIDTH+40, (int)PLAYER_HEIGHT);
 		double epCost = 30;
 		if(currentEP>0)
 		{
 			jump();
 			energyDepletion(epCost);
 
-			if(e.intersects(impact))
+			if(e.intersects(this))
 			{
 				e.damaged(techTwo+attackStat/2);
-				e.knockedBack(400, -100);
+				e.knockedBack(1000, -600, this);
 			}
 		}
 	}
