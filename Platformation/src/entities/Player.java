@@ -17,7 +17,9 @@ public class Player extends Sprite implements Damageable{
 	//
 	private double baseHP;
 	private double currentHP;
-
+	private double techOne;
+	private double techTwo;
+	
 	private double currentEP;
 	private double baseEP;
 	private boolean replenishing;
@@ -64,6 +66,9 @@ public class Player extends Sprite implements Damageable{
 		attackStat = 10;
 		defStat =  10;
 		EXP = 0; 
+		
+		techOne= 10;
+		techTwo = 20;
 	}
 	
 	public Player(PImage img, int x, int y,double slow) {
@@ -282,7 +287,7 @@ public class Player extends Sprite implements Damageable{
 		// TODO Auto-generated method stub
 		double damage = damageTaken*(10/(10+defStat));
 
-		if(isGameOver() == false && !shield) 
+		if(isGameOver() == false && !shield ) 
 		{
 			currentHP -= damage;
 		}
@@ -298,7 +303,6 @@ public class Player extends Sprite implements Damageable{
 		{
 			currentHP+=0.2;
 			
-			System.out.println(currentHP);
 		}
 
 	}
@@ -317,17 +321,30 @@ public class Player extends Sprite implements Damageable{
 		currentEP-=usedEP;
 		return usedEP;
 	}
-
-
+	
+	/**
+	 * 
+	 * @return the current HP in Percent
+	 */
+	public int getHPPercent()
+	{
+		int hp = (int)((currentHP/baseHP)*100);
+		return hp;
+	}
 
 	public boolean energyReplenish() {
 		// TODO Auto-generated method stub
-		while(currentEP<baseEP)
+		if(currentEP<baseEP)
 		{
 			replenishing = true;
-			currentEP+=0.2;
+			currentEP+=0.5;
 		}
-
+		else
+		{
+			replenishing = false;
+		}
+		
+		
 		return replenishing;
 	}
 
@@ -341,11 +358,14 @@ public class Player extends Sprite implements Damageable{
 
 	public void useTechOne(Enemy e) 
 	{
-		double epCost = 5;
-
+		double epCost = 15;
+		energyDepletion(epCost);
+		
+		
 		if(e.intersects(this))
 		{
-			e.damaged(10+attackStat/2);
+			
+			e.damaged(techOne+attackStat/2);
 			e.stunned();
 		}
 
@@ -354,11 +374,16 @@ public class Player extends Sprite implements Damageable{
 
 	public void useTechTwo(Enemy e) 
 	{
+		Rectangle impact = new Rectangle((int)x-20, (int)y+10, (int)PLAYER_WIDTH+40, (int)PLAYER_HEIGHT);
 		double epCost = 30;
-		if(e.intersects(this))
+		
+		jump();
+		energyDepletion(epCost);
+
+		if(e.intersects(impact))
 		{
-			e.damaged(10+attackStat/2);
-			e.knockedBack(100, 600);;
+			e.damaged(techTwo+attackStat/2);
+			e.knockedBack(400, -100);
 		}
 
 	}
@@ -366,7 +391,7 @@ public class Player extends Sprite implements Damageable{
 
 	public void useTechThree(Enemy e) 
 	{
-		double epCost = 15;
+		double epCost = 5;
 		if(e.intersects(this))
 		{
 			e.damaged(10+attackStat/2);
@@ -375,11 +400,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
-	public void useTechFour(Enemy e) 
-	{
-		double epCost = 20;
-
-	}
+	
 	public boolean isGameOver()
 	{
 		if(currentHP <= 0)
@@ -400,6 +421,7 @@ public class Player extends Sprite implements Damageable{
 		else
 		{
 			endShield();
+			energyReplenish();
 		}
 		
 	}
@@ -432,12 +454,29 @@ public class Player extends Sprite implements Damageable{
 	private void levelUP()
 	{
 		level+=1;
-		skillPoints+=3;
+		skillPoints+=1;
 		baseHP+=5;
 		
 		baseEP+=10;
 		attackStat+=5;
 		defStat+=3;
 		
+	}
+	
+	public void addPointsToOne()
+	{
+		if(skillPoints>0)
+		{
+			techOne+=5;
+			skillPoints-=1;
+		}
+	}
+	public void addPointsToTwo()
+	{
+		if(skillPoints>0)
+		{
+			techTwo+=5;
+			skillPoints-=1;
+		}
 	}
 }

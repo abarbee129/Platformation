@@ -100,7 +100,6 @@ public class Enemy extends Player implements Damageable {
 	public void attack(Player p)
 	{
 		p.damaged(attackStat);
-		System.out.println(p.getHP());
 	}
 
 	@Override
@@ -114,6 +113,8 @@ public class Enemy extends Player implements Damageable {
 		if(HP<=0) {
 			disapear();
 		}
+		
+		System.out.println("hit");
 		
 		return damage;
 	}
