@@ -184,6 +184,8 @@ public class DrawingSurface extends PApplet {
 			player.walk(1);
 		if (isPressed(KeyEvent.VK_UP))
 			player.jump();
+		if(isPressed(KeyEvent.VK_Q))
+			player.useTechOne(meleeEnemies.get(0));
 		if(isPressed(KeyEvent.VK_W))
 			player.useTechTwo(meleeEnemies.get(0));
 		if (isPressed(KeyEvent.VK_DOWN)) {
