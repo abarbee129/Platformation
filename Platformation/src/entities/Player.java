@@ -54,12 +54,26 @@ public class Player extends Sprite implements Damageable{
 	private double fricMod = 0.5;
 	double slow = 1;
 
-
-	public Player(PImage img, int x, int y) {
+	private ArrayList<PImage> pics;  
+	
+	
+	public Player(PImage img, int x, int y, PApplet marker) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
 		isFlipped = false;
+		
+		//pics.add(marker.loadImage("Player.png"));
+		//pics.add(marker.loadImage("PlayerAttack.png"));
+		//pics.add(marker.loadImage("PlayerShield.png"));
+		//pics.add(marker.loadImage("PlayerFlipped.png"));
+		//pics.add(marker.loadImage("PlayerAttackFlipped.png"));
+		//pics.add(marker.loadImage("PlayerShieldFlipped.png"));
+		
+		
+		
+		
+		
 		
 		shield = false;
 		baseHP = 100;
@@ -74,7 +88,7 @@ public class Player extends Sprite implements Damageable{
 		techTwo = 20;
 	}
 	
-	public Player(PImage img, int x, int y,double slow) {
+	public Player(PImage img, int x, int y,double slow, PApplet marker) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		this.slow = slow;
 		ox = new double[3];

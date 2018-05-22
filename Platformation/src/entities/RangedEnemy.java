@@ -4,6 +4,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 
 public class RangedEnemy extends Enemy {
@@ -12,8 +13,8 @@ public class RangedEnemy extends Enemy {
 	private Rectangle2D sightBox;
 
 	
-	public RangedEnemy(PImage img, int x, int y, double level, double statPoints) {
-		super(img, x, y, level, statPoints);
+	public RangedEnemy(PImage img, int x, int y, double level, double statPoints, PApplet marker) {
+		super(img, x, y, level, statPoints, marker);
 		// TODO Auto-generated constructor stub
 	}
 

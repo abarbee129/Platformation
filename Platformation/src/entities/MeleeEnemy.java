@@ -3,6 +3,8 @@ package entities;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Rectangle2D;
+
+import processing.core.PApplet;
 import processing.core.PImage;
 import worldGeometry.Platform;
 
@@ -10,9 +12,9 @@ public class MeleeEnemy extends Enemy {
 
 	private Rectangle2D sightBox;
 	private boolean moved;
-	public MeleeEnemy( PImage img ,int x, int y, int lvl, int statPoint)
+	public MeleeEnemy( PImage img ,int x, int y, int lvl, int statPoint, PApplet marker)
 	{
-		super(img, x, y, lvl, statPoint);
+		super(img, x, y, lvl, statPoint, marker);
 
 		sightBox = new Rectangle(x-200,y-10,PLAYER_WIDTH+400, PLAYER_HEIGHT+10);
 

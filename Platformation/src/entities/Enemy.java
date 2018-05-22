@@ -24,8 +24,8 @@ public class Enemy extends Player implements Damageable {
 	private int c = 0;
 
 
-	public Enemy(PImage img, int x, int y, double level, double statPoints) {
-		super(img, x, y,0.5);
+	public Enemy(PImage img, int x, int y, double level, double statPoints, PApplet marker) {
+		super(img, x, y,0.5, marker);
 		// TODO Auto-generated constructor stub
 		replenishing = false;
 		HPCalculation(statPoints);
