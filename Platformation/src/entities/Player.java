@@ -359,16 +359,19 @@ public class Player extends Sprite implements Damageable{
 	public void useTechOne(Enemy e) 
 	{
 		double epCost = 15;
-		energyDepletion(epCost);
-		
-		
-		if(e.intersects(this))
-		{
-			
-			e.damaged(techOne+attackStat/2);
-			e.stunned();
-		}
 
+		if(currentEP>0)
+		{
+			accelerate(600,0);
+			energyDepletion(epCost);
+		
+			if(e.intersects(this))
+			{
+			
+				e.damaged(techOne+attackStat/2);
+				e.stunned();
+			}
+		}
 	}
 
 
@@ -376,20 +379,21 @@ public class Player extends Sprite implements Damageable{
 	{
 		Rectangle impact = new Rectangle((int)x-20, (int)y+10, (int)PLAYER_WIDTH+40, (int)PLAYER_HEIGHT);
 		double epCost = 30;
-		
-		jump();
-		energyDepletion(epCost);
-
-		if(e.intersects(impact))
+		if(currentEP>0)
 		{
-			e.damaged(techTwo+attackStat/2);
-			e.knockedBack(400, -100);
-		}
+			jump();
+			energyDepletion(epCost);
 
+			if(e.intersects(impact))
+			{
+				e.damaged(techTwo+attackStat/2);
+				e.knockedBack(400, -100);
+			}
+		}
 	}
 
 
-	public void useTechThree(Enemy e) 
+	public void ranged(Enemy e) 
 	{
 		double epCost = 5;
 		if(e.intersects(this))
