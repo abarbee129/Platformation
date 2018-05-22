@@ -92,7 +92,7 @@ public class DrawingSurface extends PApplet {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
 					else if(c == 'm') {
-						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,50,10));
+						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,50,10, this));
 					}
 					else {
 
@@ -113,7 +113,7 @@ public class DrawingSurface extends PApplet {
 
 	}
 	public void spawnNewMario() {
-		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50,this);
 	}
 
 	public void runMe() {
@@ -126,7 +126,7 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-		initLevel("Levels" + fileSeparator + "Level1.txt");
+		initLevel("Levels" + fileSeparator + "Level 3.txt");
 		spawnNewMario();
 	}
 
@@ -184,6 +184,10 @@ public class DrawingSurface extends PApplet {
 			player.walk(1);
 		if (isPressed(KeyEvent.VK_UP))
 			player.jump();
+		if(isPressed(KeyEvent.VK_Q))
+			player.useTechOne(meleeEnemies.get(0));
+		if(isPressed(KeyEvent.VK_W))
+			player.useTechTwo(meleeEnemies.get(0));
 		if (isPressed(KeyEvent.VK_DOWN)) {
 			player.startShield();
 		}
