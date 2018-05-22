@@ -34,6 +34,7 @@ public class Player extends Sprite implements Damageable{
 	private double[] ox,oy;
 
 
+	public boolean isFlipped;
 	// Collision/Physics fields
 	private double dx;
 	private double dy;
@@ -58,6 +59,8 @@ public class Player extends Sprite implements Damageable{
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
+		isFlipped = false;
+		
 		shield = false;
 		baseHP = 100;
 		currentHP = 100;
@@ -89,6 +92,15 @@ public class Player extends Sprite implements Damageable{
 	public void walk(int dir) {
 		isMoving = true;
 		double accelAmt = 0;
+		if(dir>0)
+		{
+			isFlipped = false;
+		}
+		else if()
+		{
+			isFlipped = true;
+		}	
+			
 		if (dir*dx >= 0 && dir*dx <=maxDx/2) {
 			accelAmt = maxDx / ticksFromZeroToHalf;
 		}
@@ -362,7 +374,14 @@ public class Player extends Sprite implements Damageable{
 
 		if(currentEP>0)
 		{
-			accelerate(600,0);
+			if(isFlipped)
+			{
+				accelerate(600,0);
+			}
+			else
+			{
+				accelerate(600,0);
+			}
 			energyDepletion(epCost);
 		
 			if(e.intersects(this))
