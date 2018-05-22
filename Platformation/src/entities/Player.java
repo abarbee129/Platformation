@@ -279,7 +279,7 @@ public class Player extends Sprite implements Damageable{
 
 
 	public double damaged(double damageTaken) {
-		// TODO Auto-generated method stub
+		
 		double damage = damageTaken*(10/(10+defStat));
 
 		if(isGameOver() == false && !shield) 
@@ -293,7 +293,6 @@ public class Player extends Sprite implements Damageable{
 
 
 	public void regen() {
-		// TODO Auto-generated method stub
 		if(baseHP>currentHP)
 		{
 			currentHP+=0.2;
@@ -305,15 +304,12 @@ public class Player extends Sprite implements Damageable{
 
 
 	public double getHP() {
-		// TODO Auto-generated method stub
 		return currentHP;
 	}
 
 
 
 	public double energyDepletion(double usedEP) {
-		// TODO Auto-generated method stub
-
 		currentEP-=usedEP;
 		return usedEP;
 	}
@@ -321,8 +317,7 @@ public class Player extends Sprite implements Damageable{
 
 
 	public boolean energyReplenish() {
-		// TODO Auto-generated method stub
-		while(currentEP<baseEP)
+			while(currentEP<baseEP)
 		{
 			replenishing = true;
 			currentEP+=0.2;
@@ -334,7 +329,6 @@ public class Player extends Sprite implements Damageable{
 
 
 	public double getEP() {
-		// TODO Auto-generated method stub
 		return currentEP;
 	}
 
@@ -417,7 +411,6 @@ public class Player extends Sprite implements Damageable{
 
 	public void obtainEXP(double exp) 
 	{
-		// TODO Auto-generated method stub
 		if(EXP<(50+(50*level)))
 		{
 			EXP += exp;
