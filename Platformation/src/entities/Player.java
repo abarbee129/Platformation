@@ -96,7 +96,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			isFlipped = false;
 		}
-		else if()
+		else if(dir<0)
 		{
 			isFlipped = true;
 		}	
