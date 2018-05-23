@@ -126,7 +126,7 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-		initLevel("Levels" + fileSeparator + "Level 3.txt");
+		initLevel("Levels" + fileSeparator + "Level 2.txt");
 		spawnNewMario();
 	}
 
@@ -185,9 +185,9 @@ public class DrawingSurface extends PApplet {
 		if (isPressed(KeyEvent.VK_UP))
 			player.jump();
 		if(isPressed(KeyEvent.VK_Q))
-			player.useTechOne(meleeEnemies.get(0));
+			//player.useTechOne(meleeEnemies.get(0));
 		if(isPressed(KeyEvent.VK_W))
-			player.useTechTwo(meleeEnemies.get(0));
+			//player.useTechTwo(meleeEnemies.get(0));
 		if (isPressed(KeyEvent.VK_DOWN)) {
 			player.startShield();
 		}
