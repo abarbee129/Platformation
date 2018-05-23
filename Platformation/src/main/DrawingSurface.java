@@ -187,7 +187,7 @@ public class DrawingSurface extends PApplet {
 					b.setIsDead(true);
 				}
 			}
-
+ 
 		}
 
 
