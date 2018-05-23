@@ -126,8 +126,10 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-
+		initLevel("Levels" + fileSeparator + "Level 3.txt");
 		initLevel("Levels" + fileSeparator + "Level 2.txt");
+
+
 		spawnNewMario();
 	}
 
