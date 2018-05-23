@@ -54,12 +54,26 @@ public class Player extends Sprite implements Damageable{
 	private double fricMod = 0.5;
 	double slow = 1;
 
-
-	public Player(PImage img, int x, int y) {
+	private ArrayList<PImage> pics;  
+	
+	
+	public Player(PImage img, int x, int y, PApplet marker) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
 		isFlipped = false;
+		
+		//pics.add(marker.loadImage("Player.png"));
+		//pics.add(marker.loadImage("PlayerAttack.png"));
+		//pics.add(marker.loadImage("PlayerShield.png"));
+		//pics.add(marker.loadImage("PlayerFlipped.png"));
+		//pics.add(marker.loadImage("PlayerAttackFlipped.png"));
+		//pics.add(marker.loadImage("PlayerShieldFlipped.png"));
+		
+		
+		
+		
+		
 		
 		shield = false;
 		baseHP = 100;
@@ -74,7 +88,7 @@ public class Player extends Sprite implements Damageable{
 		techTwo = 20;
 	}
 	
-	public Player(PImage img, int x, int y,double slow) {
+	public Player(PImage img, int x, int y,double slow, PApplet marker) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		this.slow = slow;
 		ox = new double[3];
@@ -296,7 +310,7 @@ public class Player extends Sprite implements Damageable{
 
 
 	public double damaged(double damageTaken) {
-		// TODO Auto-generated method stub
+		
 		double damage = damageTaken*(10/(10+defStat));
 
 		if(isGameOver() == false && !shield ) 
@@ -310,7 +324,6 @@ public class Player extends Sprite implements Damageable{
 
 
 	public void regen() {
-		// TODO Auto-generated method stub
 		if(baseHP>currentHP)
 		{
 			currentHP+=0.2;
@@ -321,15 +334,12 @@ public class Player extends Sprite implements Damageable{
 
 
 	public double getHP() {
-		// TODO Auto-generated method stub
 		return currentHP;
 	}
 
 
 
 	public double energyDepletion(double usedEP) {
-		// TODO Auto-generated method stub
-
 		currentEP-=usedEP;
 		return usedEP;
 	}
@@ -363,15 +373,15 @@ public class Player extends Sprite implements Damageable{
 
 
 	public double getEP() {
-		// TODO Auto-generated method stub
 		return currentEP;
 	}
 
 
-	public void useTechOne(Enemy e) 
+	public void useTechOne(ArrayList<Enemy> e) 
 	{
 		double epCost = 15;
-
+		
+		
 		if(currentEP>0)
 		{
 			if(isFlipped)
@@ -383,29 +393,31 @@ public class Player extends Sprite implements Damageable{
 				accelerate(600,0);
 			}
 			energyDepletion(epCost);
+			for(int i = 0; i<e.size()-1; i++)
+			{	if(e.get(i).intersects(this))
+				{
+					e.get(i).damaged(techOne+attackStat/2);
+					e.get(i).stunned();
 		
-			if(e.intersects(this))
-			{
-			
-				e.damaged(techOne+attackStat/2);
-				e.stunned();
+				}
 			}
 		}
 	}
 
 
-	public void useTechTwo(Enemy e) 
+	public void useTechTwo(ArrayList<Enemy> e) 
 	{
 		double epCost = 30;
 		if(currentEP>0)
 		{
 			jump();
 			energyDepletion(epCost);
-
-			if(e.intersects(this))
-			{
-				e.damaged(techTwo+attackStat/2);
-				e.knockedBack(1000, -600, this);
+			for(int i = 0; i<e.size()-1; i++)
+			{	if(e.get(i).intersects(this))
+				{
+					e.get(i).damaged(techTwo+attackStat/2);
+					e.get(i).knockedBack(1000, -600, this);
+				}
 			}
 		}
 	}
@@ -461,7 +473,6 @@ public class Player extends Sprite implements Damageable{
 
 	public void obtainEXP(double exp) 
 	{
-		// TODO Auto-generated method stub
 		if(EXP<(50+(50*level)))
 		{
 			EXP += exp;

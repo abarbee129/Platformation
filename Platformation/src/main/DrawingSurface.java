@@ -113,7 +113,7 @@ public class DrawingSurface extends PApplet {
 
 	}
 	public void spawnNewMario() {
-		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50,this);
 	}
 
 	public void runMe() {
@@ -126,7 +126,11 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
+<<<<<<< HEAD
 		initLevel("Levels" + fileSeparator + "Level 3.txt");
+=======
+		initLevel("Levels" + fileSeparator + "Level 2.txt");
+>>>>>>> branch 'master' of https://github.com/abarbee129/Platformation.git
 		spawnNewMario();
 	}
 
@@ -185,9 +189,9 @@ public class DrawingSurface extends PApplet {
 		if (isPressed(KeyEvent.VK_UP))
 			player.jump();
 		if(isPressed(KeyEvent.VK_Q))
-			player.useTechOne(meleeEnemies.get(0));
+			//player.useTechOne(meleeEnemies.get(0));
 		if(isPressed(KeyEvent.VK_W))
-			player.useTechTwo(meleeEnemies.get(0));
+			//player.useTechTwo(meleeEnemies.get(0));
 		if (isPressed(KeyEvent.VK_DOWN)) {
 			player.startShield();
 		}
