@@ -296,7 +296,7 @@ public class Player extends Sprite implements Damageable{
 		}
 	}
 
-	@Override
+	@Override 
 	public void draw(PApplet g) {
 		super.draw(g);
 		g.pushStyle();
