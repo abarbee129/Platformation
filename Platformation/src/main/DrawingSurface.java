@@ -179,15 +179,10 @@ public class DrawingSurface extends PApplet {
 		}
 
 		for(Bullet b : bullets) {
-			for (Shape s : obstacles) {
-				if (s instanceof Rectangle) {
-					if(((Rectangle) s).contains(b.getx(), b.gety())) {
-						b.setIsDead(true);
-					}
-				}
-			}
 			for(MeleeEnemy me : meleeEnemies) {
-				if(me.contains(b.getx(), b.gety())) {
+				double xdif = b.getx() - (me.x+me.width/2);
+				double ydif = b.gety() - (me.y+me.height/2);
+				if((xdif < 30 && xdif > -30)&&(ydif < 30 && ydif > -30)) {
 					me.damaged(b.getDamage());
 					b.setIsDead(true);
 				}

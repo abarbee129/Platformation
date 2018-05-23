@@ -9,6 +9,7 @@ public class Bullet {
 	private double dwidth, dheight;
 	private boolean isDead;
 	private double damage;
+	private int c = 0;
 	
 	public Bullet(double x, double y, double direction, double damage) {
 		this.x = x;
@@ -47,6 +48,10 @@ public class Bullet {
 	}
 	public void move() {
 		x += direction;
+		c++;
+		if(c > 40) {
+			isDead = true;
+		}
 	}
 	
 	
