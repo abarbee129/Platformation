@@ -92,7 +92,7 @@ public class DrawingSurface extends PApplet {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
 					else if(c == 'm') {
-						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,50,10));
+						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,50,10, this));
 					}
 					else {
 
@@ -126,11 +126,8 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-<<<<<<< HEAD
-		initLevel("Levels" + fileSeparator + "Level 3.txt");
-=======
+
 		initLevel("Levels" + fileSeparator + "Level 2.txt");
->>>>>>> branch 'master' of https://github.com/abarbee129/Platformation.git
 		spawnNewMario();
 	}
 
