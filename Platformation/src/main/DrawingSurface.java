@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.nio.CharBuffer;
 import java.util.ArrayList;
 
+import entities.Bullet;
 import entities.Enemy;
 import entities.Mario;
 import entities.MeleeEnemy;
@@ -30,19 +31,19 @@ public class DrawingSurface extends PApplet {
 
 	private Rectangle screenRect;
 	private ArrayList<Booster> boosters;
-
+	private int tSinceLast;
 	private Player player;
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
 	private ArrayList<MeleeEnemy> meleeEnemies; 
-	
+	private ArrayList<Bullet> bullets; 
 
 	private ArrayList<PImage> assets;
 
 	public DrawingSurface() {
-		
-		
+
+
 		super();
 		assets = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
@@ -51,6 +52,7 @@ public class DrawingSurface extends PApplet {
 		obstacles = new ArrayList<Shape>();
 		platforms = new ArrayList<Platform>();
 		meleeEnemies = new ArrayList<MeleeEnemy>(); 
+		bullets = new ArrayList<Bullet>();
 		/*
 		obstacles.add(new Rectangle(200,400,400,50));
 		obstacles.add(new Rectangle(0,250,100,50));
@@ -66,10 +68,10 @@ public class DrawingSurface extends PApplet {
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
 		}
-		
-		
-		
-		
+
+
+
+
 	}
 
 	public void initLevel(String fileName) {
@@ -86,7 +88,7 @@ public class DrawingSurface extends PApplet {
 				for(char c : chars) {
 					if(c == '#') {
 						obstacles.add(new Rectangle((int)xoff,(int)yoff,(int)pHeight,(int)pHeight));
-						
+
 					}
 					else if( c == 'b') {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
@@ -154,7 +156,7 @@ public class DrawingSurface extends PApplet {
 		for (Shape s : obstacles) {
 			if (s instanceof Rectangle && s.intersects(screenRect)) {
 				Rectangle r = (Rectangle)s;
-				
+
 				rect(r.x,r.y,r.width,r.height);
 			}
 		}
@@ -166,6 +168,39 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 		popStyle();
+
+		for(int i = 0; i < bullets.size(); i++) {
+			if(bullets.get(i) != null && bullets.get(i).getIsDead()) {
+				bullets.remove(i);
+			}
+			else {
+				bullets.get(i).move();
+			}
+		}
+
+		for(Bullet b : bullets) {
+			for (Shape s : obstacles) {
+				if (s instanceof Rectangle) {
+					if(((Rectangle) s).contains(b.getx(), b.gety())) {
+						b.setIsDead(true);
+					}
+				}
+			}
+			for(MeleeEnemy me : meleeEnemies) {
+				if(me.contains(b.getx(), b.gety())) {
+					me.damaged(b.getDamage());
+					b.setIsDead(true);
+				}
+			}
+
+		}
+
+
+		for(Bullet b : bullets) {
+			if(b!=null && !b.getIsDead()) {
+				b.draw(this);
+			}
+		}
 
 		player.draw(this);
 		for(MeleeEnemy me : meleeEnemies) {
@@ -180,25 +215,40 @@ public class DrawingSurface extends PApplet {
 
 
 		// modifying stuff
-
-		if (isPressed(KeyEvent.VK_LEFT))
+		if(tSinceLast>0) {
+			tSinceLast--;
+		}
+		if (isPressed(KeyEvent.VK_R)) {
+			if(tSinceLast == 0) {
+				bullets.add(new Bullet(player.x,player.y+player.height/2,8.0,20.0));
+				tSinceLast = 60;
+			}
+		}
+		if (isPressed(KeyEvent.VK_LEFT)) {
 			player.walk(-1);
-		if (isPressed(KeyEvent.VK_RIGHT))
+		}
+		if (isPressed(KeyEvent.VK_RIGHT)) {
 			player.walk(1);
-		if (isPressed(KeyEvent.VK_UP))
+		}
+		if (isPressed(KeyEvent.VK_UP)) {
 			player.jump();
-		if(isPressed(KeyEvent.VK_Q))
+		}
+		if(isPressed(KeyEvent.VK_Q)) {
 			//player.useTechOne(meleeEnemies.get(0));
-		if(isPressed(KeyEvent.VK_W))
-			//player.useTechTwo(meleeEnemies.get(0));
+		}
+		if(isPressed(KeyEvent.VK_W)) {
+
+		}
+
+		//player.useTechTwo(meleeEnemies.get(0));
 		if (isPressed(KeyEvent.VK_DOWN)) {
 			player.startShield();
 		}
 		else {
 			player.endShield();
 		} 
-		
-		
+
+
 
 		// check for booster collisions and accelerate
 		for (Booster b : boosters) {
@@ -210,14 +260,14 @@ public class DrawingSurface extends PApplet {
 				else {}
 			}
 		}
-		
+
 		player.act(obstacles);
 		if(player.gety() > DRAWING_HEIGHT) {
 			spawnNewMario();
 		}
 
 
-	
+
 	}
 
 
