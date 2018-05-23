@@ -19,7 +19,7 @@ public class Player extends Sprite implements Damageable{
 	private double currentHP;
 	private double techOne;
 	private double techTwo;
-	
+
 	private double currentEP;
 	private double baseEP;
 	private boolean replenishing;
@@ -30,7 +30,7 @@ public class Player extends Sprite implements Damageable{
 	private double attackStat;
 	private double defStat;
 	private double EXP;
-	
+
 	private double[] ox,oy;
 
 
@@ -52,29 +52,30 @@ public class Player extends Sprite implements Damageable{
 	private int maxDx = 400;
 	private int maxDy = 240;
 	private double fricMod = 0.5;
-	double slow = 1;
+	private double slow = 1;
+	protected boolean isEnemy = false;
 
 	private ArrayList<PImage> pics;  
-	
-	
+
+
 	public Player(PImage img, int x, int y, PApplet marker) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
 		isFlipped = false;
-		
+
 		//pics.add(marker.loadImage("Player.png"));
 		//pics.add(marker.loadImage("PlayerAttack.png"));
 		//pics.add(marker.loadImage("PlayerShield.png"));
 		//pics.add(marker.loadImage("PlayerFlipped.png"));
 		//pics.add(marker.loadImage("PlayerAttackFlipped.png"));
 		//pics.add(marker.loadImage("PlayerShieldFlipped.png"));
-		
-		
-		
-		
-		
-		
+
+
+
+
+
+
 		shield = false;
 		baseHP = 100;
 		currentHP = 100;
@@ -83,11 +84,11 @@ public class Player extends Sprite implements Damageable{
 		attackStat = 10;
 		defStat =  10;
 		EXP = 0; 
-		
+
 		techOne= 10;
 		techTwo = 20;
 	}
-	
+
 	public Player(PImage img, int x, int y,double slow, PApplet marker) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		this.slow = slow;
@@ -114,7 +115,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			isFlipped = true;
 		}	
-			
+
 		if (dir*dx >= 0 && dir*dx <=maxDx/2) {
 			accelAmt = maxDx / ticksFromZeroToHalf;
 		}
@@ -167,8 +168,8 @@ public class Player extends Sprite implements Damageable{
 	public double getDy() {
 		return dy;
 	}
-	
-	
+
+
 	public void move() {
 		double xchange = slow*dt * (oldDx + ((ddx/2) * dt));
 		double ychange = slow*dt * (oldDy + ((ddy/2) * dt));
@@ -234,7 +235,7 @@ public class Player extends Sprite implements Damageable{
 					}
 				}
 				else {
-					
+
 				}
 			}
 
@@ -250,7 +251,7 @@ public class Player extends Sprite implements Damageable{
 		oy[0] = y;
 
 	}
-	
+
 	public boolean doesCollideWith(double rx, double ry, int width, int height) {
 
 		if (x > rx - this.width && x < rx + width ) {
@@ -275,7 +276,7 @@ public class Player extends Sprite implements Damageable{
 	public double gety() {
 		return y;
 	}
-	
+
 	public void applyFriction() {
 		if (isMoving) {
 			if (isTouchingGround) {
@@ -300,6 +301,24 @@ public class Player extends Sprite implements Damageable{
 		super.draw(g);
 		g.pushStyle();
 		g.noFill();
+		g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+2, (float)3*PLAYER_WIDTH/2, (float)9);
+		g.fill(255,0,0);
+		g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+2, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
+		g.fill(0);
+		g.textSize(10);
+		g.text("HP: " + currentHP, (float)(3+x-PLAYER_WIDTH/4), (float)y+PLAYER_HEIGHT+10);
+
+
+		if(!isEnemy) {
+			g.noFill();
+			g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+13, (float)3*PLAYER_WIDTH/2, (float)9);
+			g.fill(0,255,0);
+			g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+13, (float)(3*PLAYER_WIDTH/2*currentEP/baseEP), (float)9);
+			g.fill(0);
+			g.textSize(10);
+			g.text("EP: " + currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y+PLAYER_HEIGHT+21);
+		}
+
 
 		g.popStyle();
 
@@ -310,14 +329,14 @@ public class Player extends Sprite implements Damageable{
 
 
 	public double damaged(double damageTaken) {
-		
+
 		double damage = damageTaken*(10/(10+defStat));
 
 		if(isGameOver() == false && !shield ) 
 		{
 			currentHP -= damage;
 		}
-		
+
 		return damage;
 
 	}
@@ -327,7 +346,7 @@ public class Player extends Sprite implements Damageable{
 		if(baseHP>currentHP)
 		{
 			currentHP+=0.2;
-			
+
 		}
 
 	}
@@ -343,7 +362,7 @@ public class Player extends Sprite implements Damageable{
 		currentEP-=usedEP;
 		return usedEP;
 	}
-	
+
 	/**
 	 * 
 	 * @return the current HP in Percent
@@ -365,8 +384,8 @@ public class Player extends Sprite implements Damageable{
 		{
 			replenishing = false;
 		}
-		
-		
+
+
 		return replenishing;
 	}
 
@@ -380,8 +399,8 @@ public class Player extends Sprite implements Damageable{
 	public void useTechOne(ArrayList<Enemy> e) 
 	{
 		double epCost = 15;
-		
-		
+
+
 		if(currentEP>0)
 		{
 			if(isFlipped)
@@ -395,11 +414,11 @@ public class Player extends Sprite implements Damageable{
 			energyDepletion(epCost);
 			for(int i = 0; i<e.size()-1; i++)
 			{	if(e.get(i).intersects(this))
-				{
-					e.get(i).damaged(techOne+attackStat/2);
-					e.get(i).stunned();
-		
-				}
+			{
+				e.get(i).damaged(techOne+attackStat/2);
+				e.get(i).stunned();
+
+			}
 			}
 		}
 	}
@@ -414,10 +433,10 @@ public class Player extends Sprite implements Damageable{
 			energyDepletion(epCost);
 			for(int i = 0; i<e.size()-1; i++)
 			{	if(e.get(i).intersects(this))
-				{
-					e.get(i).damaged(techTwo+attackStat/2);
-					e.get(i).knockedBack(1000, -600, this);
-				}
+			{
+				e.get(i).damaged(techTwo+attackStat/2);
+				e.get(i).knockedBack(1000, -600, this);
+			}
 			}
 		}
 	}
@@ -434,7 +453,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
-	
+
 	public boolean isGameOver()
 	{
 		if(currentHP <= 0)
@@ -457,15 +476,15 @@ public class Player extends Sprite implements Damageable{
 			endShield();
 			energyReplenish();
 		}
-		
+
 	}
-	
+
 	public void endShield()
 	{
-		
+
 		shield = false;
 	}
-	
+
 	public boolean isShieldActive()
 	{
 		return shield;
@@ -483,19 +502,19 @@ public class Player extends Sprite implements Damageable{
 			EXP = 0;
 		}
 	}
-	
+
 	private void levelUP()
 	{
 		level+=1;
 		skillPoints+=1;
 		baseHP+=5;
-		
+
 		baseEP+=10;
 		attackStat+=5;
 		defStat+=3;
-		
+
 	}
-	
+
 	public void addPointsToOne()
 	{
 		if(skillPoints>0)

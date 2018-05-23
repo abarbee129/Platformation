@@ -33,7 +33,7 @@ public class Enemy extends Player implements Damageable {
 		attackCalculation(statPoints);
 		EPCalculation(statPoints);
 		this.level = level;
-		
+		isEnemy = true;
 		EXP = level*15;
 	}
 	
