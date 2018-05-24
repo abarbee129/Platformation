@@ -129,7 +129,7 @@ public class DrawingSurface extends PApplet {
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
 		
-		initLevel("Levels" + fileSeparator + "Level 3.txt");
+		initLevel("Levels" + fileSeparator + "Level 2.txt");
 
 
 		spawnNewMario();
@@ -265,7 +265,7 @@ public class DrawingSurface extends PApplet {
 		}
 
 		player.act(obstacles);
-		if(player.gety() > DRAWING_HEIGHT) {
+		if(player.gety() > DRAWING_HEIGHT || player.isGameOver()) {
 			spawnNewMario();
 		}
 
