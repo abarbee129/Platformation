@@ -118,6 +118,7 @@ public class DrawingSurface extends PApplet {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50,this);
 	}
 
+	
 	public void runMe() {
 		runSketch();
 	}
@@ -243,6 +244,16 @@ public class DrawingSurface extends PApplet {
 		{
 			player.attack(meleeEnemies);
 		}
+		if(isPressed(KeyEvent.VK_A))
+		{
+			player.addPointsToOne();
+		}
+		if(isPressed(KeyEvent.VK_S))
+		{
+			player.addPointsToTwo();
+		}
+		
+
 
 		if (isPressed(KeyEvent.VK_DOWN)) {
 			player.startShield();

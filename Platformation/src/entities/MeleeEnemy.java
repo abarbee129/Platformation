@@ -12,11 +12,13 @@ public class MeleeEnemy extends Enemy {
 
 	private Rectangle2D sightBox;
 	private boolean moved;
+	private boolean gaveEXP;
 	public MeleeEnemy( PImage img ,int x, int y, int lvl, int statPoint, PApplet marker)
 	{
 		super(img, x, y, lvl, statPoint, marker);
 
 		sightBox = new Rectangle(x-200,y-10,PLAYER_WIDTH+400, PLAYER_HEIGHT+10);
+		gaveEXP = false;
 
 	}
 
@@ -32,7 +34,11 @@ public class MeleeEnemy extends Enemy {
 		{
 			this.idleWalk(plat);
 		}
-		
+		if(getIsDead()&&gaveEXP==false)
+		{
+			p.obtainEXP(disapear());
+			gaveEXP = true;
+		}
 		if(p.intersects(this))
 		{
 			attack(p);

@@ -307,7 +307,8 @@ public class Player extends Sprite implements Damageable{
 		g.fill(0);
 		g.textSize(10);
 		g.text("HP: " + getHPPercent(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
-
+		g.textSize(10);
+		g.text("Lv: " + level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
 
 		if(!isEnemy) {
 			g.noFill();
