@@ -40,7 +40,7 @@ public class Enemy extends Player implements Damageable {
 	
 	private void HPCalculation(double statPoints)
 	{
-		this.setHP(statPoints + (level*5));
+		this.setHP(statPoints + (level*5)+200);
 		
 	}
 	

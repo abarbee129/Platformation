@@ -355,6 +355,11 @@ public class Player extends Sprite implements Damageable{
 
 		double damage = damageTaken*(10/(10+defStat));
 
+		if(isEnemy)
+		{
+			damage-=10;
+		}
+		
 		if(isGameOver() == false && !shield ) 
 		{
 			currentHP -= damage;
@@ -446,6 +451,7 @@ public class Player extends Sprite implements Damageable{
 
 		if(currentEP>0)
 		{
+			shield = true;
 			if(isFlipped)
 			{
 				accelerate(-600,0);
