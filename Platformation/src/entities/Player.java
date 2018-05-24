@@ -355,10 +355,6 @@ public class Player extends Sprite implements Damageable{
 
 		double damage = damageTaken*(10/(10+defStat));
 
-		if(isEnemy)
-		{
-			damage-=10;
-		}
 		
 		if(isGameOver() == false && !shield ) 
 		{
