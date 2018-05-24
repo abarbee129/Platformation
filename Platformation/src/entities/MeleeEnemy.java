@@ -26,22 +26,25 @@ public class MeleeEnemy extends Enemy {
 	{
 		// gotta reset the sight box every time because the enemy moves
 		sightBox = new Rectangle((int)x-200,(int)y-220,(int)PLAYER_WIDTH+400, (int)PLAYER_HEIGHT+250);
-		if(sightBox.contains(p) )
+		if(super.getIsDead() == false)
 		{
-			this.moveToPlayer(p);
-		}
-		else
-		{
-			this.idleWalk(plat);
-		}
-		if(getIsDead()&&gaveEXP==false)
-		{
-			p.obtainEXP(disapear());
-			gaveEXP = true;
-		}
-		if(p.intersects(this))
-		{
-			attack(p);
+			if(sightBox.contains(p) )
+			{
+				this.moveToPlayer(p);
+			}
+			else
+			{
+				this.idleWalk(plat);
+			}
+			if(getIsDead()&&gaveEXP==false)
+			{
+				p.obtainEXP(disapear());
+				gaveEXP = true;
+			}
+			if(p.intersects(this))
+			{
+				attack(p);
+			}
 		}
 	}
 

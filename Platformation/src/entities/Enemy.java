@@ -10,9 +10,8 @@ import processing.core.PImage;
 public class Enemy extends Player implements Damageable {
 
 	
-	private double HP;
-	private double currentEP;
-	private double baseEP;
+
+
 	private boolean replenishing;
 	private boolean isDead;
 
@@ -41,7 +40,7 @@ public class Enemy extends Player implements Damageable {
 	
 	private void HPCalculation(double statPoints)
 	{
-		HP = statPoints + (level*5);
+		this.setHP(statPoints + (level*5));
 		
 	}
 	
@@ -49,8 +48,7 @@ public class Enemy extends Player implements Damageable {
 	
 	private void EPCalculation(double statPoints)
 	{
-		baseEP = statPoints + (level*20);
-		currentEP = baseEP;
+		this.setEP(statPoints + (level*20));
 	}
 	
 	
@@ -115,16 +113,15 @@ public class Enemy extends Player implements Damageable {
 	public double damaged(double damageTaken) {
 		// TODO Auto-generated method stub
 		
-		double damage = damageTaken*(10/(10+defStat));
+		super.damaged(damageTaken);
 		
-		HP-=damage;
-		
-		if(HP<=0) {
+		if(getHP()<=0) {
 			disapear();
+			this.setHP(0);
 			attackStat = 0;
 		}
 				
-		return damage;
+		return damageTaken;
 	}
 
 	
@@ -139,7 +136,7 @@ public class Enemy extends Player implements Damageable {
 	@Override
 	public double getHP() {
 		// TODO Auto-generated method stub
-		return HP;
+		return super.getHP();
 	}
 
 	
@@ -147,8 +144,6 @@ public class Enemy extends Player implements Damageable {
 	@Override
 	public double energyDepletion(double usedEP) {
 		// TODO Auto-generated method stub
-		
-		currentEP-=usedEP;
 		
 		return usedEP;
 	}
@@ -160,12 +155,7 @@ public class Enemy extends Player implements Damageable {
 	public boolean energyReplenish() {
 		// TODO Auto-generated method stub
 		
-	
-			while(currentEP<baseEP)
-			{
-				replenishing = true;
-				currentEP+=0.1;
-			}
+			super.energyReplenish();
 			return replenishing;
 		
 	}
@@ -175,7 +165,7 @@ public class Enemy extends Player implements Damageable {
 	@Override
 	public double getEP() {
 		// TODO Auto-generated method stub
-		return currentEP;
+		return super.getEP();
 	}
 	
 	

@@ -335,7 +335,7 @@ public class Player extends Sprite implements Damageable{
 			g.text("EP: " + currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
 		}
 	
-		if(isEnemy && getHP()<0)
+		if(isEnemy && getHP()<=0)
 		{
 			g.fill(30);
 			g.stroke(23,234,23);
@@ -404,6 +404,18 @@ public class Player extends Sprite implements Damageable{
 		return hp;
 	}
 
+	public void setHP(double hp)
+	{
+		baseHP = hp;
+		currentHP = baseHP;
+	}	
+	
+	public void setEP(double ep)
+	{
+		baseEP = ep;
+		currentEP = baseEP;
+	}	
+	
 	public boolean energyReplenish() {
 		// TODO Auto-generated method stub
 		if(currentEP<baseEP)
