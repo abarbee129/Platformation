@@ -36,14 +36,19 @@ public class MeleeEnemy extends Enemy {
 			{
 				this.idleWalk(plat);
 			}
-			if(getIsDead()&&gaveEXP==false)
-			{
-				p.obtainEXP(disapear());
-				gaveEXP = true;
-			}
+			
+	
 			if(p.intersects(this))
 			{
 				attack(p);
+			}
+		}
+		else
+		{
+			if(gaveEXP == false)
+			{
+				p.obtainEXP(disapear());
+				gaveEXP = true;
 			}
 		}
 	}
