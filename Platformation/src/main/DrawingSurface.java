@@ -249,7 +249,12 @@ public class DrawingSurface extends PApplet {
 		}
 		if(isPressed(KeyEvent.VK_E))
 		{
+			
 			player.attack(meleeEnemies);
+		}
+		else
+		{
+			player.stopAttack();
 		}
 		if(isPressed(KeyEvent.VK_A))
 		{

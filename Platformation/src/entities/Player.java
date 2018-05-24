@@ -30,7 +30,8 @@ public class Player extends Sprite implements Damageable{
 	private double attackStat;
 	private double defStat;
 	private double EXP;
-
+	private boolean isAttacking;
+	
 	private double[] ox,oy;
 
 
@@ -310,6 +311,20 @@ public class Player extends Sprite implements Damageable{
 		g.textSize(10);
 		g.text("Lv: " + level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
 
+		if(isAttacking)
+		{
+			g.noFill();
+			g.stroke(234,23,23);
+			g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+		}
+		
+		if(shield)
+		{
+			g.noFill();
+			g.stroke(23,234,23);
+			g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+		}
+		
 		if(!isEnemy) {
 			g.noFill();
 			g.rect((float)x-PLAYER_WIDTH/4, (float)y-9, (float)3*PLAYER_WIDTH/2, (float)9);
@@ -318,6 +333,13 @@ public class Player extends Sprite implements Damageable{
 			g.fill(0);
 			g.textSize(10);
 			g.text("EP: " + currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
+		}
+	
+		if(isEnemy && getHP()<0)
+		{
+			g.fill(30);
+			g.stroke(23,234,23);
+			g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
 		}
 
 
@@ -551,5 +573,12 @@ public class Player extends Sprite implements Damageable{
 				meleeEnemies.get(i).damaged(techTwo+attackStat/2);
 			}
 		}
+		
+		isAttacking = true;
+	}
+	
+	public void stopAttack()
+	{
+		isAttacking = false;
 	}
 }
