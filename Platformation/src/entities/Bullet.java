@@ -17,7 +17,7 @@ public class Bullet {
 		this.direction = direction;
 		this.damage = damage;
 		dwidth = 8;
-		dheight = 3;
+		dheight = 4;
 	}
 	
 	
@@ -46,6 +46,7 @@ public class Bullet {
 		g.rect((float)x, (float)y, (float)dwidth, (float)dheight);
 		g.popStyle();
 	}
+	
 	public void move() {
 		x += direction;
 		c++;

@@ -76,7 +76,7 @@ public class Player extends Sprite implements Damageable{
 
 
 
-
+		level = 1;
 		shield = false;
 		baseHP = 100;
 		currentHP = 100;
@@ -94,7 +94,8 @@ public class Player extends Sprite implements Damageable{
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		this.slow = slow;
 		ox = new double[3];
-		oy = new double[3]; 
+		oy = new double[3];
+		level = 1;
 		shield = false;
 		baseHP = 100;
 		currentHP = 100;
@@ -309,7 +310,7 @@ public class Player extends Sprite implements Damageable{
 		g.textSize(10);
 		g.text("HP: " + getHPPercent(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
 		g.textSize(10);
-		g.text("Lv: " + level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
+		g.text("Lv: " + (int)level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
 
 		if(isAttacking)
 		{
@@ -333,6 +334,8 @@ public class Player extends Sprite implements Damageable{
 			g.fill(0);
 			g.textSize(10);
 			g.text("EP: " + currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
+			
+			
 		}
 	
 		if(isEnemy && getHP()<=0)

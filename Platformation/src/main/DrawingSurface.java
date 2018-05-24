@@ -193,6 +193,7 @@ public class DrawingSurface extends PApplet {
 				if((xdif < 30 && xdif > -30)&&(ydif < 30 && ydif > -30)) {
 					me.damaged(b.getDamage());
 					b.setIsDead(true);
+				
 				}
 			}
  
@@ -210,6 +211,10 @@ public class DrawingSurface extends PApplet {
 			me.actions(player, obstacles.get(1));
 			me.act(obstacles);
 			me.draw(this);
+			if(me.gety() > DRAWING_HEIGHT)
+			{
+				me.damaged(1000);
+			}
 		}
 
 
