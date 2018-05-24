@@ -301,12 +301,12 @@ public class Player extends Sprite implements Damageable{
 		super.draw(g);
 		g.pushStyle();
 		g.noFill();
-		g.rect((float)x-PLAYER_WIDTH/4, (float)y-18, (float)3*PLAYER_WIDTH/2, (float)9);
+		g.rect((float)x-PLAYER_WIDTH/4, (float)y-20, (float)3*PLAYER_WIDTH/2, (float)9);
 		g.fill(255,0,0);
-		g.rect((float)x-PLAYER_WIDTH/4, (float)y-18, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
+		g.rect((float)x-PLAYER_WIDTH/4, (float)y-20, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
 		g.fill(0);
 		g.textSize(10);
-		g.text("HP: " + getHPPercent(), (float)(3+x-PLAYER_WIDTH/4), (float)y-10);
+		g.text("HP: " + getHPPercent(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
 
 
 		if(!isEnemy) {
