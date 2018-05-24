@@ -351,8 +351,16 @@ public class Player extends Sprite implements Damageable{
 		}
 
 	}
-
-
+	public void resetHP()
+	{
+		currentHP = baseHP;
+	}
+	
+	public void resetEP()
+	{
+		currentEP = baseEP;
+	}
+	
 	public double getHP() {
 		return currentHP;
 	}

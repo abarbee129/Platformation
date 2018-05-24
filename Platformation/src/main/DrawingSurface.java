@@ -114,9 +114,16 @@ public class DrawingSurface extends PApplet {
 		} 
 
 	}
-	public void spawnNewMario() {
+	public void spawnNewPlayer() {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50,this);
 	}
+
+	public void respawnPlayer() {
+		player.resetHP();
+		player.resetEP();
+		player.moveToLocation( DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+	}
+
 
 	
 	public void runMe() {
@@ -133,7 +140,7 @@ public class DrawingSurface extends PApplet {
 		initLevel("Levels" + fileSeparator + "Level 2.txt");
 
 
-		spawnNewMario();
+		spawnNewPlayer();
 	}
 
 	// The statements in draw() are executed until the 
@@ -277,7 +284,7 @@ public class DrawingSurface extends PApplet {
 
 		player.act(obstacles);
 		if(player.gety() > DRAWING_HEIGHT || player.isGameOver()) {
-			spawnNewMario();
+			respawnPlayer();
 		}
 
 

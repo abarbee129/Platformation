@@ -104,6 +104,7 @@ public class Enemy extends Player implements Damageable {
 	
 			
 	}
+
 	
 	public void attack(Player p)
 	{
