@@ -137,7 +137,7 @@ public class DrawingSurface extends PApplet {
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
 		
-		initLevel("Levels" + fileSeparator + "Level 2.txt");
+		initLevel("Levels" + fileSeparator + "Level 1.txt");
 
 
 		spawnNewPlayer();

@@ -97,7 +97,7 @@ public class Enemy extends Player implements Damageable {
 		}
 		else
 		{
-			stunTicks = 5;
+			stunTicks = 500;
 		}
 	
 			
