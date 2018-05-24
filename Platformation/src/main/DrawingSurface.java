@@ -144,8 +144,13 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
+<<<<<<< HEAD
 		lvl = OptionPanel.level;
 		initLevel("Levels" + fileSeparator + "Level " + lvl + ".txt");
+=======
+		
+		initLevel("Levels" + fileSeparator + "Level 3.txt");
+>>>>>>> branch 'master' of https://github.com/abarbee129/Platformation.git
 
 
 		spawnNewPlayer();
