@@ -148,8 +148,6 @@ public class DrawingSurface extends PApplet {
 		lvl = OptionPanel.level;
 		initLevel("Levels" + fileSeparator + "Level " + lvl + ".txt");
 
-		
-		initLevel("Levels" + fileSeparator + "Level 3.txt");
 
 
 		spawnNewPlayer();
