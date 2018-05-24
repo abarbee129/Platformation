@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -32,12 +33,14 @@ public class DrawingSurface extends PApplet {
 	private Rectangle screenRect;
 	private ArrayList<Booster> boosters;
 	private int tSinceLast;
+	private int lvl;
 	private Player player;
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
 	private ArrayList<Integer> keys;
 	private ArrayList<MeleeEnemy> meleeEnemies; 
 	private ArrayList<Bullet> bullets; 
+	private Shape goal;
 
 	private ArrayList<PImage> assets;
 
@@ -47,8 +50,9 @@ public class DrawingSurface extends PApplet {
 		super();
 		assets = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
-		boosters = new ArrayList<Booster>();
+		
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
+		boosters = new ArrayList<Booster>();
 		obstacles = new ArrayList<Shape>();
 		platforms = new ArrayList<Platform>();
 		meleeEnemies = new ArrayList<MeleeEnemy>(); 
@@ -96,6 +100,9 @@ public class DrawingSurface extends PApplet {
 					else if(c == 'm') {
 						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,30,10, this));
 					}
+					else if(c == 'g') {
+						goal = new Rectangle((int)xoff,(int)yoff,(int)pHeight,(int)pHeight);
+					}
 					else {
 
 					}
@@ -122,6 +129,7 @@ public class DrawingSurface extends PApplet {
 		player.resetHP();
 		player.resetEP();
 		player.moveToLocation( DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50);
+		player.accelerate(-player.getDx(), -player.getDy());
 	}
 
 
@@ -136,8 +144,8 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-		
-		initLevel("Levels" + fileSeparator + "Level 1.txt");
+		lvl = OptionPanel.level;
+		initLevel("Levels" + fileSeparator + "Level " + lvl + ".txt");
 
 
 		spawnNewPlayer();
@@ -150,6 +158,9 @@ public class DrawingSurface extends PApplet {
 	public void draw() {
 
 		// drawing stuff
+		if (lvl != OptionPanel.level) {
+			setupNewLevel();
+		}
 		background(0,255,255);   
 
 		pushMatrix();
@@ -161,6 +172,24 @@ public class DrawingSurface extends PApplet {
 		this.translate((float)(xoff), 0);
 		screenRect = new Rectangle((int)(player.getx()-DRAWING_WIDTH/2),0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		fill(100);
+		if(player.intersects((Rectangle2D) goal)) {
+			if(lvl == 1) {
+				OptionPanel.level = 2;
+			}
+
+			else if(lvl == 2) {
+				OptionPanel.level = 3;
+			}
+			
+			else if(lvl == 3) {
+				OptionPanel.level = 1;
+			}
+		}
+		Rectangle gl = (Rectangle) goal;
+		pushStyle();
+		fill(0,255,0);
+		this.rect(gl.x,gl.y,gl.width,gl.height);
+		popStyle();
 		for (Shape s : obstacles) {
 			if (s instanceof Rectangle && s.intersects(screenRect)) {
 				Rectangle r = (Rectangle)s;
@@ -299,7 +328,16 @@ public class DrawingSurface extends PApplet {
 
 	}
 
-
+	public void setupNewLevel() {
+		lvl = OptionPanel.level;
+		boosters = new ArrayList<Booster>();
+		obstacles = new ArrayList<Shape>();
+		platforms = new ArrayList<Platform>();
+		meleeEnemies = new ArrayList<MeleeEnemy>(); 
+		bullets = new ArrayList<Bullet>();
+		initLevel("Levels" + fileSeparator + "Level " + lvl + ".txt");
+		respawnPlayer();
+	}
 	public void keyPressed() {
 		keys.add(keyCode);
 	}
