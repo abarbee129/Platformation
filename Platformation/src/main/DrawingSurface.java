@@ -94,7 +94,7 @@ public class DrawingSurface extends PApplet {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
 					else if(c == 'm') {
-						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,50,10, this));
+						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,10,10, this));
 					}
 					else {
 
@@ -202,6 +202,10 @@ public class DrawingSurface extends PApplet {
 			me.actions(player, obstacles.get(1));
 			me.act(obstacles);
 			me.draw(this);
+		//	if(me.getIsDead())
+			//{
+				//meleeEnemies.remove(me);
+		//	}
 
 		}
 
@@ -229,13 +233,17 @@ public class DrawingSurface extends PApplet {
 			player.jump();
 		}
 		if(isPressed(KeyEvent.VK_Q)) {
-			//player.useTechOne(meleeEnemies.get(0));
+			player.useTechOne(meleeEnemies);
 		}
 		if(isPressed(KeyEvent.VK_W)) {
+			player.useTechTwo(meleeEnemies);
 
 		}
+		if(isPressed(KeyEvent.VK_E))
+		{
+			player.attack(meleeEnemies);
+		}
 
-		//player.useTechTwo(meleeEnemies.get(0));
 		if (isPressed(KeyEvent.VK_DOWN)) {
 			player.startShield();
 		}

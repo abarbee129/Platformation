@@ -120,10 +120,9 @@ public class Enemy extends Player implements Damageable {
 		
 		if(HP<=0) {
 			disapear();
+			attackStat = 0;
 		}
-		
-		System.out.println("hit");
-		
+				
 		return damage;
 	}
 

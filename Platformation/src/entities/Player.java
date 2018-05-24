@@ -301,22 +301,22 @@ public class Player extends Sprite implements Damageable{
 		super.draw(g);
 		g.pushStyle();
 		g.noFill();
-		g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+2, (float)3*PLAYER_WIDTH/2, (float)9);
+		g.rect((float)x-PLAYER_WIDTH/4, (float)y-18, (float)3*PLAYER_WIDTH/2, (float)9);
 		g.fill(255,0,0);
-		g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+2, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
+		g.rect((float)x-PLAYER_WIDTH/4, (float)y-18, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
 		g.fill(0);
 		g.textSize(10);
-		g.text("HP: " + currentHP, (float)(3+x-PLAYER_WIDTH/4), (float)y+PLAYER_HEIGHT+10);
+		g.text("HP: " + getHPPercent(), (float)(3+x-PLAYER_WIDTH/4), (float)y-10);
 
 
 		if(!isEnemy) {
 			g.noFill();
-			g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+13, (float)3*PLAYER_WIDTH/2, (float)9);
+			g.rect((float)x-PLAYER_WIDTH/4, (float)y-9, (float)3*PLAYER_WIDTH/2, (float)9);
 			g.fill(0,255,0);
-			g.rect((float)x-PLAYER_WIDTH/4, (float)y+PLAYER_HEIGHT+13, (float)(3*PLAYER_WIDTH/2*currentEP/baseEP), (float)9);
+			g.rect((float)x-PLAYER_WIDTH/4, (float)y-9, (float)(3*PLAYER_WIDTH/2*currentEP/baseEP), (float)9);
 			g.fill(0);
 			g.textSize(10);
-			g.text("EP: " + currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y+PLAYER_HEIGHT+21);
+			g.text("EP: " + currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
 		}
 
 
@@ -396,7 +396,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
-	public void useTechOne(ArrayList<Enemy> e) 
+	public void useTechOne(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
 		double epCost = 15;
 
@@ -412,31 +412,32 @@ public class Player extends Sprite implements Damageable{
 				accelerate(600,0);
 			}
 			energyDepletion(epCost);
-			for(int i = 0; i<e.size()-1; i++)
-			{	if(e.get(i).intersects(this))
-			{
-				e.get(i).damaged(techOne+attackStat/2);
-				e.get(i).stunned();
-
-			}
+			for(int i = 0; i<meleeEnemies.size()-1; i++)
+			{	
+				if(meleeEnemies.get(i).intersects(this))
+				{
+					meleeEnemies.get(i).damaged(techOne+attackStat/2);
+					meleeEnemies.get(i).stunned();
+					
+				}
 			}
 		}
 	}
 
 
-	public void useTechTwo(ArrayList<Enemy> e) 
+	public void useTechTwo(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
 		double epCost = 30;
 		if(currentEP>0)
 		{
 			jump();
 			energyDepletion(epCost);
-			for(int i = 0; i<e.size()-1; i++)
-			{	if(e.get(i).intersects(this))
-			{
-				e.get(i).damaged(techTwo+attackStat/2);
-				e.get(i).knockedBack(1000, -600, this);
-			}
+			for(int i = 0; i<meleeEnemies.size()-1; i++)
+			{	if(meleeEnemies.get(i).intersects(this))
+				{
+					meleeEnemies.get(i).damaged(techTwo+attackStat/2);
+					meleeEnemies.get(i).knockedBack(1000, -600, this);
+				}
 			}
 		}
 	}
@@ -529,6 +530,17 @@ public class Player extends Sprite implements Damageable{
 		{
 			techTwo+=5;
 			skillPoints-=1;
+		}
+	}
+
+	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
+		// TODO Auto-generated method stub
+		for(int i = 0; i<meleeEnemies.size()-1; i++)
+		{	
+			if(meleeEnemies.get(i).intersects(this))
+			{
+				meleeEnemies.get(i).damaged(techTwo+attackStat/2);
+			}
 		}
 	}
 }
