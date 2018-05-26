@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import worldGeometry.Platform;
+
 
 // add implements damageable once it exists
 public class Player extends Sprite implements Damageable{
@@ -54,6 +54,12 @@ public class Player extends Sprite implements Damageable{
 	private int maxDy = 240;
 	private double fricMod = 0.5;
 	private double slow = 1;
+	
+	private int t1CD = 10;
+	private int t2CD = 60;
+	private int[] cooldowns;
+	
+	
 	protected boolean isEnemy = false;
 
 	private ArrayList<PImage> pics;  
@@ -442,6 +448,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
+
 	public void useTechOne(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
 		double epCost = 15;
@@ -459,7 +466,7 @@ public class Player extends Sprite implements Damageable{
 				accelerate(600,0);
 			}
 			energyDepletion(epCost);
-			for(int i = 0; i<meleeEnemies.size()-1; i++)
+			for(int i = 0; i<meleeEnemies.size(); i++)
 			{	
 				if(meleeEnemies.get(i).intersects(this))
 				{
@@ -471,7 +478,7 @@ public class Player extends Sprite implements Damageable{
 		}
 	}
 
-
+	// this tech is a jump that knocks back enemies in the area.
 	public void useTechTwo(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
 		double epCost = 30;
@@ -479,7 +486,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			jump();
 			energyDepletion(epCost);
-			for(int i = 0; i<meleeEnemies.size()-1; i++)
+			for(int i = 0; i<meleeEnemies.size(); i++)
 			{	if(meleeEnemies.get(i).intersects(this))
 				{
 					meleeEnemies.get(i).damaged(techTwo+attackStat/2);
@@ -492,7 +499,7 @@ public class Player extends Sprite implements Damageable{
 
 	public void ranged(Enemy e) 
 	{
-		double epCost = 5;
+		//double epCost = 5;
 		if(e.intersects(this))
 		{
 			e.damaged(10+attackStat/2);
@@ -581,8 +588,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
-		// TODO Auto-generated method stub
-		for(int i = 0; i<meleeEnemies.size()-1; i++)
+		for(int i = 0; i<meleeEnemies.size(); i++)
 		{	
 			if(meleeEnemies.get(i).intersects(this))
 			{
