@@ -421,7 +421,6 @@ public class Player extends Sprite implements Damageable{
 	}	
 	
 	public boolean energyReplenish() {
-		// TODO Auto-generated method stub
 		if(currentEP<baseEP)
 		{
 			replenishing = true;
