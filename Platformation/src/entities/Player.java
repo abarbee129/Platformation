@@ -151,15 +151,26 @@ public class Player extends Sprite implements Damageable{
 
 		}
 		if (accelAmt + dx > maxDx ) {
-			accelAmt = maxDx - dx;
-			if(accelAmt < 0) {
+			if(dx < maxDx) {
+				accelAmt = maxDx - dx;
+			}
+			
+			else if(dir*dx > 0) {
 				accelAmt = 0;
+			}
+			else if(dir*dx < 0) {
+				accelAmt = maxDx - dx;
 			}
 		}
 		else if(accelAmt + dx < -maxDx) {
-			accelAmt = -maxDx - dx;
-			if(accelAmt > 0) {
+			if(dx > -maxDx) {
+				accelAmt = -maxDx - dx;
+			}
+			else if(dir*dx > 0) {
 				accelAmt = 0;
+			}
+			else if(dir*dx < 0) {
+				accelAmt = -maxDx - dx;
 			}
 		}
 		
