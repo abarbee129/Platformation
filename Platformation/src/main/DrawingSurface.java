@@ -247,7 +247,8 @@ public class DrawingSurface extends PApplet {
 				me.damaged(1000);
 			}
 		}
-
+		
+	
 
 		popMatrix();
 
