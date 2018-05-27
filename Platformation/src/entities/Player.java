@@ -48,11 +48,12 @@ public class Player extends Sprite implements Damageable{
 	private boolean isTouchingGround;
 	private boolean isMoving;
 	private boolean isDashing;
+	private boolean hasJumped;
 	private double ticksFromZeroToHalf = 4.0;
 	private double ticksFromHalfToFull = 8.0;
 	private double ticksToStop = 1.0;	
 	private int maxDx = 400;
-	private int maxDy = 240;
+	private int maxDy = 480;
 	private double fricMod = 0.5;
 	private double slow = 1;
 	
@@ -179,14 +180,33 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void jump() {
-		if(isTouchingGround){
-			if(dy > -maxDy && dy < maxDy) {
-				accelerate(0, -640);
+		if(isTouchingGround || !hasJumped){
+			if(dy > -maxDy) {
+				if(isTouchingGround) {
+					accelerate(0, -500);
+					isTouchingGround = false;
+				}
+				else if(!hasJumped){
+						if(dy>0) {
+							accelerate(0,-dy);
+						}
+						accelerate(0, -400);
+						hasJumped = true;
+	
+				}
 			}
-			isTouchingGround = false;
+			
+			
 		}
 	}
 
+	public boolean getCanJump() {
+		return isTouchingGround || !hasJumped;
+	}
+	public boolean getOnGround() {
+		return isTouchingGround;
+	}
+	
 	public void accelerate (double dx, double dy) {
 		// This is a simple accelerate method that adds dx and dy to the current velocity.
 		this.dx += dx;
@@ -285,6 +305,11 @@ public class Player extends Sprite implements Damageable{
 			}
 
 		}
+		if(isTouchingGround) {
+			hasJumped = false;
+		}
+		
+		
 		applyFriction();
 		move();
 		isMoving = false;
@@ -323,12 +348,22 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void applyFriction() {
+		
+		if(dy > maxDy) {
+			accelerate(0,-dy/20*fricMod); 	
+		}
+		else if(dy < -maxDy) {
+			accelerate(0,-dy/20*fricMod);	
+		}
+		
+		
 		if (isMoving) {
 			if (isTouchingGround) {
 				accelerate(-dx/12*fricMod,0); 
 			}
-			else {
-				accelerate(-dx/12*fricMod,0); 	
+			else { 
+				accelerate(-dx/12*fricMod,0); 
+				
 			}
 		}
 		else {
@@ -336,7 +371,8 @@ public class Player extends Sprite implements Damageable{
 				accelerate(-dx/2*fricMod,0); 
 			}
 			else {
-				accelerate(-dx/12*fricMod,0); 	
+				accelerate(-dx/12*fricMod,0); 
+				
 			}
 		}
 	}

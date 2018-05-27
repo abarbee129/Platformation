@@ -41,6 +41,7 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<MeleeEnemy> meleeEnemies; 
 	private ArrayList<Bullet> bullets; 
 	private Shape goal;
+	private boolean jumpRelease;
 
 	private ArrayList<PImage> assets;
 
@@ -274,7 +275,15 @@ public class DrawingSurface extends PApplet {
 			player.walk(1);
 		}
 		if (isPressed(KeyEvent.VK_UP)) {
-			player.jump();
+			if(jumpRelease || player.getOnGround()) {
+				if(player.getCanJump()) {
+					player.jump();
+					jumpRelease = false;
+				}
+			}
+		}
+		else {
+			jumpRelease = true;
 		}
 		if(isPressed(KeyEvent.VK_Q)) {
 			player.useTechOne(meleeEnemies);
