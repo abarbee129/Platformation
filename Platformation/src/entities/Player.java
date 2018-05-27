@@ -399,7 +399,7 @@ public class Player extends Sprite implements Damageable{
 
 	public void regen() {
 		if(baseHP>currentHP)
-		{
+		{ 
 			currentHP+=0.05;
 
 		}
