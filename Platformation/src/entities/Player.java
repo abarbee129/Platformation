@@ -55,8 +55,8 @@ public class Player extends Sprite implements Damageable{
 	private double fricMod = 0.5;
 	private double slow = 1;
 	
-	private int t1CD = 10;
-	private int t2CD = 60;
+	private int t1CD = 180;
+	private int t2CD = 90;
 	private int[] cooldowns;
 	
 	
@@ -69,6 +69,7 @@ public class Player extends Sprite implements Damageable{
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
+		cooldowns = new int[4];
 		isFlipped = false;
 
 		//pics.add(marker.loadImage("Player.png"));
@@ -101,6 +102,7 @@ public class Player extends Sprite implements Damageable{
 		this.slow = slow;
 		ox = new double[3];
 		oy = new double[3];
+		cooldowns = new int[4];
 		level = 1;
 		shield = false;
 		baseHP = 100;
@@ -110,6 +112,7 @@ public class Player extends Sprite implements Damageable{
 		attackStat = 10;
 		defStat =  10;
 		EXP = 0; 
+		
 	}
 
 	public void walk(int dir) {
@@ -147,8 +150,19 @@ public class Player extends Sprite implements Damageable{
 		else {
 
 		}
-		if (accelAmt + dx > maxDx) {accelAmt = maxDx - dx;}
-		else if(accelAmt + dx < -maxDx) {accelAmt = -maxDx - dx;}
+		if (accelAmt + dx > maxDx ) {
+			accelAmt = maxDx - dx;
+			if(accelAmt < 0) {
+				accelAmt = 0;
+			}
+		}
+		else if(accelAmt + dx < -maxDx) {
+			accelAmt = -maxDx - dx;
+			if(accelAmt > 0) {
+				accelAmt = 0;
+			}
+		}
+		
 		accelerate(accelAmt, 0); 
 	}
 
@@ -188,8 +202,15 @@ public class Player extends Sprite implements Damageable{
 		ddy = 0;
 	}
 	public void act(ArrayList<Shape> shapes) {
-
-
+		
+		for(int c = 0; c < cooldowns.length; c++) {
+			if(cooldowns[c] > 0) {
+				cooldowns[c]--;
+			}
+		}
+		energyReplenish();
+		
+		
 		if(!isTouchingGround) {
 			accelerate(0, 1440*dt);
 		}
@@ -427,18 +448,21 @@ public class Player extends Sprite implements Damageable{
 	}	
 	
 	public boolean energyReplenish() {
-		if(currentEP<baseEP)
+		if(currentEP<baseEP && !shield)
 		{
-			replenishing = true;
 			currentEP+=0.5;
 		}
-		else
-		{
+		if(currentEP <= 1) {
+			replenishing  = true;
+		}
+		else if(replenishing && baseEP - currentEP <= 1){
 			replenishing = false;
 		}
-
-
+		else {
+			
+		}
 		return replenishing;
+
 	}
 
 
@@ -451,26 +475,27 @@ public class Player extends Sprite implements Damageable{
 
 	public void useTechOne(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
-		double epCost = 15;
+		double epCost = 40;
 
 
-		if(currentEP>0)
-		{
+		if(currentEP>epCost && cooldowns[0] == 0 && !replenishing)
+		{	
+			cooldowns[0] = t1CD;
 			shield = true;
 			if(isFlipped)
 			{
-				accelerate(-600,0);
+				accelerate(-1400,0);
 			}
 			else
 			{
-				accelerate(600,0);
+				accelerate(1400,0);
 			}
 			energyDepletion(epCost);
 			for(int i = 0; i<meleeEnemies.size(); i++)
 			{	
 				if(meleeEnemies.get(i).intersects(this))
 				{
-					meleeEnemies.get(i).damaged(techOne+attackStat/2);
+					meleeEnemies.get(i).damaged((techOne+attackStat/6));
 					meleeEnemies.get(i).stunned();
 					
 				}
@@ -481,9 +506,9 @@ public class Player extends Sprite implements Damageable{
 	// this tech is a jump that knocks back enemies in the area.
 	public void useTechTwo(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
-		double epCost = 30;
-		if(currentEP>0)
-		{
+		double epCost = 60;
+		if(currentEP>epCost && cooldowns[1] == 0 && !replenishing) {
+			cooldowns[1] = t2CD;
 			jump();
 			energyDepletion(epCost);
 			for(int i = 0; i<meleeEnemies.size(); i++)
@@ -520,16 +545,15 @@ public class Player extends Sprite implements Damageable{
 
 	public void startShield()
 	{
-		if(currentEP>0 && replenishing!=true)
+		if(currentEP>0 && !replenishing)
 		{
-			energyDepletion(0.5);
+			energyDepletion(1);
 			regen();
 			shield = true;
 		}
 		else
 		{
 			endShield();
-			energyReplenish();
 		}
 
 	}
