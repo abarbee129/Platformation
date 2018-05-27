@@ -603,4 +603,8 @@ public class Player extends Sprite implements Damageable{
 	{
 		isAttacking = false;
 	}
+	
+	public int getSkillPoints() {
+		return skillPoints;
+	}
 }
