@@ -47,11 +47,13 @@ public class Player extends Sprite implements Damageable{
 
 	private boolean isTouchingGround;
 	private boolean isMoving;
+	private boolean isDashing;
+	private boolean hasJumped;
 	private double ticksFromZeroToHalf = 4.0;
 	private double ticksFromHalfToFull = 8.0;
 	private double ticksToStop = 1.0;	
 	private int maxDx = 400;
-	private int maxDy = 240;
+	private int maxDy = 480;
 	private double fricMod = 0.5;
 	private double slow = 1;
 	
@@ -151,15 +153,26 @@ public class Player extends Sprite implements Damageable{
 
 		}
 		if (accelAmt + dx > maxDx ) {
-			accelAmt = maxDx - dx;
-			if(accelAmt < 0) {
+			if(dx < maxDx) {
+				accelAmt = maxDx - dx;
+			}
+			
+			else if(dir*dx > 0) {
 				accelAmt = 0;
+			}
+			else if(dir*dx < 0) {
+				accelAmt = (maxDx - dx)/2;
 			}
 		}
 		else if(accelAmt + dx < -maxDx) {
-			accelAmt = -maxDx - dx;
-			if(accelAmt > 0) {
+			if(dx > -maxDx) {
+				accelAmt = -maxDx - dx;
+			}
+			else if(dir*dx > 0) {
 				accelAmt = 0;
+			}
+			else if(dir*dx < 0) {
+				accelAmt = (-maxDx - dx)/2;
 			}
 		}
 		
@@ -167,14 +180,33 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void jump() {
-		if(isTouchingGround){
-			if(dy > -maxDy && dy < maxDy) {
-				accelerate(0, -640);
+		if(isTouchingGround || !hasJumped){
+			if(dy > -maxDy) {
+				if(isTouchingGround) {
+					accelerate(0, -500);
+					isTouchingGround = false;
+				}
+				else if(!hasJumped){
+						if(dy>0) {
+							accelerate(0,-dy);
+						}
+						accelerate(0, -400);
+						hasJumped = true;
+	
+				}
 			}
-			isTouchingGround = false;
+			
+			
 		}
 	}
 
+	public boolean getCanJump() {
+		return isTouchingGround || !hasJumped;
+	}
+	public boolean getOnGround() {
+		return isTouchingGround;
+	}
+	
 	public void accelerate (double dx, double dy) {
 		// This is a simple accelerate method that adds dx and dy to the current velocity.
 		this.dx += dx;
@@ -208,11 +240,14 @@ public class Player extends Sprite implements Damageable{
 				cooldowns[c]--;
 			}
 		}
+		isDashing = cooldowns[0] >= t1CD-10;
+	
+		
 		energyReplenish();
 		regen();
 		
 		
-		if(!isTouchingGround) {
+		if(!isTouchingGround&&!isDashing) {
 			accelerate(0, 1440*dt);
 		}
 		isTouchingGround = false;
@@ -270,6 +305,11 @@ public class Player extends Sprite implements Damageable{
 			}
 
 		}
+		if(isTouchingGround) {
+			hasJumped = false;
+		}
+		
+		
 		applyFriction();
 		move();
 		isMoving = false;
@@ -308,20 +348,31 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void applyFriction() {
+		
+		if(dy > maxDy) {
+			accelerate(0,-dy/20*fricMod); 	
+		}
+		else if(dy < -maxDy) {
+			accelerate(0,-dy/20*fricMod);	
+		}
+		
+		
 		if (isMoving) {
 			if (isTouchingGround) {
 				accelerate(-dx/12*fricMod,0); 
 			}
-			else {
-				accelerate(-dx/12*fricMod,0); 	
+			else { 
+				accelerate(-dx/12*fricMod,0); 
+				
 			}
 		}
 		else {
-			if (isTouchingGround) {
+			if (isTouchingGround&&!isDashing) {
 				accelerate(-dx/2*fricMod,0); 
 			}
 			else {
-				accelerate(-dx/12*fricMod,0); 	
+				accelerate(-dx/12*fricMod,0); 
+				
 			}
 		}
 	}
@@ -483,6 +534,7 @@ public class Player extends Sprite implements Damageable{
 		{	
 			cooldowns[0] = t1CD;
 			shield = true;
+			accelerate(0,-dy);
 			if(isFlipped)
 			{
 				accelerate(-1400,0);
@@ -626,5 +678,9 @@ public class Player extends Sprite implements Damageable{
 	public void stopAttack()
 	{
 		isAttacking = false;
+	}
+	
+	public int getSkillPoints() {
+		return skillPoints;
 	}
 }
