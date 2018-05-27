@@ -209,6 +209,7 @@ public class Player extends Sprite implements Damageable{
 			}
 		}
 		energyReplenish();
+		regen();
 		
 		
 		if(!isTouchingGround) {
@@ -399,7 +400,7 @@ public class Player extends Sprite implements Damageable{
 	public void regen() {
 		if(baseHP>currentHP)
 		{
-			currentHP+=0.2;
+			currentHP+=0.05;
 
 		}
 
@@ -475,7 +476,7 @@ public class Player extends Sprite implements Damageable{
 
 	public void useTechOne(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
-		double epCost = 40;
+		double epCost = 100;
 
 
 		if(currentEP>epCost && cooldowns[0] == 0 && !replenishing)
@@ -495,7 +496,7 @@ public class Player extends Sprite implements Damageable{
 			{	
 				if(meleeEnemies.get(i).intersects(this))
 				{
-					meleeEnemies.get(i).damaged((techOne+attackStat/6));
+					meleeEnemies.get(i).damaged((techOne+attackStat/2));
 					meleeEnemies.get(i).stunned();
 					
 				}
@@ -514,7 +515,7 @@ public class Player extends Sprite implements Damageable{
 			for(int i = 0; i<meleeEnemies.size(); i++)
 			{	if(meleeEnemies.get(i).intersects(this))
 				{
-					meleeEnemies.get(i).damaged(techTwo+attackStat/2);
+					meleeEnemies.get(i).damaged(2*techTwo+attackStat/2);
 					meleeEnemies.get(i).knockedBack(1000, -600, this);
 				}
 			}
@@ -547,8 +548,7 @@ public class Player extends Sprite implements Damageable{
 	{
 		if(currentEP>0 && !replenishing)
 		{
-			energyDepletion(1);
-			regen();
+			energyDepletion(2);
 			shield = true;
 		}
 		else
