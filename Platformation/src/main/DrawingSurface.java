@@ -42,7 +42,7 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Bullet> bullets; 
 	private Shape goal;
 	private boolean jumpRelease;
-
+	private boolean skillRelease;
 	private ArrayList<PImage> assets;
 
 	public DrawingSurface() {
@@ -304,14 +304,24 @@ public class DrawingSurface extends PApplet {
 		{
 			player.stopAttack();
 		}
-		if(isPressed(KeyEvent.VK_A))
+		if(isPressed(KeyEvent.VK_A)||isPressed(KeyEvent.VK_S))
 		{
-			player.addPointsToOne();
+			if(skillRelease) {
+				if(isPressed(KeyEvent.VK_A)) {
+					player.addPointsToOne();
+					skillRelease = false;
+				}
+				else if(isPressed(KeyEvent.VK_S)) {
+					player.addPointsToTwo();
+					skillRelease = false;
+				}
+				
+			}
 		}
-		if(isPressed(KeyEvent.VK_S))
-		{
-			player.addPointsToTwo();
+		else {
+			skillRelease = true;
 		}
+		
 		
 
 

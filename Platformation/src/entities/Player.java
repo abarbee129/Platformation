@@ -180,13 +180,17 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void jump() {
+		
+		
+		
+		
 		if(isTouchingGround || !hasJumped){
 			if(dy > -maxDy) {
 				if(isTouchingGround) {
 					accelerate(0, -600);
 					isTouchingGround = false;
 				}
-				else if(!hasJumped){
+				else if(!hasJumped&&!isEnemy){
 						if(dy>0) {
 							accelerate(0,-dy);
 						}
@@ -389,7 +393,24 @@ public class Player extends Sprite implements Damageable{
 		g.text("HP: " + getHPPercent(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
 		g.textSize(10);
 		g.text("Lv: " + (int)level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
+		
+		if(skillPoints > 0) {
+			g.textSize(10);
+			g.fill(0);
+			if(skillPoints==1) {
+				g.text("You have " + skillPoints + " skillpoint to spend", (float)(x-12-PLAYER_WIDTH), (float)y-42);
 
+			}
+			else {
+				g.text("You have " + skillPoints + " skillpoints to spend", (float)(x-12-PLAYER_WIDTH), (float)y-42);
+
+			}
+			
+		}
+		
+		
+		
+		
 		if(isAttacking)
 		{
 			g.noFill();
