@@ -249,7 +249,7 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 		
-	
+		player.act(obstacles);
 
 		popMatrix();
 
@@ -276,7 +276,7 @@ public class DrawingSurface extends PApplet {
 		}
 		if (isPressed(KeyEvent.VK_UP)) {
 			if(jumpRelease || player.getOnGround()) {
-				if(player.getCanJump()) {
+				if(player.getCanJump() && player.getDy() >= -100) {
 					player.jump();
 					jumpRelease = false;
 				}
@@ -335,7 +335,7 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 
-		player.act(obstacles);
+		
 		if(player.gety() > DRAWING_HEIGHT || player.isGameOver()) {
 			respawnPlayer();
 		}

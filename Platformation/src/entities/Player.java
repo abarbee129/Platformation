@@ -183,16 +183,15 @@ public class Player extends Sprite implements Damageable{
 		if(isTouchingGround || !hasJumped){
 			if(dy > -maxDy) {
 				if(isTouchingGround) {
-					accelerate(0, -500);
+					accelerate(0, -600);
 					isTouchingGround = false;
 				}
 				else if(!hasJumped){
 						if(dy>0) {
 							accelerate(0,-dy);
 						}
-						accelerate(0, -400);
+						accelerate(0, -600);
 						hasJumped = true;
-	
 				}
 			}
 			
