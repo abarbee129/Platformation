@@ -188,11 +188,9 @@ public class Player extends Sprite implements Damageable{
 			if(dy > -maxDy) {
 				if(isTouchingGround) {
 					accelerate(0, -600);
-					System.out.println("single jump");
 					isTouchingGround = false;
 				}
 				else if(!hasJumped&&!isEnemy){
-						System.out.println("double jump");
 						if(dy>0) {
 							accelerate(0,-dy);
 						}
@@ -424,7 +422,11 @@ public class Player extends Sprite implements Damageable{
 		{
 			g.noFill();
 			g.stroke(0,0,220);
-			g.ellipse((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+			for (int i = 0; i < 20; i++) {
+				g.stroke(0,0,220,110 - 5*i);
+				g.ellipse((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)PLAYER_WIDTH+i, (float)PLAYER_HEIGHT+i);
+			}
+			
 		}
 		
 		if(!isEnemy) {
