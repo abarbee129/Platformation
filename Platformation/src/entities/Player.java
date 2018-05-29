@@ -422,7 +422,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			g.noFill();
 			g.stroke(0,0,220);
-			g.ellipse((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+			g.ellipse((float)x+20, (float)y+20, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
 		}
 		
 		if(!isEnemy) {
@@ -588,7 +588,7 @@ public class Player extends Sprite implements Damageable{
 			{	if(meleeEnemies.get(i).intersects(this))
 				{
 					meleeEnemies.get(i).damaged(2*techTwo+attackStat/2);
-					meleeEnemies.get(i).knockedBack(1000, -600, this);
+					meleeEnemies.get(i).knockedBack(1000, -1000, this);
 				}
 			}
 		}
