@@ -421,8 +421,8 @@ public class Player extends Sprite implements Damageable{
 		if(shield)
 		{
 			g.noFill();
-			g.stroke(23,234,23);
-			g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+			g.stroke(0,0,220);
+			g.ellipse((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
 		}
 		
 		if(!isEnemy) {
