@@ -180,21 +180,24 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void jump() {
+		
+		
+		
+		
 		if(isTouchingGround || !hasJumped){
 			if(dy > -maxDy) {
 				if(isTouchingGround) {
-					accelerate(0, -500);
+					accelerate(0, -600);
 					System.out.println("single jump");
 					isTouchingGround = false;
 				}
-				else if(!hasJumped){
+				else if(!hasJumped&&!isEnemy){
 						System.out.println("double jump");
 						if(dy>0) {
 							accelerate(0,-dy);
 						}
-						accelerate(0, 500);
+						accelerate(0, -600);
 						hasJumped = true;
-	
 				}
 			}
 			
@@ -392,7 +395,24 @@ public class Player extends Sprite implements Damageable{
 		g.text("HP: " + getHPPercent(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
 		g.textSize(10);
 		g.text("Lv: " + (int)level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
+		
+		if(skillPoints > 0) {
+			g.textSize(10);
+			g.fill(0);
+			if(skillPoints==1) {
+				g.text("You have " + skillPoints + " skillpoint to spend", (float)(x-12-PLAYER_WIDTH), (float)y-42);
 
+			}
+			else {
+				g.text("You have " + skillPoints + " skillpoints to spend", (float)(x-12-PLAYER_WIDTH), (float)y-42);
+
+			}
+			
+		}
+		
+		
+		
+		
 		if(isAttacking)
 		{
 			g.noFill();
@@ -403,8 +423,8 @@ public class Player extends Sprite implements Damageable{
 		if(shield)
 		{
 			g.noFill();
-			g.stroke(23,234,23);
-			g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+			g.stroke(0,0,220);
+			g.ellipse((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
 		}
 		
 		if(!isEnemy) {

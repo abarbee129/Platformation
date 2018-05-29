@@ -42,7 +42,7 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Bullet> bullets; 
 	private Shape goal;
 	private boolean jumpRelease;
-
+	private boolean skillRelease;
 	private ArrayList<PImage> assets;
 
 	public DrawingSurface() {
@@ -249,7 +249,7 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 		
-	
+		player.act(obstacles);
 
 		popMatrix();
 
@@ -276,7 +276,7 @@ public class DrawingSurface extends PApplet {
 		}
 		if (isPressed(KeyEvent.VK_UP)) {
 			if(jumpRelease || player.getOnGround()) {
-				if(player.getCanJump()) {
+				if(player.getCanJump() && player.getDy() >= -100) {
 					player.jump();
 					jumpRelease = false;
 				}
@@ -304,14 +304,24 @@ public class DrawingSurface extends PApplet {
 		{
 			player.stopAttack();
 		}
-		if(isPressed(KeyEvent.VK_A))
+		if(isPressed(KeyEvent.VK_A)||isPressed(KeyEvent.VK_S))
 		{
-			player.addPointsToOne();
+			if(skillRelease) {
+				if(isPressed(KeyEvent.VK_A)) {
+					player.addPointsToOne();
+					skillRelease = false;
+				}
+				else if(isPressed(KeyEvent.VK_S)) {
+					player.addPointsToTwo();
+					skillRelease = false;
+				}
+				
+			}
 		}
-		if(isPressed(KeyEvent.VK_S))
-		{
-			player.addPointsToTwo();
+		else {
+			skillRelease = true;
 		}
+		
 		
 
 
@@ -335,7 +345,7 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 
-		player.act(obstacles);
+		
 		if(player.gety() > DRAWING_HEIGHT || player.isGameOver()) {
 			respawnPlayer();
 		}
