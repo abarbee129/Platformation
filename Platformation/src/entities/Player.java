@@ -184,13 +184,15 @@ public class Player extends Sprite implements Damageable{
 			if(dy > -maxDy) {
 				if(isTouchingGround) {
 					accelerate(0, -500);
+					System.out.println("single jump");
 					isTouchingGround = false;
 				}
 				else if(!hasJumped){
+						System.out.println("double jump");
 						if(dy>0) {
 							accelerate(0,-dy);
 						}
-						accelerate(0, -400);
+						accelerate(0, 500);
 						hasJumped = true;
 	
 				}
