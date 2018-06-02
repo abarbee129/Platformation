@@ -34,6 +34,7 @@ public class DrawingSurface extends PApplet {
 	private ArrayList<Booster> boosters;
 	private int tSinceLast;
 	private int lvl;
+	private int completed;
 	private Player player;
 	private ArrayList<Shape> obstacles;
 	private ArrayList<Platform> platforms;
@@ -84,6 +85,7 @@ public class DrawingSurface extends PApplet {
 			FileReader reader = new FileReader(fileName);
 			BufferedReader bReader = new BufferedReader(reader);
 			char[] chars = null;
+			completed++;
 			double yoff = 0;
 			double xoff = 0;
 			int rows = 24;
@@ -99,7 +101,7 @@ public class DrawingSurface extends PApplet {
 						boosters.add(new Booster(xoff,yoff,(int)pHeight,(int)pHeight));
 					}
 					else if(c == 'm') {
-						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,30,10, this));
+						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,5*completed,5+5*completed, this));
 					}
 					else if(c == 'g') {
 						goal = new Rectangle((int)xoff,(int)yoff,(int)pHeight,(int)pHeight);
@@ -167,10 +169,12 @@ public class DrawingSurface extends PApplet {
 		background(0,255,255);   
 
 		pushMatrix();
-
+		// scaling
 		float ratioX = (float)width/DRAWING_WIDTH;
 		float ratioY = (float)height/DRAWING_HEIGHT;
 		scale(ratioX, ratioY);
+		// do acutall in game world drawing stuff here
+		
 		double xoff = DRAWING_WIDTH/2 - player.getx();
 		this.translate((float)(xoff), 0);
 		screenRect = new Rectangle((int)(player.getx()-DRAWING_WIDTH/2),0,DRAWING_WIDTH,DRAWING_HEIGHT);
@@ -253,6 +257,30 @@ public class DrawingSurface extends PApplet {
 
 		popMatrix();
 
+		
+		
+		
+		// do some untranslated ui drawing here
+		// xp bar
+		float xpBarX;
+		float xpBarY;
+		fill(90,90,90);
+		rect(0,0,DRAWING_WIDTH,10);
+		fill(255, 238, 53);
+		double pxp = player.getXP();	
+		double needed = player.getNeededEXP();
+		double ratio = pxp / needed;
+		rect(0,0,(float)(10+((DRAWING_WIDTH-10)*ratio)),10);
+		
+		fill(255,255,255,200);
+		stroke(0);
+		// ability 1
+		rect(DRAWING_WIDTH/6, DRAWING_HEIGHT/16, 50, 50);
+		// ability 2
+		rect(2*DRAWING_WIDTH/6, DRAWING_HEIGHT/16, 50, 50);
+		
+		
+		
 
 		// modifying stuff
 		/*

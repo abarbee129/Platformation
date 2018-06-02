@@ -36,6 +36,7 @@ public class Player extends Sprite implements Damageable{
 
 
 	public boolean isFlipped;
+	
 	// Collision/Physics fields
 	private double dx;
 	private double dy;
@@ -57,6 +58,8 @@ public class Player extends Sprite implements Damageable{
 	private double fricMod = 0.5;
 	private double slow = 1;
 	
+	
+	// ability cooldown fields
 	private int t1CD = 180;
 	private int t2CD = 90;
 	private int[] cooldowns;
@@ -99,13 +102,13 @@ public class Player extends Sprite implements Damageable{
 		techTwo = 20;
 	}
 
-	public Player(PImage img, int x, int y,double slow, PApplet marker) {
+	public Player(PImage img, int x, int y,double level,double slow, PApplet marker) {
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		this.slow = slow;
 		ox = new double[3];
 		oy = new double[3];
 		cooldowns = new int[4];
-		level = 1;
+		this.level = level;
 		shield = false;
 		baseHP = 100;
 		currentHP = 100;
@@ -646,9 +649,17 @@ public class Player extends Sprite implements Damageable{
 		return shield;
 	}
 
+	public double getXP() {
+		return EXP;
+	}
+	
+	public double getNeededEXP() {
+		return 50+(50*Math.pow(level, 1.6));
+	}
+	
 	public void obtainEXP(double exp) 
 	{
-		if(EXP<(50+(50*level)))
+		if(EXP+exp<(50+(50*Math.pow(level, 1.6))))
 		{
 			EXP += exp;
 		}
