@@ -270,7 +270,11 @@ public class DrawingSurface extends PApplet {
 		double pxp = player.getXP();	
 		double needed = player.getNeededEXP();
 		double ratio = pxp / needed;
-		rect(0,0,(float)(10+((DRAWING_WIDTH-10)*ratio)),10);
+		rect(0,0,(float)(120+((DRAWING_WIDTH-120)*ratio)),10);
+		fill(0);
+		text("EXP : " + player.getXP() + " / " + (int)player.getNeededEXP()+".0", 10, 9);
+		
+		
 		
 		fill(255,255,255,200);
 		stroke(0);

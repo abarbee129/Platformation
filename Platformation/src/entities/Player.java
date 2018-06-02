@@ -654,19 +654,19 @@ public class Player extends Sprite implements Damageable{
 	}
 	
 	public double getNeededEXP() {
-		return 50+(50*Math.pow(level, 1.6));
+		return 50+(50*Math.pow(level, 1.8));
 	}
 	
 	public void obtainEXP(double exp) 
 	{
-		if(EXP+exp<(50+(50*Math.pow(level, 1.6))))
+		if(EXP+exp<(50+(50*Math.pow(level, 1.8))))
 		{
 			EXP += exp;
 		}
 		else
 		{
+			EXP = (int)(EXP+exp-(50+(50*Math.pow(level, 1.8))));
 			levelUP();
-			EXP = 0;
 		}
 	}
 
