@@ -52,7 +52,7 @@ public class DrawingSurface extends PApplet {
 		super();
 		assets = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
-		
+
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
 		boosters = new ArrayList<Booster>();
 		obstacles = new ArrayList<Shape>();
@@ -136,7 +136,7 @@ public class DrawingSurface extends PApplet {
 	}
 
 
-	
+
 	public void runMe() {
 		runSketch();
 	}
@@ -168,13 +168,13 @@ public class DrawingSurface extends PApplet {
 		}
 		background(0,255,255);   
 
-		pushMatrix();
+
 		// scaling
 		float ratioX = (float)width/DRAWING_WIDTH;
 		float ratioY = (float)height/DRAWING_HEIGHT;
 		scale(ratioX, ratioY);
+		pushMatrix();
 		// do acutall in game world drawing stuff here
-		
 		double xoff = DRAWING_WIDTH/2 - player.getx();
 		this.translate((float)(xoff), 0);
 		screenRect = new Rectangle((int)(player.getx()-DRAWING_WIDTH/2),0,DRAWING_WIDTH,DRAWING_HEIGHT);
@@ -187,7 +187,7 @@ public class DrawingSurface extends PApplet {
 			else if(lvl == 2) {
 				OptionPanel.level = 3;
 			}
-			
+
 			else if(lvl == 3) {
 				OptionPanel.level = 1;
 			}
@@ -212,7 +212,7 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 		popStyle();
-		
+
 		/*
 		for(int i = 0; i < bullets.size(); i++) {
 			if(bullets.get(i) != null && bullets.get(i).getIsDead()) {
@@ -229,10 +229,10 @@ public class DrawingSurface extends PApplet {
 				if((xdif < 30 && xdif > -30)&&(ydif < 30 && ydif > -30)) {
 					me.damaged(b.getDamage());
 					b.setIsDead(true);
-				
+
 				}
 			}
- 
+
 		}
 
 		for(Bullet b : bullets) {
@@ -240,7 +240,7 @@ public class DrawingSurface extends PApplet {
 				b.draw(this);
 			}
 		}
-		*/
+		 */
 
 		player.draw(this);
 		for(MeleeEnemy me : meleeEnemies) {
@@ -252,14 +252,14 @@ public class DrawingSurface extends PApplet {
 				me.damaged(1000);
 			}
 		}
-		
+
 		player.act(obstacles);
-
 		popMatrix();
+		
 
-		
-		
-		
+
+
+		pushStyle();
 		// do some untranslated ui drawing here
 		// xp bar
 		float xpBarX;
@@ -273,32 +273,112 @@ public class DrawingSurface extends PApplet {
 		rect(0,0,(float)(120+((DRAWING_WIDTH-120)*ratio)),10);
 		fill(0);
 		text("EXP : " + player.getXP() + " / " + (int)player.getNeededEXP()+".0", 10, 9);
+
+
 		
-		
-		
-		fill(255,255,255,200);
-		stroke(0);
+
 		// ability 1
-		rect(DRAWING_WIDTH/6, DRAWING_HEIGHT/16, 50, 50);
-		// ability 2
-		rect(2*DRAWING_WIDTH/6, DRAWING_HEIGHT/16, 50, 50);
+
+		for(int i = 0; i < 2; i++) {
+
+			fill(255,255,255,200);
+			stroke(0);
+			strokeWeight(2);
+
+			float cdRatio = (float)(1 - ((1.0*player.getCooldowns(i)) / player.getTechCD(i)));
+			if(cdRatio < 1) {
+				fill(155,155,155,200);
+				rect((i+1)*DRAWING_WIDTH/6, DRAWING_HEIGHT/16, 50, 50);
+			}
+			else {
+				fill(255,255,255,200);
+				rect((i+1)*DRAWING_WIDTH/6, DRAWING_HEIGHT/16, 50, 50);
+			}
+			// ability 2
+
+			// some cd math;
+			// total perimeter = 50*4 = 200
+			// total cd time = t1cd;
+			// 1 unit of cd = 200/t1cd in length
+
+
+
+
+
+			// 5 lines
+			// l1 from topmid to topright; 
+			// l2
+			// l3
+			// l4
+			// l5
+
+			float l1 = (float)(1.0/8);
+			float l2 = (float)(3.0/8);
+			float l3 = (float)(5.0/8);
+			float l4 = (float)(7.0/8);
+			float l5 = (float)(8.0/8);
+			stroke(255, 238, 53);
+			if(cdRatio < l1) {
+				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 25 + 25*(cdRatio/l1), DRAWING_HEIGHT/16);
+			}
+			else if(cdRatio > l1 && cdRatio < l2) {
+				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, 50*((cdRatio-l1)/(l2-l1)) + DRAWING_HEIGHT/16);
+			}
+			else if(cdRatio > l2 && cdRatio < l3) {
+				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, 50 + DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/16+50,(i+1)*DRAWING_WIDTH/6 + 50*(1-((cdRatio-l2)/(l3-l2))), 50 + DRAWING_HEIGHT/16);
+			}
+			else if(cdRatio > l3 && cdRatio < l4) {
+				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, 50 + DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/16+50,(i+1)*DRAWING_WIDTH/6, 50 + DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6, DRAWING_HEIGHT/16+50,(i+1)*DRAWING_WIDTH/6, 50 + DRAWING_HEIGHT/16 - 50*(cdRatio-l3)/(l4-l3));
+			}
+			else if(cdRatio > l4 && cdRatio < l5) {
+				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6 + 50, 50 + DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/16+50,(i+1)*DRAWING_WIDTH/6, 50 + DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6, DRAWING_HEIGHT/16+50,(i+1)*DRAWING_WIDTH/6, DRAWING_HEIGHT/16);
+				line((i+1)*DRAWING_WIDTH/6, DRAWING_HEIGHT/16,(i+1)*DRAWING_WIDTH/6+25*(cdRatio-l4)/(l5-l4),DRAWING_HEIGHT/16);
+			}
+			else {
+				noFill();
+				rect((i+1)*DRAWING_WIDTH/6,DRAWING_HEIGHT/16,50,50);
+
+			}
+		}
+		
+
+
+
+
+
+		fill(0);
+		text("Dash",12+DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/16);
+		text("Launch",7 + 2*DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/16);
 		
 		
-		
+		textSize(50);
+		text('Q',4 + DRAWING_WIDTH/6, 41 + DRAWING_HEIGHT/16);
+		text('W',4 + 2*DRAWING_WIDTH/6, 43 + DRAWING_HEIGHT/16);
+		popStyle();
+
 
 		// modifying stuff
 		/*
 		if(tSinceLast>0) {
 			tSinceLast--;
 		}
-		*/
+		 */
 		if (isPressed(KeyEvent.VK_R)) {
 			/*
 			if(tSinceLast == 0) {
 				bullets.add(new Bullet(player.x,player.y+player.height/2,8.0,20.0));
 				tSinceLast = 60;
 			}
-			*/
+			 */
 		}
 		if (isPressed(KeyEvent.VK_LEFT)) {
 			player.walk(-1);
@@ -329,7 +409,7 @@ public class DrawingSurface extends PApplet {
 		}
 		if(isPressed(KeyEvent.VK_E))
 		{
-			
+
 			player.attack(meleeEnemies);
 		}
 		else
@@ -347,14 +427,14 @@ public class DrawingSurface extends PApplet {
 					player.addPointsToTwo();
 					skillRelease = false;
 				}
-				
+
 			}
 		}
 		else {
 			skillRelease = true;
 		}
-		
-		
+
+
 
 
 		if (isPressed(KeyEvent.VK_DOWN)) {
@@ -377,7 +457,7 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 
-		
+
 		if(player.gety() > DRAWING_HEIGHT || player.isGameOver()) {
 			respawnPlayer();
 		}

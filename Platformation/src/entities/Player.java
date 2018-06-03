@@ -425,7 +425,6 @@ public class Player extends Sprite implements Damageable{
 		{
 			g.noFill();
 			g.stroke(0,0,220);
-			g.ellipse((float)x+20, (float)y+20, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
 			for (int i = 0; i < 20; i++) {
 				g.stroke(0,0,220,110 - 5*i);
 				g.ellipse((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)PLAYER_WIDTH+i, (float)PLAYER_HEIGHT+i);
@@ -719,4 +718,21 @@ public class Player extends Sprite implements Damageable{
 	public int getSkillPoints() {
 		return skillPoints;
 	}
+	
+	
+	public int getCooldowns(int index) {
+		return cooldowns[index];
+	}
+	public int getTechCD(int index) {
+		if(index == 0) {
+			return t1CD;
+		}
+		else if (index == 1) {
+			return t2CD;
+		}
+		else {
+			return 0;
+		}
+	}
+
 }
