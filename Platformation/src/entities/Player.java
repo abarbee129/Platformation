@@ -529,7 +529,18 @@ public class Player extends Sprite implements Damageable{
 	public boolean energyReplenish() {
 		if(currentEP<baseEP && !shield)
 		{
-			currentEP+=0.5;
+			if(level < 5) {
+				currentEP+=0.5;
+			}
+			else if(level < 10){
+				currentEP+=1;
+			}
+			else {
+				currentEP+=1.5;
+			}
+		}
+		if(currentEP>baseEP) {
+			currentEP = baseEP;
 		}
 		if(currentEP <= 1) {
 			replenishing  = true;
