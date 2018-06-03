@@ -36,9 +36,9 @@ public class MeleeEnemy extends Enemy {
 			{
 				this.idleWalk(plat);
 			}
-			
-	
-			if(p.intersects(this))
+
+
+			if(p.intersects(this) && !isStunned)
 			{
 				attack(p);
 			}
@@ -55,29 +55,33 @@ public class MeleeEnemy extends Enemy {
 
 	private void moveToPlayer(Player p)
 	{
-		if(p.getx() < this.getx())
-		{
-			
-			walk(-1);
-			accelerate(-super.getDx()/4,0);
-			if(p.gety() > this.gety())
-			{
-				jump();
-			}
-			
+		if(isStunned	) {
 			
 		}
-		else if(p.getx() > this.getx())
-		{
-			walk(1);
-			accelerate(-super.getDx()/4,0);
+		
+		else {
 			
+			if(p.getx() < this.getx()) {
+
+				walk(-1);
+				accelerate(-super.getDx()/4,0);
+				if(p.gety() > this.gety()) {
+					jump();
+				}
+
+
+			}
+			else if(p.getx() > this.getx()) {
+				walk(1);
+				accelerate(-super.getDx()/4,0);
+
+			}
 		}
 	}
 
 	private void idleWalk(Shape plat)
 	{
-		
+
 		Rectangle platform = plat.getBounds();
 
 		double xPlat = platform.getX();
@@ -87,12 +91,12 @@ public class MeleeEnemy extends Enemy {
 		if(this.getX() > xPlat+4 && moved==false)
 		{
 			//walk(1);
-			
+
 		}
 		else if(this.getX() < width-4 && moved == true)
 		{
 			//walk(-1);
-			
+
 		}
 		else if(this.getX() <= xPlat)
 		{
@@ -105,8 +109,8 @@ public class MeleeEnemy extends Enemy {
 
 
 	}
-	
-	
+
+
 
 
 

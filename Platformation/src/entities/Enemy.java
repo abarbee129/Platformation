@@ -14,12 +14,12 @@ public class Enemy extends Player implements Damageable {
 
 	private boolean replenishing;
 	private boolean isDead;
+	
 
 	private double level;
 	private double attackStat;
 	private double defStat;
 	private double EXP;
-	private int stunTicks = 0;
 	private int c = 0;
 
 
@@ -82,24 +82,10 @@ public class Enemy extends Player implements Damageable {
 	}
 	
 
-	public void stunned()
-	{	
-		if(stunTicks > 0) {
-			stunTicks--;
-			if(c%2 == 0) {
-				this.moveByAmount(0, 0);
-			}
-			
-			else{
-				this.moveByAmount(0, 0);
-			}
-			
+	public void stunned(double strength) {	
+		if(strength-1 > stunTicks) {
+			stunTicks = (int) strength;
 		}
-		else
-		{
-			stunTicks = 500;
-		}
-	
 			
 	}
 
@@ -128,7 +114,7 @@ public class Enemy extends Player implements Damageable {
 	
 	@Override
 	public void regen() {
-		// TODO Auto-generated method stub
+		super.regen();
 	}
 
 	

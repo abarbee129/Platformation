@@ -126,6 +126,9 @@ public class DrawingSurface extends PApplet {
 	}
 	public void spawnNewPlayer() {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50,this);
+		for(int i = 0; i < 0; i++) {
+			player.levelUP();
+		}
 	}
 
 	public void respawnPlayer() {
@@ -245,6 +248,7 @@ public class DrawingSurface extends PApplet {
 		player.draw(this);
 		for(MeleeEnemy me : meleeEnemies) {
 			me.actions(player, obstacles.get(1));
+			me.regen();
 			me.act(obstacles);
 			me.draw(this);
 			if(me.gety() > DRAWING_HEIGHT)
