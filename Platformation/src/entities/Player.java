@@ -64,7 +64,7 @@ public class Player extends Sprite implements Damageable{
 	// ability cooldown fields
 	private int t1CD = 180;
 	private int t2CD = 200;
-	private int atkRecov = 2;
+	private int atkRecov = 5;
 	private int[] cooldowns;
 	
 	
@@ -721,6 +721,7 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
+		//Rectangle attackBox = new Rectangle((int)getX()+PLAYER_WIDTH,(int) getY()+PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_WIDTH );
 		if(cooldowns[2] == 0) {
 			cooldowns[2] = atkRecov;
 			for(int i = 0; i<meleeEnemies.size(); i++)
