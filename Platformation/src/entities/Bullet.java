@@ -1,8 +1,10 @@
 package entities;
 
+import java.awt.Rectangle;
+
 import processing.core.PApplet;
 
-public class Bullet {
+public class Bullet extends Rectangle{
 
 	private double x,y;
 	private double direction;
@@ -12,6 +14,7 @@ public class Bullet {
 	private int c = 0;
 	
 	public Bullet(double x, double y, double direction, double damage) {
+		
 		this.x = x;
 		this.y = y;
 		this.direction = direction;
@@ -35,6 +38,15 @@ public class Bullet {
 	public double gety() {
 		return x;
 	}
+	
+    public void damageEnemy(Enemy e)
+    {
+		if(this.intersects(e))
+		{
+			e.damaged(10);
+		}
+    	
+    }
 	
 	public double getDamage() {
 		return damage;

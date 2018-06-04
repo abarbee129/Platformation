@@ -63,7 +63,8 @@ public class Player extends Sprite implements Damageable{
 	
 	// ability cooldown fields
 	private int t1CD = 180;
-	private int t2CD = 90;
+	private int t2CD = 200;
+	private int atkRecov = 2;
 	private int[] cooldowns;
 	
 	
@@ -586,6 +587,8 @@ public class Player extends Sprite implements Damageable{
 			energyDepletion(epCost);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
+					me.damaged(5*techOne + attackStat);
+					me.stunned(40 + techOne*4);
 					
 				}
 			}
@@ -597,17 +600,21 @@ public class Player extends Sprite implements Damageable{
 	public void useTechTwo(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
 		double epCost = 60;
+		
 		if(currentEP>epCost && cooldowns[1] == 0 && !replenishing) {
 			cooldowns[1] = t2CD;
+			shield = true;
+			accelerate(0,-1000);
 			energyDepletion(epCost);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
-					me.damaged(5*techTwo + attackStat);
+					me.damaged(30*techTwo + attackStat);
 					me.knockedBack(600*Math.pow(techTwo, 0.25), -400, this);
 					me.stunned(20 + techTwo*4);
 				}
 			}
 		}
+		
 	}
 
 
@@ -706,7 +713,7 @@ public class Player extends Sprite implements Damageable{
 		if(skillPoints>0)
 		{
 			if(t2CD > 20) {
-				t2CD -= 5;
+				t2CD -= 2;
 			}
 			techTwo+=2;
 			skillPoints-=1;
@@ -714,15 +721,22 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
-		for(int i = 0; i<meleeEnemies.size(); i++)
-		{	
-			if(meleeEnemies.get(i).intersects(this))
-			{
-				meleeEnemies.get(i).damaged(attackStat);
+		if(cooldowns[2] == 0) {
+			cooldowns[2] = atkRecov;
+			for(int i = 0; i<meleeEnemies.size(); i++)
+			{	
+				if(meleeEnemies.get(i).intersects(this))
+				{
+					meleeEnemies.get(i).damaged(attackStat);
+				}
 			}
+			isAttacking = true;
 		}
-		
-		isAttacking = true;
+		else
+		{
+			stopAttack();
+		}
+			
 	}
 	
 	public void stopAttack()
@@ -741,9 +755,15 @@ public class Player extends Sprite implements Damageable{
 	public int getTechCD(int index) {
 		if(index == 0) {
 			return t1CD;
+
 		}
 		else if (index == 1) {
 			return t2CD;
+
+		}
+		else if(index == 2)
+		{
+			return atkRecov;
 		}
 		else {
 			return 0;

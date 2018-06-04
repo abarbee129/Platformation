@@ -114,7 +114,6 @@ public class Enemy extends Player implements Damageable {
 	
 	@Override
 	public void regen() {
-		super.regen();
 	}
 
 	
