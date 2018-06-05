@@ -67,7 +67,8 @@ public class Player extends Sprite implements Damageable{
 	private int atkRecov = 5;
 	private int[] cooldowns;
 	
-	
+	private boolean inCombat;
+
 	protected boolean isEnemy = false;
 
 	private ArrayList<PImage> pics;  
@@ -262,7 +263,11 @@ public class Player extends Sprite implements Damageable{
 		
 		
 		energyReplenish();
-		regen();
+		
+		
+		
+		if(!inCombat)
+			regen();
 		
 		
 		if(!isTouchingGround&&!isDashing) {
@@ -749,6 +754,20 @@ public class Player extends Sprite implements Damageable{
 		return skillPoints;
 	}
 	
+	public void isInCombat(ArrayList<MeleeEnemy> meleeEnemies)
+	{
+		Rectangle combatBox = new Rectangle((int)getX()-50,(int) getY()-50, 100, 100 );
+		inCombat=false;
+		for(int i = 0; i<meleeEnemies.size(); i++)
+		{	
+			if(meleeEnemies.get(i).intersects(combatBox))
+			{
+				inCombat = true;
+			}
+		}
+		
+		
+	}
 	
 	public int getCooldowns(int index) {
 		return cooldowns[index];

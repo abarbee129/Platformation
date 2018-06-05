@@ -258,6 +258,8 @@ public class DrawingSurface extends PApplet {
 		}
 
 		player.act(obstacles);
+		player.isInCombat(meleeEnemies);
+		
 		popMatrix();
 		
 
