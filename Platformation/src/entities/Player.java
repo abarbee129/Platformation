@@ -59,6 +59,7 @@ public class Player extends Sprite implements Damageable{
 	private int maxDy = 480;
 	private double fricMod = 0.5;
 	private double slow = 1;
+	private int lives;
 	
 	
 	// ability cooldown fields
@@ -90,6 +91,7 @@ public class Player extends Sprite implements Damageable{
 
 
 
+		lives = 3;
 
 
 		level = 1;
@@ -121,6 +123,7 @@ public class Player extends Sprite implements Damageable{
 		attackStat = 10;
 		defStat =  10;
 		EXP = 0; 
+		lives = 3;
 		
 	}
 
@@ -789,5 +792,17 @@ public class Player extends Sprite implements Damageable{
 			return 0;
 		}
 	}
+	public int getLives()
+	{
+		return lives;
+	}
 
+	public void lifeGained()
+	{
+		lives++;
+	}
+	public void lifeLost()
+	{
+		lives--;
+	}
 }

@@ -1,6 +1,7 @@
 package entities;
 
 import java.awt.Rectangle;
+import java.util.ArrayList;
 
 import processing.core.PApplet;
 
@@ -39,15 +40,22 @@ public class Bullet extends Rectangle{
 		return x;
 	}
 	
-    public void damageEnemy(Enemy e)
+    public void damageEnemy(ArrayList<MeleeEnemy> meleeEnemies)
     {
-		if(this.intersects(e))
-		{
-			e.damaged(10);
+    	for(int i = 0; i<meleeEnemies.size(); i++)
+		{	
+			if(meleeEnemies.get(i).intersects(this))
+			{
+				meleeEnemies.get(i).damaged(10);
+			}
 		}
+		
     	
     }
-	
+	public void act(ArrayList<MeleeEnemy> m)
+	{
+		damageEnemy(m);
+	}
 	public double getDamage() {
 		return damage;
 	}

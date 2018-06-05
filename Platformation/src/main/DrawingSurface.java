@@ -216,7 +216,7 @@ public class DrawingSurface extends PApplet {
 		}
 		popStyle();
 
-		/*
+	
 		for(int i = 0; i < bullets.size(); i++) {
 			if(bullets.get(i) != null && bullets.get(i).getIsDead()) {
 				bullets.remove(i);
@@ -241,9 +241,10 @@ public class DrawingSurface extends PApplet {
 		for(Bullet b : bullets) {
 			if(b!=null && !b.getIsDead()) {
 				b.draw(this);
+				
 			}
 		}
-		 */
+		
 
 		player.draw(this);
 		for(MeleeEnemy me : meleeEnemies) {
@@ -362,9 +363,12 @@ public class DrawingSurface extends PApplet {
 
 
 		fill(0);
+		
 		text("Dash",12+DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/12);
 		text("Launch",7 + 2*DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/12);
 		
+		textSize(25);
+		text("Lives:-" + player.getLives(),DRAWING_WIDTH/25, -3 + DRAWING_HEIGHT/12);
 		
 		textSize(50);
 		text('Q',4 + DRAWING_WIDTH/6, 41 + DRAWING_HEIGHT/12);
@@ -373,18 +377,18 @@ public class DrawingSurface extends PApplet {
 
 
 		// modifying stuff
-		/*
+	
 		if(tSinceLast>0) {
 			tSinceLast--;
 		}
-		 */
+		 
 		if (isPressed(KeyEvent.VK_R)) {
-			/*
+			
 			if(tSinceLast == 0) {
 				bullets.add(new Bullet(player.x,player.y+player.height/2,8.0,20.0));
 				tSinceLast = 60;
 			}
-			 */
+			 
 		}
 		if (isPressed(KeyEvent.VK_LEFT)) {
 			player.walk(-1);
@@ -465,7 +469,15 @@ public class DrawingSurface extends PApplet {
 
 
 		if(player.gety() > DRAWING_HEIGHT || player.isGameOver()) {
-			respawnPlayer();
+			player.lifeLost();
+			if(player.getLives()>-1)
+			{
+				respawnPlayer();
+			}
+			else
+			{
+				spawnNewPlayer();
+			}
 		}
 
 
