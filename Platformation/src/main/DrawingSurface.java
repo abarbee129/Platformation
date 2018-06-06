@@ -163,7 +163,7 @@ public class DrawingSurface extends PApplet {
 
 		spawnNewPlayer();
 	}
-
+ 
 	// The statements in draw() are executed until the 
 	// program is stopped. Each statement is executed in 
 	// sequence and after the last line is read, the first 
