@@ -19,6 +19,7 @@ public class Player extends Sprite implements Damageable{
 	private double currentHP;
 	private double techOne;
 	private double techTwo;
+	private final double xpScale = 1.6;
 
 	private double currentEP;
 	private double baseEP;
@@ -96,8 +97,8 @@ public class Player extends Sprite implements Damageable{
 		currentHP = 100;
 		baseEP = 200;
 		currentEP = 200;
-		attackStat = 10;
-		defStat =  10;
+		attackStat = 20;
+		defStat =  20;
 		EXP = 0; 
 
 		techOne = 5;
@@ -473,7 +474,7 @@ public class Player extends Sprite implements Damageable{
 
 	public double damaged(double damageTaken) {
 
-		double damage = damageTaken*(10/(10+defStat));
+		double damage = damageTaken*(5/(5+defStat));
 
 		
 		if(isGameOver() == false && !shield ) 
@@ -662,18 +663,18 @@ public class Player extends Sprite implements Damageable{
 	}
 	
 	public double getNeededEXP() {
-		return 50+(50*Math.pow(level, 1.8));
+		return 50+(50*Math.pow(level, xpScale));
 	}
 	
 	public void obtainEXP(double exp) 
 	{
-		if(EXP+exp<(50+(50*Math.pow(level, 1.8))))
+		if(EXP+exp<(50+(50*Math.pow(level, xpScale))))
 		{
 			EXP += exp;
 		}
 		else
 		{
-			EXP = (int)(EXP+exp-(50+(50*Math.pow(level, 1.8))));
+			EXP = (int)(EXP+exp-(50+(50*Math.pow(level, xpScale))));
 			levelUP();
 		}
 	}
@@ -718,7 +719,7 @@ public class Player extends Sprite implements Damageable{
 		{	
 			if(meleeEnemies.get(i).intersects(this))
 			{
-				meleeEnemies.get(i).damaged(attackStat);
+				meleeEnemies.get(i).damaged(attackStat/2);
 			}
 		}
 		

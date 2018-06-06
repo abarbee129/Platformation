@@ -27,11 +27,11 @@ public class Enemy extends Player implements Damageable {
 		super(img, x, y,level,0.5, marker);
 		// TODO Auto-generated constructor stub
 		replenishing = false;
+		this.level = level;
 		HPCalculation(statPoints);
 		defCalculation(statPoints);
 		attackCalculation(statPoints);
 		EPCalculation(statPoints);
-		this.level = level;
 		isEnemy = true;
 		EXP = level*15;
 	}
@@ -40,7 +40,7 @@ public class Enemy extends Player implements Damageable {
 	
 	private void HPCalculation(double statPoints)
 	{
-		this.setHP(statPoints + (level*5)+200);
+		this.setHP(statPoints + (level*40)+200);
 		
 	}
 	
@@ -56,14 +56,14 @@ public class Enemy extends Player implements Damageable {
 	
 	private void defCalculation(double statPoints)
 	{
-		defStat = statPoints + (level*3);
+		defStat = statPoints + (level*5);
 	}
 	
 	
 	
 	private void attackCalculation(double statPoints)
 	{
-		 attackStat = statPoints + (level*10);
+		 attackStat = statPoints + (level);
 		
 	}
 	

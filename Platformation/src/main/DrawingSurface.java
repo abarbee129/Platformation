@@ -45,7 +45,12 @@ public class DrawingSurface extends PApplet {
 	private boolean jumpRelease;
 	private boolean skillRelease;
 	private ArrayList<PImage> assets;
-
+	private long total = 0;
+	private int frameCount = 0;
+	private int averageFPS = 0;
+	private boolean first = true;
+	private long start = System.nanoTime();
+	
 	public DrawingSurface() {
 
 
@@ -126,7 +131,7 @@ public class DrawingSurface extends PApplet {
 	}
 	public void spawnNewPlayer() {
 		player = new Player(assets.get(0), DRAWING_WIDTH/2-Mario.MARIO_WIDTH/2,50,this);
-		for(int i = 0; i < 0; i++) {
+		for(int i = 0; i < 80; i++) {
 			player.levelUP();
 		}
 	}
@@ -169,9 +174,15 @@ public class DrawingSurface extends PApplet {
 		if (lvl != OptionPanel.level) {
 			setupNewLevel();
 		}
-		background(0,255,255);   
-
-
+		
+		
+		background(0,255,255);  
+		
+		
+		frameCount++;
+		
+		text("FPS: " + averageFPS,0,20);
+		text("Frame Count: " + frameCount, 0,30);
 		// scaling
 		float ratioX = (float)width/DRAWING_WIDTH;
 		float ratioY = (float)height/DRAWING_HEIGHT;
@@ -466,8 +477,17 @@ public class DrawingSurface extends PApplet {
 			respawnPlayer();
 		}
 
-
-
+		total = System.nanoTime() - start;
+		
+		if(total > 1000000000) {
+			averageFPS = frameCount;
+			//System.out.println(averageFPS);
+			frameCount = 0;
+			total = 0;
+			start = System.nanoTime();
+		}
+		
+		
 	}
 
 	public void setupNewLevel() {
