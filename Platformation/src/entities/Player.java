@@ -60,14 +60,17 @@ public class Player extends Sprite implements Damageable{
 	private int maxDy = 480;
 	private double fricMod = 0.5;
 	private double slow = 1;
+	private int lives;
 	
 	
 	// ability cooldown fields
 	private int t1CD = 180;
-	private int t2CD = 90;
+	private int t2CD = 200;
+	private int atkRecov = 5;
 	private int[] cooldowns;
 	
-	
+	private boolean inCombat;
+
 	protected boolean isEnemy = false;
 
 	private ArrayList<PImage> pics;  
@@ -89,6 +92,7 @@ public class Player extends Sprite implements Damageable{
 
 
 
+		lives = 3;
 
 
 		level = 1;
@@ -97,8 +101,8 @@ public class Player extends Sprite implements Damageable{
 		currentHP = 100;
 		baseEP = 200;
 		currentEP = 200;
-		attackStat = 20;
-		defStat =  20;
+		attackStat = 10;
+		defStat =  10;
 		EXP = 0; 
 
 		techOne = 5;
@@ -120,6 +124,7 @@ public class Player extends Sprite implements Damageable{
 		attackStat = 10;
 		defStat =  10;
 		EXP = 0; 
+		lives = 3;
 		
 	}
 
@@ -262,7 +267,11 @@ public class Player extends Sprite implements Damageable{
 		
 		
 		energyReplenish();
-		regen();
+		
+		
+		
+		if(!inCombat)
+			regen();
 		
 		
 		if(!isTouchingGround&&!isDashing) {
@@ -474,7 +483,7 @@ public class Player extends Sprite implements Damageable{
 
 	public double damaged(double damageTaken) {
 
-		double damage = damageTaken*(5/(5+defStat));
+		double damage = damageTaken*(10/(10+defStat));
 
 		
 		if(isGameOver() == false && !shield ) 
@@ -587,6 +596,8 @@ public class Player extends Sprite implements Damageable{
 			energyDepletion(epCost);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
+					me.damaged(5*techOne + attackStat);
+					me.stunned(40 + techOne*4);
 					
 				}
 			}
@@ -598,17 +609,21 @@ public class Player extends Sprite implements Damageable{
 	public void useTechTwo(ArrayList<MeleeEnemy> meleeEnemies) 
 	{
 		double epCost = 60;
+		
 		if(currentEP>epCost && cooldowns[1] == 0 && !replenishing) {
 			cooldowns[1] = t2CD;
+			shield = true;
+			accelerate(0,-1000);
 			energyDepletion(epCost);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
-					me.damaged(5*techTwo + attackStat);
+					me.damaged(30*techTwo + attackStat);
 					me.knockedBack(600*Math.pow(techTwo, 0.25), -400, this);
 					me.stunned(20 + techTwo*4);
 				}
 			}
 		}
+		
 	}
 
 
@@ -715,15 +730,23 @@ public class Player extends Sprite implements Damageable{
 	}
 
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
-		for(int i = 0; i<meleeEnemies.size(); i++)
-		{	
-			if(meleeEnemies.get(i).intersects(this))
-			{
-				meleeEnemies.get(i).damaged(attackStat/2);
+		//Rectangle attackBox = new Rectangle((int)getX()+PLAYER_WIDTH,(int) getY()+PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_WIDTH );
+		if(cooldowns[2] == 0) {
+			cooldowns[2] = atkRecov;
+			for(int i = 0; i<meleeEnemies.size(); i++)
+			{	
+				if(meleeEnemies.get(i).intersects(this))
+				{
+					meleeEnemies.get(i).damaged(attackStat);
+				}
 			}
+			isAttacking = true;
 		}
-		
-		isAttacking = true;
+		else
+		{
+			stopAttack();
+		}
+			
 	}
 	
 	public void stopAttack()
@@ -735,6 +758,20 @@ public class Player extends Sprite implements Damageable{
 		return skillPoints;
 	}
 	
+	public void isInCombat(ArrayList<MeleeEnemy> meleeEnemies)
+	{
+		Rectangle combatBox = new Rectangle((int)getX()-50,(int) getY()-50, 100, 100 );
+		inCombat=false;
+		for(int i = 0; i<meleeEnemies.size(); i++)
+		{	
+			if(meleeEnemies.get(i).intersects(combatBox))
+			{
+				inCombat = true;
+			}
+		}
+		
+		
+	}
 	
 	public int getCooldowns(int index) {
 		return cooldowns[index];
@@ -745,10 +782,27 @@ public class Player extends Sprite implements Damageable{
 		}
 		else if (index == 1) {
 			return t2CD;
+
+		}
+		else if(index == 2)
+		{
+			return atkRecov;
 		}
 		else {
 			return 0;
 		}
 	}
+	public int getLives()
+	{
+		return lives;
+	}
 
+	public void lifeGained()
+	{
+		lives++;
+	}
+	public void lifeLost()
+	{
+		lives--;
+	}
 }
