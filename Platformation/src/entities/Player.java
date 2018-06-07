@@ -19,7 +19,7 @@ public class Player extends Sprite implements Damageable{
 	private double currentHP;
 	private double techOne;
 	private double techTwo;
-	private boolean usedTwo;
+	private boolean usedOne, usedTwo;
 	private final double xpScale = 1.6;
 
 	private double currentEP;

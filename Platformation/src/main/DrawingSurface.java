@@ -462,7 +462,7 @@ public class DrawingSurface extends PApplet {
 
 
 		if (isPressed(KeyEvent.VK_DOWN)) {
-			player.startShield();
+				player.startShield();
 		}
 		else {
 			player.endShield();
