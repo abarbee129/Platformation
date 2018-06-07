@@ -99,11 +99,11 @@ public class Player extends Sprite implements Damageable{
 
 		level = 1;
 		shield = false;
-		baseHP = 100;
-		currentHP = 100;
+		baseHP = 300;
+		currentHP = 300;
 		baseEP = 200;
 		currentEP = 200;
-		attackStat = 10;
+		attackStat = 20;
 		defStat =  10;
 		EXP = 0; 
 
@@ -119,11 +119,11 @@ public class Player extends Sprite implements Damageable{
 		cooldowns = new int[4];
 		this.level = level;
 		shield = false;
-		baseHP = 100;
-		currentHP = 100;
+		baseHP = 300;
+		currentHP = 300;
 		baseEP = 200;
 		currentEP = 200;
-		attackStat = 10;
+		attackStat = 20;
 		defStat =  10;
 		EXP = 0; 
 		lives = 3;
@@ -506,10 +506,15 @@ public class Player extends Sprite implements Damageable{
 	public void regen() {
 		if(baseHP>currentHP)
 		{
-			currentHP+=0.05;
-
+			if(!shield)	
+			{	
+				currentHP+=0.05;
+			}
+			else
+			{
+				currentHP+=0.5;					
+			}
 		}
-
 	}
 	public void resetHP()
 	{
@@ -661,7 +666,7 @@ public class Player extends Sprite implements Damageable{
 	{
 		if(currentEP>0 && !replenishing)
 		{
-			energyDepletion(2);
+			energyDepletion(1.5);
 			shield = true;
 		}
 		else
