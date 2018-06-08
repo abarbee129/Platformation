@@ -181,8 +181,12 @@ public class DrawingSurface extends PApplet {
 		
 		frameCount++;
 		
-		text("FPS: " + averageFPS,0,20);
-		text("Frame Count: " + frameCount, 0,30);
+		fill(255,0,0);
+		textSize(20);
+		text("FPS: " + averageFPS,0,30);
+		fill(0);
+		text("Lives: " + player.getLives(),0, 50);
+		textSize(10);
 		// scaling
 		float ratioX = (float)width/DRAWING_WIDTH;
 		float ratioY = (float)height/DRAWING_HEIGHT;
@@ -259,19 +263,8 @@ public class DrawingSurface extends PApplet {
 
 		player.draw(this);
 		for(MeleeEnemy me : meleeEnemies) {
-			me.actions(player, obstacles.get(1));
-			me.regen();
-			me.act(obstacles);
 			me.draw(this);
-			if(me.gety() > DRAWING_HEIGHT)
-			{
-				me.damaged(1000);
-			}
 		}
-
-		player.act(obstacles);
-		player.isInCombat(meleeEnemies);
-		
 		popMatrix();
 		
 
@@ -378,8 +371,7 @@ public class DrawingSurface extends PApplet {
 		text("Dash",12+DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/12);
 		text("Launch",7 + 2*DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/12);
 		
-		textSize(25);
-		text("Lives:-" + player.getLives(),DRAWING_WIDTH/25, -3 + DRAWING_HEIGHT/12);
+
 		
 		textSize(50);
 		text('Q',4 + DRAWING_WIDTH/6, 41 + DRAWING_HEIGHT/12);
@@ -465,6 +457,19 @@ public class DrawingSurface extends PApplet {
 			player.endShield();
 		} 
 
+		for(MeleeEnemy me : meleeEnemies) {
+			me.actions(player, obstacles.get(1));
+			me.regen();
+			me.act(obstacles,meleeEnemies);
+			if(me.gety() > DRAWING_HEIGHT)
+			{
+				me.damaged(1000);
+			}
+		}
+
+		player.act(obstacles,meleeEnemies);
+		player.isInCombat(meleeEnemies);
+		
 
 
 		// check for booster collisions and accelerate

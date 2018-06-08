@@ -21,6 +21,7 @@ public class Enemy extends Player implements Damageable {
 	private double defStat;
 	private double EXP;
 	private int c = 0;
+	private boolean hasBeenHitByDash;
 
 
 	public Enemy(PImage img, int x, int y, double level, double statPoints, PApplet marker) {
@@ -33,7 +34,7 @@ public class Enemy extends Player implements Damageable {
 		attackCalculation(statPoints);
 		EPCalculation(statPoints);
 		isEnemy = true;
-		EXP = level*15;
+		EXP = level*25;
 	}
 	
 	
@@ -153,7 +154,12 @@ public class Enemy extends Player implements Damageable {
 		return super.getEP();
 	}
 	
-	
+	public void setHasBeenHitByDash(boolean hasBeenHit) {
+		hasBeenHitByDash = hasBeenHit;
+	}
+	public boolean getHasBeenHitByDash() {
+		return hasBeenHitByDash;
+	}
 	
 	public boolean ifReplenishing()
 	{
