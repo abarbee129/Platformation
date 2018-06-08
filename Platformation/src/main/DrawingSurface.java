@@ -30,6 +30,7 @@ public class DrawingSurface extends PApplet {
 
 	public static final String fileSeparator = System.getProperty("file.separator");
 
+	private ArrayList<PImage> backgrounds;
 	private Rectangle screenRect;
 	private ArrayList<Booster> boosters;
 	private int tSinceLast;
@@ -56,6 +57,7 @@ public class DrawingSurface extends PApplet {
 
 		super();
 		assets = new ArrayList<PImage>();
+		backgrounds = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
 
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
@@ -155,7 +157,7 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-
+		backgrounds.add(loadImage("backgroundtest.png"));
 		lvl = OptionPanel.level;
 		initLevel("Levels" + fileSeparator + "Level " + lvl + ".txt");
 
@@ -177,6 +179,7 @@ public class DrawingSurface extends PApplet {
 		
 		
 		background(0,255,255);  
+		//background(backgrounds.get(0));
 		
 		
 		frameCount++;
@@ -451,7 +454,7 @@ public class DrawingSurface extends PApplet {
 
 
 		if (isPressed(KeyEvent.VK_DOWN)) {
-			player.startShield();
+				player.startShield();
 		}
 		else {
 			player.endShield();

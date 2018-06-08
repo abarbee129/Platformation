@@ -19,6 +19,7 @@ public class Player extends Sprite implements Damageable{
 	private double currentHP;
 	private double techOne;
 	private double techTwo;
+	private boolean usedOne, usedTwo;
 	private final double xpScale = 1.6;
 
 	private double currentEP;
@@ -83,6 +84,7 @@ public class Player extends Sprite implements Damageable{
 		cooldowns = new int[4];
 		isFlipped = false;
 
+		usedTwo = false;
 		//pics.add(marker.loadImage("Player.png"));
 		//pics.add(marker.loadImage("PlayerAttack.png"));
 		//pics.add(marker.loadImage("PlayerShield.png"));
@@ -97,12 +99,12 @@ public class Player extends Sprite implements Damageable{
 
 		level = 1;
 		shield = false;
-		baseHP = 100;
-		currentHP = 100;
+		baseHP = 300;
+		currentHP = 300;
 		baseEP = 200;
 		currentEP = 200;
-		attackStat = 10;
-		defStat =  40;
+		attackStat = 20;
+		defStat =  10;
 		EXP = 0; 
 
 		techOne = 5;
@@ -117,14 +119,16 @@ public class Player extends Sprite implements Damageable{
 		cooldowns = new int[4];
 		this.level = level;
 		shield = false;
-		baseHP = 100;
-		currentHP = 100;
+		baseHP = 300;
+		currentHP = 300;
 		baseEP = 200;
 		currentEP = 200;
-		attackStat = 10;
+		attackStat = 20;
 		defStat =  10;
 		EXP = 0; 
 		lives = 3;
+		usedTwo = false;
+
 
 	}
 
@@ -286,6 +290,13 @@ public class Player extends Sprite implements Damageable{
 
 
 
+		
+		if(cooldowns[1] == t2CD/2)
+		{
+			usedTwo = false;
+		}
+		
+		
 		energyReplenish();
 
 
@@ -519,8 +530,14 @@ public class Player extends Sprite implements Damageable{
 	public void regen() {
 		if(baseHP>currentHP)
 		{
-			currentHP+=0.05;
-
+			if(!shield)	
+			{	
+				currentHP+=0.05;
+			}
+			else
+			{
+				currentHP+=0.5;					
+			}
 		}
 
 	}
@@ -603,6 +620,7 @@ public class Player extends Sprite implements Damageable{
 		if(currentEP>epCost && cooldowns[0] == 0 && !replenishing)
 		{	
 			cooldowns[0] = t1CD;
+			shield = true;
 			accelerate(0,-dy);
 			if(isFlipped)
 			{
@@ -633,6 +651,7 @@ public class Player extends Sprite implements Damageable{
 					me.stunned(20 + techTwo*4);
 				}
 			}
+			usedTwo = true;
 		}
 
 	}
@@ -663,7 +682,7 @@ public class Player extends Sprite implements Damageable{
 	{
 		if(currentEP>0 && !replenishing)
 		{
-			energyDepletion(2);
+			energyDepletion(1.5);
 			shield = true;
 		}
 		else
@@ -744,22 +763,33 @@ public class Player extends Sprite implements Damageable{
 
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
 		//Rectangle attackBox = new Rectangle((int)getX()+PLAYER_WIDTH,(int) getY()+PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_WIDTH );
-		if(cooldowns[2] == 0) {
-			cooldowns[2] = atkRecov;
-			for(int i = 0; i<meleeEnemies.size(); i++)
-			{	
-				if(meleeEnemies.get(i).intersects(this))
-				{
-					meleeEnemies.get(i).damaged(attackStat);
+		if(usedTwo==false || isTouchingGround)
+		{
+			if(cooldowns[2] == 0) {
+				cooldowns[2] = atkRecov;
+				for(int i = 0; i<meleeEnemies.size(); i++)
+				{	
+					if(meleeEnemies.get(i).intersects(this))
+					{
+						meleeEnemies.get(i).damaged(attackStat);
+					}
 				}
 			}
 			isAttacking = true;
 		}
 		else
 		{
-			stopAttack();
+			accelerate(0,150);
+			for(MeleeEnemy me : meleeEnemies) {
+				if(me.intersects(this)) {
+					me.damaged(techTwo*2 + attackStat);
+					me.knockedBack(600*Math.pow(techTwo, 0.25), -400, this);
+					me.stunned(20 + techTwo*4);
+				}
+			}
 		}
 
+		
 	}
 
 	public void stopAttack()
