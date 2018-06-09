@@ -108,7 +108,7 @@ public class Enemy extends Player implements Damageable {
 			attackStat = 0;
 		}
 				
-		return damageTaken;
+		return super.damaged(damageTaken);
 	}
 
 	

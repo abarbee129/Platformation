@@ -288,7 +288,10 @@ public class Player extends Sprite implements Damageable{
 		}
 
 
-
+		if(cooldowns[0] == t1CD-(t1CD/4))
+		{
+			usedOne = false;
+		}
 
 		
 		if(cooldowns[1] == t2CD/2)
@@ -491,7 +494,7 @@ public class Player extends Sprite implements Damageable{
 			g.rect((float)x-PLAYER_WIDTH/4, (float)y-9, (float)(3*PLAYER_WIDTH/2*currentEP/baseEP), (float)9);
 			g.fill(0);
 			g.textSize(10);
-			g.text("EP: " + currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
+			g.text("EP: " + (int)currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
 
 
 		}
@@ -586,7 +589,7 @@ public class Player extends Sprite implements Damageable{
 
 	public boolean energyReplenish() {
 		if(currentEP<baseEP && !shield) {
-			currentEP+= 0.5 * (int)(1 + level/5);
+			currentEP+=0.3*(int)(1+level/5);
 		}
 		if(currentEP>baseEP) {
 			currentEP = baseEP;
@@ -631,6 +634,7 @@ public class Player extends Sprite implements Damageable{
 				accelerate(1400,0);
 			}
 			energyDepletion(epCost);
+			usedOne = true;
 		}
 	}
 
@@ -763,17 +767,34 @@ public class Player extends Sprite implements Damageable{
 
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
 		//Rectangle attackBox = new Rectangle((int)getX()+PLAYER_WIDTH,(int) getY()+PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_WIDTH );
-		if(usedTwo==false || isTouchingGround)
+		if(usedTwo==false|| isTouchingGround)
 		{
-			if(cooldowns[2] == 0) {
-				cooldowns[2] = atkRecov;
+			if(usedOne == false)
+			{
+				if(cooldowns[2] == 0) {
+					cooldowns[2] = atkRecov;
+						for(int i = 0; i<meleeEnemies.size(); i++)
+						{	
+							if(meleeEnemies.get(i).intersects(this))
+							{
+								meleeEnemies.get(i).damaged(attackStat);
+							}
+						}
+					}
+			}
+			else
+			{
 				for(int i = 0; i<meleeEnemies.size(); i++)
 				{	
 					if(meleeEnemies.get(i).intersects(this))
 					{
 						meleeEnemies.get(i).damaged(attackStat);
+						accelerate(-dx, -600);
+						lifeSteal(meleeEnemies.get(i).damaged(attackStat));
+						usedOne = false;
 					}
 				}
+				
 			}
 			isAttacking = true;
 		}
@@ -834,6 +855,14 @@ public class Player extends Sprite implements Damageable{
 		else {
 			return 0;
 		}
+	}
+	public void lifeSteal(double damage)
+	{
+			if(currentHP<baseHP)
+			{
+				currentHP+= damage*0.05;
+			}
+			
 	}
 	public int getLives()
 	{
