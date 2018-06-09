@@ -860,7 +860,7 @@ public class Player extends Sprite implements Damageable{
 	{
 			if(currentHP<baseHP)
 			{
-				currentHP+= damage*0.05;
+				currentHP+= damage;
 			}
 			
 	}
