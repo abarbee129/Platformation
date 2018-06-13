@@ -68,7 +68,7 @@ public class Player extends Sprite implements Damageable{
 	private int t1CD = 180;
 	private int t2CD = 200;
 	private int atkRecov = 5;
-	private int[] cooldowns;
+	private double[] cooldowns;
 
 	private boolean inCombat;
 
@@ -81,7 +81,7 @@ public class Player extends Sprite implements Damageable{
 		super(img, x, y, PLAYER_WIDTH, PLAYER_HEIGHT);
 		ox = new double[3];
 		oy = new double[3]; 
-		cooldowns = new int[4];
+		cooldowns = new double[4];
 		isFlipped = false;
 
 		usedTwo = false;
@@ -116,7 +116,7 @@ public class Player extends Sprite implements Damageable{
 		this.slow = slow;
 		ox = new double[3];
 		oy = new double[3];
-		cooldowns = new int[4];
+		cooldowns = new double[4];
 		this.level = level;
 		shield = false;
 		baseHP = 300;
@@ -132,7 +132,7 @@ public class Player extends Sprite implements Damageable{
 
 	}
 
-	public void walk(int dir) {
+	public void walk(double dir) {
 		isMoving = true;
 		double accelAmt = 0;
 		if(dir>0)
@@ -145,7 +145,8 @@ public class Player extends Sprite implements Damageable{
 		}	
 
 		if (dir*dx >= 0 && dir*dx <=maxDx/2) {
-			accelAmt = maxDx / ticksFromZeroToHalf;
+			accelAmt = maxDx / (ticksFromZeroToHalf);
+			accelAmt *= dir;
 		}
 		else if (dir*dx >= maxDx/2 && dir*dx <= maxDx) {
 			double accelerationFromZeroToHalf = maxDx / 2 / ticksFromZeroToHalf;
@@ -154,8 +155,8 @@ public class Player extends Sprite implements Damageable{
 			accelAmt =  (accelerationCoefficient * tickCount) + accelerationFromZeroToHalf;
 			accelAmt *= dir;
 		}
-		else if (dir*dx >= -maxDx && dir* dx <=0) {
-			accelAmt = maxDx / ticksToStop;
+		else if (dir*dx >= -maxDx && dir*dx <0) {
+			accelAmt = maxDx / (ticksToStop);
 			accelAmt *= dir;
 		}
 		else {
@@ -190,7 +191,6 @@ public class Player extends Sprite implements Damageable{
 				accelAmt = (-maxDx - dx)/2;
 			}
 		}
-
 		accelerate(accelAmt, 0); 
 	}
 
@@ -202,14 +202,14 @@ public class Player extends Sprite implements Damageable{
 		if(isTouchingGround || !hasJumped){
 			if(dy > -maxDy) {
 				if(isTouchingGround) {
-					accelerate(0, -600);
+					instantAccelerate(0, -600);
 					isTouchingGround = false;
 				}
 				else if(!hasJumped&&!isEnemy){
 					if(dy>0) {
-						accelerate(0,-dy);
+						instantAccelerate(0,-dy);
 					}
-					accelerate(0, -600);
+					instantAccelerate(0, -600);
 					hasJumped = true;
 				}
 			}
@@ -227,6 +227,14 @@ public class Player extends Sprite implements Damageable{
 
 	public void accelerate (double dx, double dy) {
 		// This is a simple accelerate method that adds dx and dy to the current velocity.
+		this.dx += dx*TimeEntity.TIME_RATE;
+		this.dy += dy*TimeEntity.TIME_RATE;
+
+		ddx += dx*TimeEntity.TIME_RATE;
+		ddy += dy*TimeEntity.TIME_RATE;
+	}
+	public void instantAccelerate (double dx, double dy) {
+		// This is a simple accelerate method that adds dx and dy to the current velocity.
 		this.dx += dx;
 		this.dy += dy;
 
@@ -243,8 +251,8 @@ public class Player extends Sprite implements Damageable{
 
 
 	public void move() {
-		double xchange = slow*dt * (oldDx + ((ddx/2) * dt));
-		double ychange = slow*dt * (oldDy + ((ddy/2) * dt));
+		double xchange = TimeEntity.TIME_RATE*slow*dt * (oldDx + ((ddx/2) * dt));
+		double ychange = TimeEntity.TIME_RATE*slow*dt * (oldDy + ((ddy/2) * dt));
 		super.moveByAmount(xchange, ychange);
 		oldDx = this.dx;
 		oldDy = this.dy;
@@ -259,7 +267,7 @@ public class Player extends Sprite implements Damageable{
 
 		for(int c = 0; c < cooldowns.length; c++) {
 			if(cooldowns[c] > 0) {
-				cooldowns[c]--;
+				cooldowns[c]-= TimeEntity.TIME_RATE;
 			}
 		}
 		isDashing = cooldowns[0] >= t1CD-10;
@@ -281,7 +289,7 @@ public class Player extends Sprite implements Damageable{
 		}
 		if(stunTicks > 0) {
 			isStunned = true;
-			stunTicks--;
+			stunTicks-=TimeEntity.TIME_RATE;
 		}
 		else {
 			isStunned = false;
@@ -317,22 +325,17 @@ public class Player extends Sprite implements Damageable{
 			if(intersects(r)) {
 				double thisCX = x + PLAYER_WIDTH/2;
 				double thisCY = y + PLAYER_HEIGHT/2;
+				
 				double oldCx = ox[1] + PLAYER_WIDTH/2;
 				double oldCy = oy[1] + PLAYER_HEIGHT/2;
 				double oxdif = oldCx - (r.x+r.width/2);
 				double oydif = oldCy - (r.y+r.height/2);
 				double xdif = thisCX - (r.x+r.width/2);
 				double ydif = thisCY - (r.y+r.height/2);
-				if(ydif < 0 && oydif > ydif) {
+				if(ydif < 0) {
 					// player is "above" the center of the platform
-					super.moveByAmount(0, ydif);
-
-				}
-				else if(ydif < 0) {
-					// player is "above" the center of the platform
-					accelerate(0,-dy);
+					instantAccelerate(0,-dy);
 					super.moveByAmount(0, -(ydif+1)-(PLAYER_HEIGHT/2 + r.height/2));
-
 					isTouchingGround = true;
 				}
 				else if(ydif > 0 && oydif > ydif) {
@@ -535,11 +538,11 @@ public class Player extends Sprite implements Damageable{
 		{
 			if(!shield)	
 			{	
-				currentHP+=0.05;
+				currentHP+=0.05 * TimeEntity.TIME_RATE;
 			}
 			else
 			{
-				currentHP+=0.5;					
+				currentHP+=0.5 * TimeEntity.TIME_RATE;					
 			}
 		}
 
@@ -589,7 +592,7 @@ public class Player extends Sprite implements Damageable{
 
 	public boolean energyReplenish() {
 		if(currentEP<baseEP && !shield) {
-			currentEP+=0.3*(int)(1+level/5);
+			currentEP+=TimeEntity.TIME_RATE*0.3*(int)(1+level/5);
 		}
 		if(currentEP>baseEP) {
 			currentEP = baseEP;
@@ -624,14 +627,14 @@ public class Player extends Sprite implements Damageable{
 		{	
 			cooldowns[0] = t1CD;
 			shield = true;
-			accelerate(0,-dy);
+			instantAccelerate(0,-dy);
 			if(isFlipped)
 			{
-				accelerate(-1400,0);
+				instantAccelerate(-1400,0);
 			}
 			else
 			{
-				accelerate(1400,0);
+				instantAccelerate(1400,0);
 			}
 			energyDepletion(epCost);
 			usedOne = true;
@@ -646,7 +649,7 @@ public class Player extends Sprite implements Damageable{
 		if(currentEP>epCost && cooldowns[1] == 0 && !replenishing) {
 			cooldowns[1] = t2CD;
 			shield = true;
-			accelerate(0,-1000);
+			instantAccelerate(0,-1000);
 			energyDepletion(epCost);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
@@ -658,6 +661,10 @@ public class Player extends Sprite implements Damageable{
 			usedTwo = true;
 		}
 
+	}
+	
+	public void useTechThree() {
+		
 	}
 
 
@@ -686,7 +693,7 @@ public class Player extends Sprite implements Damageable{
 	{
 		if(currentEP>0 && !replenishing)
 		{
-			energyDepletion(1.5);
+			energyDepletion(1.5*TimeEntity.TIME_RATE);
 			shield = true;
 		}
 		else
@@ -788,9 +795,9 @@ public class Player extends Sprite implements Damageable{
 				{	
 					if(meleeEnemies.get(i).intersects(this))
 					{
-						meleeEnemies.get(i).damaged(attackStat);
+						meleeEnemies.get(i).damaged(attackStat*TimeEntity.TIME_RATE);
 						accelerate(-dx, -600);
-						lifeSteal(meleeEnemies.get(i).damaged(attackStat));
+						lifeSteal(meleeEnemies.get(i).damaged(attackStat*TimeEntity.TIME_RATE));
 						usedOne = false;
 					}
 				}
@@ -800,10 +807,10 @@ public class Player extends Sprite implements Damageable{
 		}
 		else
 		{
-			accelerate(0,150);
+			instantAccelerate(0,150);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
-					me.damaged(techTwo*2 + attackStat);
+					me.damaged(TimeEntity.TIME_RATE*(techTwo*2 + attackStat));
 					me.knockedBack(600*Math.pow(techTwo, 0.25), -400, this);
 					me.stunned(20 + techTwo*4);
 				}
@@ -837,7 +844,7 @@ public class Player extends Sprite implements Damageable{
 
 	}
 
-	public int getCooldowns(int index) {
+	public double getCooldowns(int index) {
 		return cooldowns[index];
 	}
 	public int getTechCD(int index) {

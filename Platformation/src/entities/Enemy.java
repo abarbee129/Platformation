@@ -73,11 +73,11 @@ public class Enemy extends Player implements Damageable {
 	{
 		if(p.getCenterX()>this.getCenterX())
 		{
-			super.accelerate(-dx, dy);
+			super.instantAccelerate(-dx, dy);
 		}
 		else
 		{
-			super.accelerate(dx, dy);
+			super.instantAccelerate(dx, dy);
 		}
 			
 	}
@@ -93,7 +93,7 @@ public class Enemy extends Player implements Damageable {
 	
 	public void attack(Player p)
 	{
-		p.damaged(attackStat);
+		p.damaged(attackStat*TimeEntity.TIME_RATE);
 	}
 
 	@Override

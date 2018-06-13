@@ -18,6 +18,7 @@ import entities.Enemy;
 import entities.Mario;
 import entities.MeleeEnemy;
 import entities.Player;
+import entities.TimeEntity;
 import worldGeometry.Booster;
 import worldGeometry.Platform;
 import processing.core.PApplet;
@@ -50,6 +51,7 @@ public class DrawingSurface extends PApplet {
 	private int frameCount = 0;
 	private int averageFPS = 0;
 	private boolean first = true;
+	private double timeSpeed = 1;
 	private long start = System.nanoTime();
 	
 	public DrawingSurface() {
@@ -66,6 +68,7 @@ public class DrawingSurface extends PApplet {
 		platforms = new ArrayList<Platform>();
 		meleeEnemies = new ArrayList<MeleeEnemy>(); 
 		bullets = new ArrayList<Bullet>();
+		TimeEntity.setTimeRate(timeSpeed);
 		/*
 		obstacles.add(new Rectangle(200,400,400,50));
 		obstacles.add(new Rectangle(0,250,100,50));
