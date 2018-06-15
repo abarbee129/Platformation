@@ -453,8 +453,16 @@ public class DrawingSurface extends PApplet {
 			skillRelease = true;
 		}
 
+	/*	if (isPressed(KeyEvent.VK_T)) {
+			timeSpeed = 0.25;
+			
+		}
+		else
+		{
+			timeSpeed = 1;
+		}
 
-
+		TimeEntity.setTimeRate(timeSpeed);*/
 
 		if (isPressed(KeyEvent.VK_DOWN)) {
 				player.startShield();
