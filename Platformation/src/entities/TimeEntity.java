@@ -11,8 +11,8 @@ public class TimeEntity {
 		if(time < 0) {
 			System.out.println("Bad time value, time cannot be less than 0. TimePassedIn: " + time);
 		}
-		else if(time > 1) {
-			System.out.println("Bad time value, time cannot be greater than 1. TimePassedIn: " + time);
+		else if(time > 4) {
+			System.out.println("Bad time value, time cannot be greater than 4. TimePassedIn: " + time);
 		}
 		else {
 			TIME_RATE = time;

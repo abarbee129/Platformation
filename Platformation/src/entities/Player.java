@@ -267,7 +267,12 @@ public class Player extends Sprite implements Damageable{
 
 		for(int c = 0; c < cooldowns.length; c++) {
 			if(cooldowns[c] > 0) {
-				cooldowns[c]-= TimeEntity.TIME_RATE;
+				if(cooldowns[c] - TimeEntity.TIME_RATE < 0) {
+					cooldowns[c] = 0;
+				}
+				else {
+					cooldowns[c]-= TimeEntity.TIME_RATE;
+				}
 			}
 		}
 		isDashing = cooldowns[0] >= t1CD-10;
@@ -623,7 +628,7 @@ public class Player extends Sprite implements Damageable{
 		double epCost = 100;
 
 
-		if(currentEP>epCost && cooldowns[0] == 0 && !replenishing)
+		if(currentEP>epCost && cooldowns[0] <= 0 && !replenishing)
 		{	
 			cooldowns[0] = t1CD;
 			shield = true;
@@ -646,7 +651,7 @@ public class Player extends Sprite implements Damageable{
 	{
 		double epCost = 60;
 
-		if(currentEP>epCost && cooldowns[1] == 0 && !replenishing) {
+		if(currentEP>epCost && cooldowns[1] <= 0 && !replenishing) {
 			cooldowns[1] = t2CD;
 			shield = true;
 			instantAccelerate(0,-1000);
@@ -778,7 +783,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			if(usedOne == false)
 			{
-				if(cooldowns[2] == 0) {
+				if(cooldowns[2] <= 0) {
 					cooldowns[2] = atkRecov;
 						for(int i = 0; i<meleeEnemies.size(); i++)
 						{	
