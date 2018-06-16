@@ -746,6 +746,9 @@ public class Player extends Sprite implements Damageable{
 		baseEP+=10;
 		attackStat+=5;
 		defStat+=3;
+		
+		resetHP();
+		resetEP();
 
 	}
 
