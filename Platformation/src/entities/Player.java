@@ -783,7 +783,9 @@ public class Player extends Sprite implements Damageable{
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
 		//Rectangle attackBox = new Rectangle((int)getX()+PLAYER_WIDTH,(int) getY()+PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_WIDTH );
 		if(usedTwo==false|| isTouchingGround) {
-
+			
+			
+			// normal basic attack, no abilities used or is on the ground.
 			if(usedOne == false) {
 				if(cooldowns[2] <= 0) {
 					cooldowns[2] = atkRecov;
@@ -794,7 +796,7 @@ public class Player extends Sprite implements Damageable{
 					}
 				}
 			}
-
+			// special basic attack with life steal, the "q" ability has been used
 			else {
 				for(int i = 0; i<meleeEnemies.size(); i++) {	
 					if(meleeEnemies.get(i).intersects(this)) {
@@ -808,7 +810,8 @@ public class Player extends Sprite implements Damageable{
 			}
 			isAttacking = true;
 		}
-
+		// special basic attack #2, this one slams down and knocks enemies away really far!, activated if in the air
+		// and the "w" ability was recently used
 		else {
 			instantAccelerate(0,150);
 			for(MeleeEnemy me : meleeEnemies) {
