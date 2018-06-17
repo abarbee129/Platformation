@@ -286,8 +286,8 @@ public class Player extends Sprite implements Damageable{
 				}
 			}
 		}
-		else {
-			
+		else if (!isEnemy) {
+
 			for(MeleeEnemy me : meleeEnemies) {
 				me.setHasBeenHitByDash(false);
 			}
@@ -306,13 +306,13 @@ public class Player extends Sprite implements Damageable{
 			usedOne = false;
 		}
 
-		
+
 		if(cooldowns[1] == t2CD/2)
 		{
 			usedTwo = false;
 		}
-		
-		
+
+
 		energyReplenish();
 
 
@@ -330,7 +330,7 @@ public class Player extends Sprite implements Damageable{
 			if(intersects(r)) {
 				double thisCX = x + PLAYER_WIDTH/2;
 				double thisCY = y + PLAYER_HEIGHT/2;
-				
+
 				double oldCx = ox[1] + PLAYER_WIDTH/2;
 				double oldCy = oy[1] + PLAYER_HEIGHT/2;
 				double oxdif = oldCx - (r.x+r.width/2);
@@ -667,9 +667,9 @@ public class Player extends Sprite implements Damageable{
 		}
 
 	}
-	
+
 	public void useTechThree() {
-		
+
 	}
 
 
@@ -713,7 +713,7 @@ public class Player extends Sprite implements Damageable{
 		if(!isDashing) {
 			shield = false;
 		}
-		
+
 	}
 
 	public boolean isShieldActive()
@@ -779,39 +779,34 @@ public class Player extends Sprite implements Damageable{
 
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
 		//Rectangle attackBox = new Rectangle((int)getX()+PLAYER_WIDTH,(int) getY()+PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_WIDTH );
-		if(usedTwo==false|| isTouchingGround)
-		{
-			if(usedOne == false)
-			{
+		if(usedTwo==false|| isTouchingGround) {
+
+			if(usedOne == false) {
 				if(cooldowns[2] <= 0) {
 					cooldowns[2] = atkRecov;
-						for(int i = 0; i<meleeEnemies.size(); i++)
-						{	
-							if(meleeEnemies.get(i).intersects(this))
-							{
-								meleeEnemies.get(i).damaged(attackStat);
-							}
+					for(int i = 0; i<meleeEnemies.size(); i++) {	
+						if(meleeEnemies.get(i).intersects(this)) {
+							meleeEnemies.get(i).damaged(attackStat);
 						}
 					}
+				}
 			}
-			else
-			{
-				for(int i = 0; i<meleeEnemies.size(); i++)
-				{	
-					if(meleeEnemies.get(i).intersects(this))
-					{
+
+			else {
+				for(int i = 0; i<meleeEnemies.size(); i++) {	
+					if(meleeEnemies.get(i).intersects(this)) {
 						meleeEnemies.get(i).damaged(attackStat*TimeEntity.TIME_RATE);
 						accelerate(-dx, -600);
 						lifeSteal(meleeEnemies.get(i).damaged(attackStat*TimeEntity.TIME_RATE));
 						usedOne = false;
 					}
 				}
-				
+
 			}
 			isAttacking = true;
 		}
-		else
-		{
+
+		else {
 			instantAccelerate(0,150);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
@@ -822,7 +817,7 @@ public class Player extends Sprite implements Damageable{
 			}
 		}
 
-		
+
 	}
 
 	public void stopAttack()
@@ -870,11 +865,11 @@ public class Player extends Sprite implements Damageable{
 	}
 	public void lifeSteal(double damage)
 	{
-			if(currentHP<baseHP)
-			{
-				currentHP+= damage;
-			}
-			
+		if(currentHP<baseHP)
+		{
+			currentHP+= damage;
+		}
+
 	}
 	public int getLives()
 	{
