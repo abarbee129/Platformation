@@ -422,10 +422,12 @@ public class DrawingSurface extends PApplet {
 		else {
 			player.endShield();
 		} 
+		
 		if(isPressed(KeyEvent.VK_W)) {
 			player.useTechTwo(meleeEnemies);
 
 		}
+		
 		if(isPressed(KeyEvent.VK_E))
 		{
 
@@ -453,8 +455,9 @@ public class DrawingSurface extends PApplet {
 			skillRelease = true;
 		}
 
-	/*	if (isPressed(KeyEvent.VK_T)) {
+		if (isPressed(KeyEvent.VK_T)&&player.getEP()>0) {
 			timeSpeed = 0.25;
+			player.energyDepletion(1);
 			
 		}
 		else
@@ -462,7 +465,7 @@ public class DrawingSurface extends PApplet {
 			timeSpeed = 1;
 		}
 
-		TimeEntity.setTimeRate(timeSpeed);*/
+		TimeEntity.setTimeRate(timeSpeed);
 
 		if (isPressed(KeyEvent.VK_DOWN)) {
 				player.startShield();
