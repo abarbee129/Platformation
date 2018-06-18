@@ -22,6 +22,8 @@ public class Player extends Sprite implements Damageable{
 	private boolean usedOne, usedTwo;
 	private final double xpScale = 1.6;
 
+	private Rectangle combatBox;
+	
 	private double currentEP;
 	private double baseEP;
 	private boolean replenishing;
@@ -91,8 +93,8 @@ public class Player extends Sprite implements Damageable{
 		//pics.add(marker.loadImage("PlayerFlipped.png"));
 		//pics.add(marker.loadImage("PlayerAttackFlipped.png"));
 		//pics.add(marker.loadImage("PlayerShieldFlipped.png"));
-
-
+		
+		combatBox = new Rectangle((int)(this.x-200),(int)(this.y-100), 400, 200);
 
 		lives = 3;
 
@@ -128,6 +130,7 @@ public class Player extends Sprite implements Damageable{
 		EXP = 0; 
 		lives = 3;
 		usedTwo = false;
+		combatBox = new Rectangle((int)(this.x-200),(int)(this.y-100), 400, 200);
 
 
 	}
@@ -449,6 +452,7 @@ public class Player extends Sprite implements Damageable{
 	@Override 
 	public void draw(PApplet g) {
 		super.draw(g);
+		
 		g.pushStyle();
 		g.noFill();
 		g.rect((float)x-PLAYER_WIDTH/4, (float)y-20, (float)3*PLAYER_WIDTH/2, (float)9);
@@ -459,7 +463,9 @@ public class Player extends Sprite implements Damageable{
 		g.text("HP: " + (int)getHP(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
 		g.textSize(10);
 		g.text("Lv: " + (int)level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
-
+		
+		
+		
 		if(skillPoints > 0) {
 			g.textSize(10);
 			g.fill(0);
@@ -503,6 +509,9 @@ public class Player extends Sprite implements Damageable{
 			g.fill(0);
 			g.textSize(10);
 			g.text("EP: " + (int)currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
+			
+			//g.noFill();
+			//g.rect((float)combatBox.getX(), (float)combatBox.getY(),(float)combatBox.getWidth(), (float)combatBox.getHeight());
 
 
 		}
