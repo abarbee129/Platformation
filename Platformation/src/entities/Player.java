@@ -2,6 +2,7 @@ package entities;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
@@ -22,7 +23,7 @@ public class Player extends Sprite implements Damageable{
 	private boolean usedOne, usedTwo;
 	private final double xpScale = 1.6;
 
-	private Rectangle combatBox;
+	private Rectangle2D combatBox;
 	
 	private double currentEP;
 	private double baseEP;
@@ -264,7 +265,7 @@ public class Player extends Sprite implements Damageable{
 	}
 	public void act(ArrayList<Shape> shapes,ArrayList<MeleeEnemy> meleeEnemies) {
 
-
+		combatBox = new Rectangle((int)(this.x-200),(int)(this.y-100), 400, 200);
 
 
 
@@ -320,8 +321,10 @@ public class Player extends Sprite implements Damageable{
 
 
 
-		if(!inCombat)
+		if(isInCombat(meleeEnemies)==false)
+		{
 			regen();
+		}
 
 
 		if(!isTouchingGround&&!isDashing) {
@@ -631,8 +634,12 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
+	public void dashTo(double x, double y)
+	{
+		
+	}
 
-	public void useTechOne(ArrayList<MeleeEnemy> meleeEnemies) 
+	public void useTechOne() 
 	{
 		double epCost = 100;
 
@@ -844,18 +851,19 @@ public class Player extends Sprite implements Damageable{
 		return skillPoints;
 	}
 
-	public void isInCombat(ArrayList<MeleeEnemy> meleeEnemies)
+	public boolean isInCombat(ArrayList<MeleeEnemy> meleeEnemies)
 	{
 		Rectangle combatBox = new Rectangle((int)getX()-50,(int) getY()-50, 100, 100 );
-		inCombat=false;
+		
 		for(int i = 0; i<meleeEnemies.size(); i++)
 		{	
 			if(meleeEnemies.get(i).intersects(combatBox))
 			{
-				inCombat = true;
+				return true;
 			}
 		}
 
+		return false;
 
 	}
 
@@ -878,6 +886,8 @@ public class Player extends Sprite implements Damageable{
 			return 0;
 		}
 	}
+	
+
 	public void lifeSteal(double damage)
 	{
 		if(currentHP<baseHP)

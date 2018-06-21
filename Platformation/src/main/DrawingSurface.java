@@ -417,7 +417,7 @@ public class DrawingSurface extends PApplet {
 			jumpRelease = true;
 		}
 		if(isPressed(KeyEvent.VK_Q)) {
-			player.useTechOne(meleeEnemies);
+			player.useTechOne();
 		}
 		else {
 			player.endShield();
