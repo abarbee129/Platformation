@@ -46,6 +46,7 @@ public class DrawingSurface extends PApplet {
 	private Shape goal;
 	private boolean jumpRelease;
 	private boolean skillRelease;
+	private boolean attackRelease;
 	private ArrayList<PImage> assets;
 	private long total = 0;
 	private int frameCount = 0;
@@ -430,12 +431,14 @@ public class DrawingSurface extends PApplet {
 		
 		if(isPressed(KeyEvent.VK_E))
 		{
-
-			player.attack(meleeEnemies);
+			if(attackRelease) {
+				player.attack(meleeEnemies);
+				attackRelease = false;
+			}
 		}
 		else
 		{
-			player.stopAttack();
+			attackRelease = true;
 		}
 		if(isPressed(KeyEvent.VK_A)||isPressed(KeyEvent.VK_S))
 		{
@@ -465,6 +468,7 @@ public class DrawingSurface extends PApplet {
 
 		for(MeleeEnemy me : meleeEnemies) {
 			if(me.getIsDead()) {
+				me.actions(player, obstacles.get(1));
 				if(me.gety() < DRAWING_HEIGHT+200 && Math.abs(me.getDx()) +  Math.abs(me.getDy()) > 1) {
 					me.act(obstacles, meleeEnemies);
 				}

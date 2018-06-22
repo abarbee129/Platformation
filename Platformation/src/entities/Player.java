@@ -32,6 +32,7 @@ public class Player extends Sprite implements Damageable{
 	private boolean regen;
 	private double level;
 	private int skillPoints;
+	private double attackRange = 200;
 	private double attackStat;
 	private double defStat;
 	private double EXP;
@@ -70,8 +71,10 @@ public class Player extends Sprite implements Damageable{
 	// ability cooldown fields
 	private int t1CD = 180;
 	private int t2CD = 200;
-	private int atkRecov = 5;
+	private int atkRecov = 20;
+	private boolean atkRefresh;
 	private double[] cooldowns;
+	private double atkAnimTime = 0;
 
 	private boolean inCombat;
 
@@ -279,6 +282,21 @@ public class Player extends Sprite implements Damageable{
 				}
 			}
 		}
+		if(atkAnimTime - TimeEntity.TIME_RATE < 0) {
+			atkAnimTime = 0;
+		}
+		else {
+			atkAnimTime-= TimeEntity.TIME_RATE;
+		}
+		if(cooldowns[2] >= 2*atkRecov && !atkRefresh) {
+			atkRefresh = true;
+		}
+		else if(atkRefresh && cooldowns[2] < 1) {
+			atkRefresh = false;
+		}
+		
+		
+		isAttacking = atkAnimTime > 0;
 		isDashing = cooldowns[0] >= t1CD-10;
 		if(isDashing) {
 			shield = true;
@@ -467,7 +485,8 @@ public class Player extends Sprite implements Damageable{
 		g.text("HP: " + (int)getHP(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
 		g.textSize(10);
 		g.text("Lv: " + (int)level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
-
+		// delete me when done
+		g.text("AtkRec " + (int)cooldowns[2], (float)(3+x-PLAYER_WIDTH/4), (float)y-32);
 
 
 		if(skillPoints > 0) {
@@ -491,7 +510,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			g.noFill();
 			g.stroke(234,23,23);
-			g.rect((float)x, (float)y, (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+			g.ellipse((float)(x+PLAYER_WIDTH/2), (float)(y+PLAYER_HEIGHT/2), (float)attackRange*2, (float)attackRange*2);
 		}
 
 		if(shield)
@@ -733,6 +752,7 @@ public class Player extends Sprite implements Damageable{
 
 	}
 
+
 	public boolean isShieldActive()
 	{
 		return shield;
@@ -802,15 +822,33 @@ public class Player extends Sprite implements Damageable{
 		
 		
 		// normal basic attack, no abilities used or is on the ground.
+		/*
 		if(cooldowns[2] <= 0) {
 			cooldowns[2] = atkRecov;
 			isAttacking = true;
-			for(int i = 0; i<meleeEnemies.size(); i++) {	
-				if(meleeEnemies.get(i).intersects(this)) {
-					meleeEnemies.get(i).damaged(attackStat);
+			for(MeleeEnemy me : meleeEnemies) {
+				if(me.intersects(this)) {
+					me.damaged(attackStat);
 				}
 			}
 		}
+		*/
+		
+		if(cooldowns[2] <= 2*atkRecov && !isAttacking && !atkRefresh) {
+			cooldowns[2] += atkRecov;
+			
+			atkAnimTime += 5;
+			for(MeleeEnemy me : meleeEnemies) {
+				double xdif = (me.x+me.width/2) -(x+width/2);
+				double ydif = (me.y+me.height/2) -(y+height/2);
+				double dist = Math.sqrt(Math.pow(xdif, 2) + Math.pow(ydif, 2));
+				if(dist < attackRange) {
+					me.damaged(attackStat);
+				}
+			}
+			
+		}
+		
 		
 		
 		// disabled for debug purposes
@@ -849,10 +887,6 @@ public class Player extends Sprite implements Damageable{
 
 	}
 
-	public void stopAttack()
-	{
-		isAttacking = false;
-	}
 
 	public int getSkillPoints() {
 		return skillPoints;
