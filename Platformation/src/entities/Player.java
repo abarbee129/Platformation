@@ -304,7 +304,7 @@ public class Player extends Sprite implements Damageable{
 			isStunned = false;
 		}
 
-
+		/*
 		if(cooldowns[0] == t1CD-(t1CD/4))
 		{
 			usedOne = false;
@@ -315,6 +315,7 @@ public class Player extends Sprite implements Damageable{
 		{
 			usedTwo = false;
 		}
+		*/
 
 
 		energyReplenish();

@@ -338,22 +338,22 @@ public class DrawingSurface extends PApplet {
 			if(cdRatio < l1) {
 				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 25 + 25*(cdRatio/l1), DRAWING_HEIGHT/12);
 			}
-			else if(cdRatio > l1 && cdRatio < l2) {
+			else if(cdRatio < l2) {
 				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, 50*((cdRatio-l1)/(l2-l1)) + DRAWING_HEIGHT/12);
 			}
-			else if(cdRatio > l2 && cdRatio < l3) {
+			else if(cdRatio < l3) {
 				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, 50 + DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/12+50,(i+1)*DRAWING_WIDTH/6 + 50*(1-((cdRatio-l2)/(l3-l2))), 50 + DRAWING_HEIGHT/12);
 			}
-			else if(cdRatio > l3 && cdRatio < l4) {
+			else if(cdRatio < l4) {
 				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, 50 + DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/12+50,(i+1)*DRAWING_WIDTH/6, 50 + DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6, DRAWING_HEIGHT/12+50,(i+1)*DRAWING_WIDTH/6, 50 + DRAWING_HEIGHT/12 - 50*(cdRatio-l3)/(l4-l3));
 			}
-			else if(cdRatio > l4 && cdRatio < l5) {
+			else if(cdRatio < l5) {
 				line((i+1)*DRAWING_WIDTH/6+25, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/12,(i+1)*DRAWING_WIDTH/6 + 50, 50 + DRAWING_HEIGHT/12);
 				line((i+1)*DRAWING_WIDTH/6+50, DRAWING_HEIGHT/12+50,(i+1)*DRAWING_WIDTH/6, 50 + DRAWING_HEIGHT/12);
@@ -455,17 +455,6 @@ public class DrawingSurface extends PApplet {
 			skillRelease = true;
 		}
 
-		if (isPressed(KeyEvent.VK_T)&&player.getEP()>0) {
-			timeSpeed = 0.25;
-			player.energyDepletion(1);
-			
-		}
-		else
-		{
-			timeSpeed = 1;
-		}
-
-		TimeEntity.setTimeRate(timeSpeed);
 
 		if (isPressed(KeyEvent.VK_DOWN)) {
 				player.startShield();
