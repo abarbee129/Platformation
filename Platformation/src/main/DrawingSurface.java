@@ -464,12 +464,21 @@ public class DrawingSurface extends PApplet {
 		} 
 
 		for(MeleeEnemy me : meleeEnemies) {
-			me.actions(player, obstacles.get(1));
-			me.regen();
-			me.act(obstacles,meleeEnemies);
-			if(me.gety() > DRAWING_HEIGHT)
-			{
-				me.damaged(1000);
+			if(me.getIsDead()) {
+				if(me.gety() < DRAWING_HEIGHT+200 && Math.abs(me.getDx()) +  Math.abs(me.getDy()) > 1) {
+					me.act(obstacles, meleeEnemies);
+				}
+			}
+			
+			else {
+				me.actions(player, obstacles.get(1));
+				me.regen();
+				me.act(obstacles,meleeEnemies);
+				if(me.gety() > DRAWING_HEIGHT)
+				{
+					me.damaged(1000);
+					
+				}
 			}
 		}
 

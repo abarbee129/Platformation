@@ -104,7 +104,7 @@ public class Enemy extends Player implements Damageable {
 		
 		if(getHP()<=0) {
 			disapear();
-			this.setHP(0);
+			setHP(0);
 			attackStat = 0;
 		}
 				
