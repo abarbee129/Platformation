@@ -833,6 +833,7 @@ public class Player extends Sprite implements Damageable{
 			}
 		}
 		*/
+		// I would make the radius smaller
 		
 		if(cooldowns[2] <= 2*atkRecov && !isAttacking && !atkRefresh) {
 			cooldowns[2] += atkRecov;
