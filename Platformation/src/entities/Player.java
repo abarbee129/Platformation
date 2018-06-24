@@ -298,12 +298,6 @@ public class Player extends Sprite implements Damageable{
 			}
 		}
 		
-		if(atkAnimTime - TimeEntity.TIME_RATE < 0) {
-			atkAnimTime = 0;
-		}
-		else {
-			atkAnimTime-= TimeEntity.TIME_RATE;
-		}
 		if(cooldowns[2] >= 2*atkRecov && !atkRefresh) {
 			atkRefresh = true;
 		}
@@ -312,7 +306,7 @@ public class Player extends Sprite implements Damageable{
 		}
 		
 		
-		isAttacking = atkAnimTime > 0;
+		isAttacking = animationTicks[2] > 0;
 		isDashing = animationTicks[0] > 0;
 		if(isDashing) {
 			shield = true;
@@ -850,12 +844,11 @@ public class Player extends Sprite implements Damageable{
 			}
 		}
 		*/
-		// I would make the radius smaller
+		
 		
 		if(cooldowns[2] <= 2*atkRecov && !isAttacking && !atkRefresh) {
 			cooldowns[2] += atkRecov;
-			
-			atkAnimTime += 5;
+			animationTicks[2] += 5;
 			for(MeleeEnemy me : meleeEnemies) {
 				double xdif = (me.x+me.width/2) -(x+width/2);
 				double ydif = (me.y+me.height/2) -(y+height/2);
