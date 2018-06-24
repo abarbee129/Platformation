@@ -74,10 +74,13 @@ public class Player extends Sprite implements Damageable{
 	private int atkRecov = 20;
 	private boolean atkRefresh;
 	private double[] cooldowns;
+	
+	
+	// animation fields
+	private double[] animationTicks;
 	private double atkAnimTime = 0;
 
 	private boolean inCombat;
-
 	protected boolean isEnemy = false;
 
 	private ArrayList<PImage> pics;  
@@ -88,6 +91,7 @@ public class Player extends Sprite implements Damageable{
 		ox = new double[3];
 		oy = new double[3]; 
 		cooldowns = new double[4];
+		animationTicks = new double[4];
 		isFlipped = false;
 
 		usedTwo = false;
@@ -123,6 +127,7 @@ public class Player extends Sprite implements Damageable{
 		ox = new double[3];
 		oy = new double[3];
 		cooldowns = new double[4];
+		animationTicks = new double[4];
 		this.level = level;
 		shield = false;
 		baseHP = 300;
@@ -278,10 +283,21 @@ public class Player extends Sprite implements Damageable{
 					cooldowns[c] = 0;
 				}
 				else {
-					cooldowns[c]-= TimeEntity.TIME_RATE;
+					cooldowns[c] -= TimeEntity.TIME_RATE;
 				}
 			}
 		}
+		for(int a = 0; a < animationTicks.length; a++) {
+			if(animationTicks[a] > 0) {
+				if(animationTicks[a] - TimeEntity.TIME_RATE < 0) {
+					animationTicks[a] = 0;
+				}
+				else {
+					animationTicks[a] -= TimeEntity.TIME_RATE;
+				}
+			}
+		}
+		
 		if(atkAnimTime - TimeEntity.TIME_RATE < 0) {
 			atkAnimTime = 0;
 		}
@@ -297,7 +313,7 @@ public class Player extends Sprite implements Damageable{
 		
 		
 		isAttacking = atkAnimTime > 0;
-		isDashing = cooldowns[0] >= t1CD-10;
+		isDashing = animationTicks[0] > 0;
 		if(isDashing) {
 			shield = true;
 			for(MeleeEnemy me : meleeEnemies) {
@@ -667,6 +683,7 @@ public class Player extends Sprite implements Damageable{
 		if(currentEP>epCost && cooldowns[0] <= 0 && !replenishing)
 		{	
 			cooldowns[0] = t1CD;
+			animationTicks[0] = 10;
 			shield = true;
 			instantAccelerate(0,-dy);
 			if(isFlipped)
