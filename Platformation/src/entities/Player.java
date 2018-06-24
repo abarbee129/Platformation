@@ -32,7 +32,7 @@ public class Player extends Sprite implements Damageable{
 	private boolean regen;
 	private double level;
 	private int skillPoints;
-	private double attackRange = 200;
+	private double attackRange = 150;
 	private double attackStat;
 	private double defStat;
 	private double EXP;
