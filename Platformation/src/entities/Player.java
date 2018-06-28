@@ -32,7 +32,7 @@ public class Player extends Sprite implements Damageable{
 	private boolean regen;
 	private double level;
 	private int skillPoints;
-	private double attackRange = 100;
+	private double attackRange = 150;
 	private double attackStat;
 	private double defStat;
 	private double EXP;
@@ -74,10 +74,13 @@ public class Player extends Sprite implements Damageable{
 	private int atkRecov = 20;
 	private boolean atkRefresh;
 	private double[] cooldowns;
+	
+	
+	// animation fields
+	private double[] animationTicks;
 	private double atkAnimTime = 0;
 
 	private boolean inCombat;
-
 	protected boolean isEnemy = false;
 
 	private ArrayList<PImage> pics;  
@@ -88,6 +91,7 @@ public class Player extends Sprite implements Damageable{
 		ox = new double[3];
 		oy = new double[3]; 
 		cooldowns = new double[4];
+		animationTicks = new double[4];
 		isFlipped = false;
 
 		usedTwo = false;
@@ -123,6 +127,7 @@ public class Player extends Sprite implements Damageable{
 		ox = new double[3];
 		oy = new double[3];
 		cooldowns = new double[4];
+		animationTicks = new double[4];
 		this.level = level;
 		shield = false;
 		baseHP = 300;
@@ -282,12 +287,17 @@ public class Player extends Sprite implements Damageable{
 				}
 			}
 		}
-		if(atkAnimTime - TimeEntity.TIME_RATE < 0) {
-			atkAnimTime = 0;
+		for(int a = 0; a < animationTicks.length; a++) {
+			if(animationTicks[a] > 0) {
+				if(animationTicks[a] - TimeEntity.TIME_RATE < 0) {
+					animationTicks[a] = 0;
+				}
+				else {
+					animationTicks[a] -= TimeEntity.TIME_RATE;
+				}
+			}
 		}
-		else {
-			atkAnimTime-= TimeEntity.TIME_RATE;
-		}
+		
 		if(cooldowns[2] >= 2*atkRecov && !atkRefresh) {
 			atkRefresh = true;
 		}
@@ -296,8 +306,8 @@ public class Player extends Sprite implements Damageable{
 		}
 		
 		
-		isAttacking = atkAnimTime > 0;
-		isDashing = cooldowns[0] >= t1CD-10;
+		isAttacking = animationTicks[2] > 0;
+		isDashing = animationTicks[0] > 0;
 		if(isDashing) {
 			shield = true;
 			for(MeleeEnemy me : meleeEnemies) {
@@ -833,12 +843,11 @@ public class Player extends Sprite implements Damageable{
 			}
 		}
 		*/
-		// I would make the radius smaller
+		
 		
 		if(cooldowns[2] <= 2*atkRecov && !isAttacking && !atkRefresh) {
 			cooldowns[2] += atkRecov;
-			
-			atkAnimTime += 5;
+			animationTicks[2] += 5;
 			for(MeleeEnemy me : meleeEnemies) {
 				double xdif = (me.x+me.width/2) -(x+width/2);
 				double ydif = (me.y+me.height/2) -(y+height/2);
