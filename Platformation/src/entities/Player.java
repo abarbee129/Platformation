@@ -24,19 +24,24 @@ public class Player extends Sprite implements Damageable{
 	private final double xpScale = 1.6;
 
 	private Rectangle2D combatBox;
+	private Rectangle2D attackBox;
 
+	private int comboCount = 0;
 	private double currentEP;
+	private double rate;
 	private double baseEP;
 	private boolean replenishing;
 	private boolean shield;
 	private boolean regen;
+	private boolean revive;
+	private double bloodWell, BWTotal;
 	private double level;
 	private int skillPoints;
-	private double attackRange = 150;
+	private double attackRange = 50;
 	private double attackStat;
 	private double defStat;
 	private double EXP;
-	private boolean isAttacking;
+	private boolean isAttacking, isDamaged;
 
 	private double[] ox,oy;
 
@@ -56,6 +61,7 @@ public class Player extends Sprite implements Damageable{
 	private boolean isMoving;
 	private boolean isDashing;
 	private boolean hasJumped;
+	private boolean finished5;
 	protected boolean isStunned;
 	protected int stunTicks = 0;
 	private double ticksFromZeroToHalf = 4.0;
@@ -69,9 +75,10 @@ public class Player extends Sprite implements Damageable{
 
 
 	// ability cooldown fields
-	private int t1CD = 180;
+	private int t1CD = 180;//180
 	private int t2CD = 200;
 	private int atkRecov = 20;
+	private int comboRef = 80;
 	private boolean atkRefresh;
 	private double[] cooldowns;
 	
@@ -95,14 +102,9 @@ public class Player extends Sprite implements Damageable{
 		isFlipped = false;
 
 		usedTwo = false;
-		//pics.add(marker.loadImage("Player.png"));
-		//pics.add(marker.loadImage("PlayerAttack.png"));
-		//pics.add(marker.loadImage("PlayerShield.png"));
-		//pics.add(marker.loadImage("PlayerFlipped.png"));
-		//pics.add(marker.loadImage("PlayerAttackFlipped.png"));
-		//pics.add(marker.loadImage("PlayerShieldFlipped.png"));
-
+	
 		combatBox = new Rectangle((int)(this.x-200),(int)(this.y-100), 400, 200);
+		attackBox = new Rectangle((int)(this.x),(int)(this.y), PLAYER_WIDTH+50, PLAYER_HEIGHT);
 
 		lives = 3;
 
@@ -114,11 +116,14 @@ public class Player extends Sprite implements Damageable{
 		baseEP = 200;
 		currentEP = 200;
 		attackStat = 20;
-		defStat =  10;
+		defStat =  30;
 		EXP = 0; 
+		
+		BWTotal = 100+(level*5);
 
 		techOne = 5;
 		techTwo = 5;
+		rate = 0.8;
 	}
 
 	public Player(PImage img, int x, int y,double level,double slow, PApplet marker) {
@@ -139,6 +144,7 @@ public class Player extends Sprite implements Damageable{
 		EXP = 0; 
 		lives = 3;
 		usedTwo = false;
+		attackBox = new Rectangle((int)(this.x),(int)(this.y), PLAYER_WIDTH+50, PLAYER_HEIGHT);
 		combatBox = new Rectangle((int)(this.x-200),(int)(this.y-100), 400, 200);
 
 
@@ -147,11 +153,11 @@ public class Player extends Sprite implements Damageable{
 	public void walk(double dir) {
 		isMoving = true;
 		double accelAmt = 0;
-		if(dir>0)
+		if(dir>0&& !isDashing)
 		{
 			isFlipped = false;
 		}
-		else if(dir<0)
+		else if(dir<0&&!isDashing)
 		{
 			isFlipped = true;
 		}	
@@ -208,9 +214,6 @@ public class Player extends Sprite implements Damageable{
 
 	public void jump() {
 
-
-
-
 		if(isTouchingGround || !hasJumped){
 			if(dy > -maxDy) {
 				if(isTouchingGround) {
@@ -239,20 +242,51 @@ public class Player extends Sprite implements Damageable{
 
 	public void accelerate (double dx, double dy) {
 		// This is a simple accelerate method that adds dx and dy to the current velocity.
-		this.dx += dx*TimeEntity.TIME_RATE;
-		this.dy += dy*TimeEntity.TIME_RATE;
+		if(!replenishing)
+		{
+			this.dx += dx*TimeEntity.TIME_RATE;
+			this.dy += dy*TimeEntity.TIME_RATE;
 
-		ddx += dx*TimeEntity.TIME_RATE;
-		ddy += dy*TimeEntity.TIME_RATE;
+			ddx += dx*TimeEntity.TIME_RATE;
+			ddy += dy*TimeEntity.TIME_RATE;
+		}
+		else
+		{
+			this.dx += dx*TimeEntity.TIME_RATE*0.5;
+			this.dy += dy*TimeEntity.TIME_RATE*0.5;
+
+			ddx += dx*TimeEntity.TIME_RATE*0.5;
+			ddy += dy*TimeEntity.TIME_RATE*0.5;
+		}
+	
 	}
+	
+	
+	
 	public void instantAccelerate (double dx, double dy) {
 		// This is a simple accelerate method that adds dx and dy to the current velocity.
-		this.dx += dx;
-		this.dy += dy;
+		if(!replenishing)
+		{
+			this.dx += dx;
+			this.dy += dy;
 
-		ddx += dx;
-		ddy += dy;
+			ddx += dx;
+			ddy += dy;
+		}
+		else
+		{
+			this.dx += dx*0.5;
+			this.dy += dy*0.5;
+
+			ddx += dx*0.5;
+			ddy += dy*0.5;
+		}
 	}
+	
+	
+	
+	
+	
 
 	public double getDx() {
 		return dx;
@@ -262,6 +296,8 @@ public class Player extends Sprite implements Damageable{
 	}
 
 
+	
+	
 	public void move() {
 		double xchange = TimeEntity.TIME_RATE*slow*dt * (oldDx + ((ddx/2) * dt));
 		double ychange = TimeEntity.TIME_RATE*slow*dt * (oldDy + ((ddy/2) * dt));
@@ -271,6 +307,9 @@ public class Player extends Sprite implements Damageable{
 		ddx = 0;
 		ddy = 0;
 	}
+	
+	
+	
 	public void act(ArrayList<Shape> shapes,ArrayList<MeleeEnemy> meleeEnemies) {
 
 		combatBox = new Rectangle((int)(this.x-200),(int)(this.y-100), 400, 200);
@@ -298,6 +337,9 @@ public class Player extends Sprite implements Damageable{
 			}
 		}
 		
+	
+		
+		
 		if(cooldowns[2] >= 2*atkRecov && !atkRefresh) {
 			atkRefresh = true;
 		}
@@ -306,15 +348,16 @@ public class Player extends Sprite implements Damageable{
 		}
 		
 		
-		isAttacking = animationTicks[2] > 0;
-		isDashing = animationTicks[0] > 0;
+		//isDashing = animationTicks[0] > 0;
 		if(isDashing) {
+			
 			shield = true;
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this) && !me.getHasBeenHitByDash()) {
 					me.setHasBeenHitByDash(true);
-					me.damaged(10*techOne + attackStat);
-					me.stunned(40 + techOne*4);
+					me.damaged(5*techOne + attackStat);
+					me.stunned(60 + techOne*4);
+					me.knockedBack(0, -1000, this);
 				}
 			}
 		}
@@ -324,6 +367,27 @@ public class Player extends Sprite implements Damageable{
 				me.setHasBeenHitByDash(false);
 			}
 		}
+	
+		
+		if((currentHP <= 0 && bloodWell>0)||revive)
+		{
+			if(currentHP < 0)
+			{
+				currentHP = 0;
+			}
+			revive = true;
+			replenishing = true;
+			bloodWell--;
+			currentHP++;
+		}
+		
+		if(bloodWell <= 0)
+		{
+			revive = false;
+		}
+		
+		
+		
 		if(stunTicks > 0) {
 			isStunned = true;
 			stunTicks-=TimeEntity.TIME_RATE;
@@ -332,18 +396,53 @@ public class Player extends Sprite implements Damageable{
 			isStunned = false;
 		}
 
-		/*
+		//------------ combMecahnics------------
+		if(cooldowns[0] == t1CD-(t1CD/6))
+		{
+			isDashing = false;
+		}
 		if(cooldowns[0] == t1CD-(t1CD/4))
 		{
+			
 			usedOne = false;
 		}
 
-
+		if(cooldowns[3] == 0)
+		{
+			if(bloodWell<BWTotal)
+			{
+				bloodWell+=comboCount;
+			}
+			if(bloodWell>BWTotal)
+			{
+				bloodWell = BWTotal;
+			}
+			comboCount = 0;
+			finished5 = false; 
+		}
+		
+		if(comboCount%5 == 0 && comboCount>0)
+		{
+			if(!finished5)
+			{
+				currentEP+=20;
+			}
+			finished5 = true; 
+		}
+		if(comboCount%3 == 0 && comboCount>0)
+		{
+			hasJumped = false;
+		}
+		if(comboCount%5 != 0)
+		{
+			finished5 = false;
+		}
+		
 		if(cooldowns[1] == t2CD/2)
 		{
 			usedTwo = false;
 		}
-		*/
+		//-----------------------------------------
 
 
 		energyReplenish();
@@ -359,6 +458,7 @@ public class Player extends Sprite implements Damageable{
 		if(!isTouchingGround&&!isDashing) {
 			accelerate(0, 1440*dt);
 		}
+		
 		isTouchingGround = false;
 		for(Shape s : shapes) {
 			Rectangle r = s.getBounds();
@@ -378,16 +478,21 @@ public class Player extends Sprite implements Damageable{
 					super.moveByAmount(0, -(ydif+1)-(PLAYER_HEIGHT/2 + r.height/2));
 					isTouchingGround = true;
 				}
-				else if(ydif > 0 && oydif > ydif) {
+				else if(ydif > 25 && oydif > ydif) {
 					// player is "below" the center of the platform	
-					super.moveByAmount(0, r.getHeight()/2-ydif);
+					instantAccelerate(0,-dy);
+					super.moveByAmount(0, r.getHeight()/2-ydif+(PLAYER_HEIGHT/2 + r.height/2));
 				}
 				else if(xdif > 0 && oxdif > xdif) {
 					// player is "right" of the center of the platform	
+					instantAccelerate(0,-dx);
 					super.moveByAmount(r.getWidth() - xdif, 0);
+					
 				}
 				else if(xdif < 0 && oxdif < xdif) {
-					// player is "left" of the center of the platform	
+					// player is "left" of the center of the platform
+					instantAccelerate(0,-dx);
+
 					super.moveByAmount(-(r.getWidth() + xdif), 0);
 				}
 
@@ -486,22 +591,39 @@ public class Player extends Sprite implements Damageable{
 		super.draw(g);
 
 		g.pushStyle();
+		
+		g.fill(225);
+		g.textSize(10);
+		
+
 		g.noFill();
 		g.rect((float)x-PLAYER_WIDTH/4, (float)y-20, (float)3*PLAYER_WIDTH/2, (float)9);
-		g.fill(255,0,0);
-		g.rect((float)x-PLAYER_WIDTH/4, (float)y-20, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
-		g.fill(0);
+		
+		if(currentHP>(baseHP/2))
+		{
+			g.fill(255,0,0);
+			g.rect((float)x-PLAYER_WIDTH/4, (float)y-20, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
+		}
+		else
+		{
+			g.fill(239,150,123);
+			g.rect((float)x-PLAYER_WIDTH/4, (float)y-20, (float)(3*PLAYER_WIDTH/2*currentHP/baseHP), (float)9);
+
+		}
+		g.fill(225);
 		g.textSize(10);
 		g.text("HP: " + (int)getHP(), (float)(3+x-PLAYER_WIDTH/4), (float)y-12);
+		
+	
+	
 		g.textSize(10);
 		g.text("Lv: " + (int)level, (float)(3+x-PLAYER_WIDTH/4), (float)y-22);
-		// delete me when done
-		g.text("AtkRec " + (int)cooldowns[2], (float)(3+x-PLAYER_WIDTH/4), (float)y-32);
 
 
+		
 		if(skillPoints > 0) {
 			g.textSize(10);
-			g.fill(0);
+			g.fill(225);
 			if(skillPoints==1) {
 				g.text("You have " + skillPoints + " skillpoint to spend", (float)(x-12-PLAYER_WIDTH), (float)y-42);
 
@@ -520,29 +642,73 @@ public class Player extends Sprite implements Damageable{
 		{
 			g.noFill();
 			g.stroke(234,23,23);
-			g.ellipse((float)(x+PLAYER_WIDTH/2), (float)(y+PLAYER_HEIGHT/2), (float)attackRange*2, (float)attackRange*2);
+			//g.ellipse((float)(x+PLAYER_WIDTH/2), (float)(y+PLAYER_HEIGHT/2), (float)attackRange*2, (float)attackRange*2);
+			g.rect((float)(x), (float)(y), (float)PLAYER_WIDTH, (float)PLAYER_HEIGHT);
+			g.rect((float)attackBox.getX(), (float)attackBox.getY(), (float)attackBox.getWidth(), (float)attackBox.getHeight());
 		}
 
 		if(shield)
 		{
 			g.noFill();
-			g.stroke(0,0,220);
-			for (int i = 0; i < 20; i++) {
-				g.stroke(0,0,220,110 - 5*i);
+			g.stroke(59,200,83);
+			for (int i = 0; i < 50; i++) {
+				g.stroke(0,255,0,110 - 5*i);
+				
+				if(isDashing)
+				{
+					g.stroke(0,0,220,110 - 5*i);
+					if(!isFlipped)
+					{
+						g.ellipse((float)x+PLAYER_WIDTH/2-10, (float)y+PLAYER_HEIGHT/2, (float)PLAYER_HEIGHT+i, (float)PLAYER_WIDTH+i);
+					}
+					else
+					{
+						g.ellipse((float)x+PLAYER_WIDTH/2+10, (float)y+PLAYER_HEIGHT/2, (float)PLAYER_HEIGHT+i, (float)PLAYER_WIDTH+i);
+					}
+
+				}
 				g.ellipse((float)x+PLAYER_WIDTH/2, (float)y+PLAYER_HEIGHT/2, (float)PLAYER_WIDTH+i, (float)PLAYER_HEIGHT+i);
+
+
 			}
 		}
 
 		if(!isEnemy) {
 			g.noFill();
-			g.stroke(0);
+			g.stroke(225);
 			g.rect((float)x-PLAYER_WIDTH/4, (float)y-9, (float)3*PLAYER_WIDTH/2, (float)9);
-			g.fill(0,255,0);
-			g.rect((float)x-PLAYER_WIDTH/4, (float)y-9, (float)(3*PLAYER_WIDTH/2*currentEP/baseEP), (float)9);
-			g.fill(0);
-			g.textSize(10);
-			g.text("EP: " + (int)currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
+			if(!replenishing && currentEP >(baseEP/2))
+			{
+				g.fill(0,255,0);
 
+			}
+			else if(replenishing) 
+			{
+				g.fill(230,25,230);
+				g.tint(230,25,230);
+				
+			}
+			else if(currentEP <= (baseEP/2)&&!replenishing)
+			{
+				g.fill(0,150,0);
+			}
+			g.rect((float)x-PLAYER_WIDTH/4, (float)y-9, (float)(3*PLAYER_WIDTH/2*currentEP/baseEP), (float)9);
+			
+			g.textSize(10);
+			if(!replenishing && currentEP >(baseEP/2))
+			{
+				g.fill(0);
+			}
+			else if(replenishing) 
+			{
+				g.fill(225);
+			}
+			else if(currentEP <= (baseEP/2)&&!replenishing)
+			{
+				g.fill(225);
+			}
+			g.text("EP: " + (int)currentEP, (float)(3+x-PLAYER_WIDTH/4), (float)y-2);
+			
 			//g.noFill();
 			//g.rect((float)combatBox.getX(), (float)combatBox.getY(),(float)combatBox.getWidth(), (float)combatBox.getHeight());
 
@@ -567,13 +733,31 @@ public class Player extends Sprite implements Damageable{
 
 	public double damaged(double damageTaken) {
 
-		double damage = damageTaken*(10/(10+defStat));
+		double damage = damageTaken*(10/(defStat));
 
+		if(replenishing)
+		{
+			damage *= 1.2; 
+		}
+		
+		if(revive)
+		{
+			damage *= 0;
+		}
 
 		if(isGameOver() == false && !shield ) 
 		{
 			currentHP -= damage;
+			
 		}
+		else if(shield)
+		{
+			currentHP -= damage*(10/(defStat*0.6));
+			
+		}
+		
+		
+		
 
 		return damage;
 
@@ -581,15 +765,15 @@ public class Player extends Sprite implements Damageable{
 
 
 	public void regen() {
-		if(baseHP>currentHP)
+		if(baseHP>currentHP && !replenishing)
 		{
 			if(!shield)	
 			{	
-				currentHP+=0.05 * TimeEntity.TIME_RATE;
+				currentHP+=0.05 *level/5* TimeEntity.TIME_RATE;
 			}
 			else
 			{
-				currentHP+=0.5 * TimeEntity.TIME_RATE;					
+				currentHP+=0.5 *level* TimeEntity.TIME_RATE;					
 			}
 		}
 
@@ -639,7 +823,7 @@ public class Player extends Sprite implements Damageable{
 
 	public boolean energyReplenish() {
 		if(currentEP<baseEP && !shield) {
-			currentEP+=TimeEntity.TIME_RATE*0.3*(int)(1+level/5);
+			currentEP+=TimeEntity.TIME_RATE*0.1*(int)(1+level/10);
 		}
 		if(currentEP>baseEP) {
 			currentEP = baseEP;
@@ -647,12 +831,10 @@ public class Player extends Sprite implements Damageable{
 		if(currentEP <= 1) {
 			replenishing  = true;
 		}
-		else if(replenishing && baseEP - currentEP <= 1){
+		else if(replenishing && baseEP - currentEP <= 1  && !revive){
 			replenishing = false;
 		}
-		else {
-
-		}
+		
 		return replenishing;
 
 	}
@@ -663,15 +845,9 @@ public class Player extends Sprite implements Damageable{
 		return currentEP;
 	}
 
-
-	public void dashTo(double x, double y)
-	{
-
-	}
-
 	public void useTechOne() 
 	{
-		double epCost = 100;
+		double epCost = 60;
 
 
 		if(currentEP>epCost && cooldowns[0] <= 0 && !replenishing)
@@ -681,15 +857,22 @@ public class Player extends Sprite implements Damageable{
 			instantAccelerate(0,-dy);
 			if(isFlipped)
 			{
-				instantAccelerate(-1400,0);
+				//instantAccelerate(-2000,0);
+				this.accelerate(-1400, dy);
 			}
 			else
 			{
-				instantAccelerate(1400,0);
+				//instantAccelerate(2000,0);
+				this.accelerate(1400, dy);
+
+				
 			}
 			energyDepletion(epCost);
 			usedOne = true;
+			isDashing = true;
+			bloodWell+=5;
 		}
+		
 	}
 
 	// this tech is a jump that knocks back enemies in the area.
@@ -700,40 +883,43 @@ public class Player extends Sprite implements Damageable{
 		if(currentEP>epCost && cooldowns[1] <= 0 && !replenishing) {
 			cooldowns[1] = t2CD;
 			shield = true;
+			regen();
 			instantAccelerate(0,-1000);
 			energyDepletion(epCost);
 			for(MeleeEnemy me : meleeEnemies) {
 				if(me.intersects(this)) {
-					me.damaged(30*techTwo + attackStat);
+					me.damaged(10*techTwo + attackStat);
 					me.knockedBack(600*Math.pow(techTwo, 0.5), -400, this);
 					me.stunned(20 + techTwo*4);
 				}
 			}
+
 			usedTwo = true;
+			bloodWell+=5;
+
 		}
-
-	}
-
-	public void useTechThree() {
-
-	}
-
-
-	public void ranged(Enemy e) 
-	{
-		//double epCost = 5;
-		if(e.intersects(this))
+		else if(bloodWell>(BWTotal/4) && cooldowns[1] <= 0 && replenishing)
 		{
-			e.damaged(10+attackStat/2);
+			combatBox = new Rectangle((int)this.x-100, (int)this.y-100, (int)PLAYER_WIDTH+200, (int)PLAYER_HEIGHT+300);
+			cooldowns[1] = t2CD+2;
+			for(MeleeEnemy me : meleeEnemies) {
+				if(me.intersects(combatBox)) {
+					me.damaged(3*techTwo+(BWTotal/4));
+					me.knockedBack(600*Math.pow(techTwo, 0.5), -1000, this);
+					me.stunned(150);
+				}
+			}
+			
+			bloodWell-=(BWTotal/4);
 		}
 
-	}
 
+	}
 
 
 	public boolean isGameOver()
 	{
-		if(currentHP <= 0)
+		if(currentHP <= 0 && !revive)
 		{
 			return true;
 		}
@@ -749,6 +935,16 @@ public class Player extends Sprite implements Damageable{
 		}
 		else
 		{
+			if(bloodWell>0&&currentEP>10)
+			{
+				energyDepletion(-1);
+				bloodWell--;
+			}
+		    else if(currentHP>5&&currentEP>10)
+			{
+				energyDepletion(-1);
+				currentHP--;
+			}
 			endShield();
 		}
 
@@ -756,10 +952,9 @@ public class Player extends Sprite implements Damageable{
 
 	public void endShield()
 	{
-		if(!isDashing) {
+		if(!isDashing&&!isAttacking) {
 			shield = false;
 		}
-
 	}
 
 
@@ -808,7 +1003,7 @@ public class Player extends Sprite implements Damageable{
 	{
 		if(skillPoints>0)
 		{
-			if(t1CD > 11) {
+			if(t1CD > 15) {
 				t1CD -= 5;
 			}
 			techOne+=2;
@@ -819,10 +1014,10 @@ public class Player extends Sprite implements Damageable{
 	{
 		if(skillPoints>0)
 		{
-			if(t2CD > 11) {
+			if(t2CD > 16) {
 				t2CD -= 5;
 			}
-			techTwo+=2;
+			techTwo+=1;
 			skillPoints-=1;
 		}
 	}
@@ -830,50 +1025,26 @@ public class Player extends Sprite implements Damageable{
 	public void attack(ArrayList<MeleeEnemy> meleeEnemies) {
 		//Rectangle attackBox = new Rectangle((int)getX()+PLAYER_WIDTH,(int) getY()+PLAYER_HEIGHT, PLAYER_WIDTH, PLAYER_WIDTH );
 		
-		
-		// normal basic attack, no abilities used or is on the ground.
-		/*
-		if(cooldowns[2] <= 0) {
-			cooldowns[2] = atkRecov;
-			isAttacking = true;
-			for(MeleeEnemy me : meleeEnemies) {
-				if(me.intersects(this)) {
-					me.damaged(attackStat);
-				}
-			}
-		}
-		*/
-		
-		
-		if(cooldowns[2] <= 2*atkRecov && !isAttacking && !atkRefresh) {
-			cooldowns[2] += atkRecov;
-			animationTicks[2] += 5;
-			for(MeleeEnemy me : meleeEnemies) {
-				double xdif = (me.x+me.width/2) -(x+width/2);
-				double ydif = (me.y+me.height/2) -(y+height/2);
-				double dist = Math.sqrt(Math.pow(xdif, 2) + Math.pow(ydif, 2));
-				if(dist < attackRange) {
-					me.damaged(attackStat);
-				}
-			}
-			
-		}
-		
-		
-		
-		// disabled for debug purposes
-		/*
-		if(usedTwo==false|| isTouchingGround) {			
+		if(usedTwo == false && (isTouchingGround||currentEP<10||replenishing)) {	
 			if(usedOne == false) {
-				
+				for(MeleeEnemy me : meleeEnemies) {
+					if(me.intersects(this)) {
+						me.damaged(attackStat +(level*(bloodWell/BWTotal)));
+						comboCount++;
+						cooldowns[3] = comboRef;
+						
+					}
+				}
 			}
 			// special basic attack with life steal, the "q" ability has been used
 			else {
 				for(int i = 0; i<meleeEnemies.size(); i++) {	
 					if(meleeEnemies.get(i).intersects(this)) {
-						meleeEnemies.get(i).damaged(attackStat*TimeEntity.TIME_RATE);
+						meleeEnemies.get(i).damaged(techOne+attackStat*TimeEntity.TIME_RATE +(bloodWell/BWTotal));
 						accelerate(-dx, -600);
-						lifeSteal(meleeEnemies.get(i).damaged(attackStat*TimeEntity.TIME_RATE));
+						lifeSteal(meleeEnemies.get(i).damaged(techOne+attackStat*TimeEntity.TIME_RATE));
+						comboCount++;
+						cooldowns[3] = comboRef;
 						usedOne = false;
 					}
 				}
@@ -881,21 +1052,57 @@ public class Player extends Sprite implements Damageable{
 			}
 			isAttacking = true;
 		}
-		// special basic attack #2, this one slams down and knocks enemies away really far!, activated if in the air
-		// and the "w" ability was recently used
-		else {
-			instantAccelerate(0,150);
+		else if(isTouchingGround==false && usedTwo==false && currentEP>10 && !replenishing)
+		{
+			Rectangle2D r;
+			accelerate(0, -210);
+			energyDepletion(10);
 			for(MeleeEnemy me : meleeEnemies) {
-				if(me.intersects(this)) {
-					me.damaged(TimeEntity.TIME_RATE*(techTwo*2 + attackStat));
-					me.knockedBack(600*Math.pow(techTwo, 0.25), -400, this);
-					me.stunned(20 + techTwo*4);
+				if(!isFlipped)
+				{
+					r = new Rectangle((int)(x), (int )(y-100), PLAYER_WIDTH+100,PLAYER_HEIGHT+200);
 				}
+				else
+				{
+					r = new Rectangle((int)(x+PLAYER_WIDTH), (int )(y-100), -(PLAYER_WIDTH+100), PLAYER_HEIGHT+200);
+				}
+				
+				if(me.intersects(r)) {
+										
+					me.damaged(attackStat+(2*level*(bloodWell/BWTotal)));
+					comboCount++;
+					cooldowns[3] = comboRef;
+				}
+				
+
+				attackBox = r;
+				isAttacking = true;
 			}
 		}
-		*/
-
+		else {
+			// special basic attack #2, this one slams down and knocks enemies away really far!, activated if in the air 
+			// and the "w" ability was recently used
+			instantAccelerate(0,1000);	
+			
+			for(MeleeEnemy me : meleeEnemies) {
+					if(me.intersects(this)) {
+					me.damaged(2*techTwo + attackStat +(comboCount*0.4));
+					me.knockedBack(600*Math.pow(techTwo, 0.5), -1000, this);
+					me.stunned(20 + techTwo*4);
+					comboCount++;
+					cooldowns[3] = comboRef;
+						
+					shield = true;
+					
+				}				
+			}
+			usedTwo = false;
+			isAttacking = true;
+		}
+		
+			
 	}
+		
 
 
 	public int getSkillPoints() {
@@ -904,7 +1111,7 @@ public class Player extends Sprite implements Damageable{
 
 	public boolean isInCombat(ArrayList<MeleeEnemy> meleeEnemies)
 	{
-		Rectangle combatBox = new Rectangle((int)getX()-50,(int) getY()-50, 100, 100 );
+		 combatBox = new Rectangle((int)getX()-100,(int) getY()-100, 100, 100 );
 
 		for(int i = 0; i<meleeEnemies.size(); i++)
 		{	
@@ -918,9 +1125,20 @@ public class Player extends Sprite implements Damageable{
 
 	}
 
+	
+	
+	
+	
+	
+	
 	public double getCooldowns(int index) {
 		return cooldowns[index];
 	}
+	
+	
+	
+	
+	
 	public int getTechCD(int index) {
 		if(index == 0) {
 			return t1CD;
@@ -943,14 +1161,32 @@ public class Player extends Sprite implements Damageable{
 	{
 		if(currentHP<baseHP)
 		{
-			currentHP+= damage;
+			currentHP+= damage/2;
 		}
 
+		if(currentHP>baseHP)
+		{
+			currentHP = baseHP;
+		}
 	}
+	
+	
+	
+	
+	
+	public int getLevel()
+	{
+		return (int) level;
+	}
+	
 	public int getLives()
 	{
 		return lives;
 	}
+	
+	
+	
+	
 
 	public void lifeGained()
 	{
@@ -960,4 +1196,81 @@ public class Player extends Sprite implements Damageable{
 	{
 		lives--;
 	}
+	
+	public double getSlow()
+	{
+		return slow;
+	}
+	
+	
+// ---------------------- Images-------------------------------------
+	
+	
+	
+	public boolean isImageAttack()
+	{
+		return isAttacking;
+	}
+	
+	
+	
+	
+	public void stopAttacking()
+	{
+		isAttacking = false;
+	}
+	
+	
+	
+	
+	
+	
+	public int getComboCount()
+	{
+		return comboCount;
+	}
+	
+	
+	
+	
+	public int finisher(ArrayList<MeleeEnemy> meleeEnemies)
+	{
+		for(MeleeEnemy me : meleeEnemies) {
+			if(me.intersects(this) && bloodWell >= BWTotal/10) {
+				me.damaged(attackStat+(BWTotal/10));
+				bloodWell-=(BWTotal/10);
+				System.out.println(BWTotal);
+				System.out.println(BWTotal/10);
+
+			}
+		}
+
+		return comboCount;
+	}
+
+	
+	
+	
+	public double getTBW() {
+		// TODO Auto-generated method stub
+		return BWTotal;
+	}
+
+	
+	
+	
+	public double getCBW() {
+		// TODO Auto-generated method stub
+		return bloodWell;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

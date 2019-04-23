@@ -1,27 +1,24 @@
 package entities;
 
 import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import processing.core.PApplet;
 
-public class Bullet extends Rectangle{
+public class Bullet extends Rectangle2D.Double{
 
-	private double x,y;
 	private double direction;
-	private double dwidth, dheight;
 	private boolean isDead;
 	private double damage;
 	private int c = 0;
 	
 	public Bullet(double x, double y, double direction, double damage) {
 		
-		this.x = x;
-		this.y = y;
+		super(x,y,2,2);
 		this.direction = direction;
 		this.damage = damage;
-		dwidth = 8;
-		dheight = 4;
+		
 	}
 	
 	
@@ -46,7 +43,7 @@ public class Bullet extends Rectangle{
 		{	
 			if(meleeEnemies.get(i).intersects(this))
 			{
-				meleeEnemies.get(i).damaged(10);
+				meleeEnemies.get(i).damaged(damage);
 			}
 		}
 		
@@ -57,13 +54,30 @@ public class Bullet extends Rectangle{
 		damageEnemy(m);
 	}
 	public double getDamage() {
+		if(c>30)
+		{
+			damage*=2;
+		}
 		return damage;
 	}
 	
 	public void draw(PApplet g) {
 		g.pushStyle();
-		g.fill(255,0,0);
-		g.rect((float)x, (float)y, (float)dwidth, (float)dheight);
+		if(c<20)
+		{
+			g.fill(0,0,250);
+		}
+		else if(c>20&&c<30)
+		{
+			g.fill(250,0,250);
+		}
+		else if(c>30)
+		{
+			g.fill(250,0,0);
+		}
+				
+		g.rect((float)x, (float)y, (float)20.0,(float)20.0);
+		
 		g.popStyle();
 	}
 	

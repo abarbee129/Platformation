@@ -28,7 +28,7 @@ public class Main {
 		window = (JFrame)processingCanvas.getFrame();
 
 		window.setBounds(0,0,800, 600);
-		window.setMinimumSize(new Dimension(100,100));
+		window.setMinimumSize(new Dimension(1080,720));
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setResizable(true);
 

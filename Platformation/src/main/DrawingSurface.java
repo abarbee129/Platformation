@@ -31,7 +31,7 @@ public class DrawingSurface extends PApplet {
 
 	public static final String fileSeparator = System.getProperty("file.separator");
 
-	private ArrayList<PImage> backgrounds;
+	private PImage backgrounds;
 	private Rectangle screenRect;
 	private ArrayList<Booster> boosters;
 	private int tSinceLast;
@@ -55,12 +55,14 @@ public class DrawingSurface extends PApplet {
 	private double timeSpeed = 1;
 	private long start = System.nanoTime();
 	
+	
+	
+	
 	public DrawingSurface() {
 
 
 		super();
 		assets = new ArrayList<PImage>();
-		backgrounds = new ArrayList<PImage>();
 		keys = new ArrayList<Integer>();
 
 		screenRect = new Rectangle(0,0,DRAWING_WIDTH,DRAWING_HEIGHT);
@@ -70,18 +72,6 @@ public class DrawingSurface extends PApplet {
 		meleeEnemies = new ArrayList<MeleeEnemy>(); 
 		bullets = new ArrayList<Bullet>();
 		TimeEntity.setTimeRate(timeSpeed);
-		/*
-		obstacles.add(new Rectangle(200,400,400,50));
-		obstacles.add(new Rectangle(0,250,100,50));
-		obstacles.add(new Rectangle(700,250,100,50));
-		obstacles.add(new Rectangle(375,300,50,100));
-		obstacles.add(new Rectangle(300,250,200,50));
-		booster[0] = new Booster(290,230); 
-		booster[1] = new Booster(290,500);
-		booster[2] = new Booster(290,500); 
-		booster[3] = new Booster(290,500);
-		 */
-		// cool
 		for(Shape s : obstacles) {
 			platforms.add(new Platform(s));
 		}
@@ -116,6 +106,10 @@ public class DrawingSurface extends PApplet {
 					}
 					else if(c == 'g') {
 						goal = new Rectangle((int)xoff,(int)yoff,(int)pHeight,(int)pHeight);
+					}
+					else if(c=='M')
+					{
+						meleeEnemies.add(new MeleeEnemy(assets.get(1),(int)xoff,(int)yoff,40*completed,10+5*completed, this));
 					}
 					else {
 
@@ -161,7 +155,8 @@ public class DrawingSurface extends PApplet {
 		//size(0,0,PApplet.P3D);
 		assets.add(loadImage("Player.png"));
 		assets.add(loadImage("Melee.png"));
-		backgrounds.add(loadImage("backgroundtest.png"));
+		assets.add(loadImage("PlayerAttack.png"));
+		backgrounds = loadImage("backgroundtest.png");
 		lvl = OptionPanel.level;
 		initLevel("Levels" + fileSeparator + "Level " + lvl + ".txt");
 
@@ -182,8 +177,7 @@ public class DrawingSurface extends PApplet {
 		}
 		
 		
-		background(0,255,255);  
-		//background(backgrounds.get(0));
+		background(0,0,0);
 		
 		
 		frameCount++;
@@ -191,7 +185,7 @@ public class DrawingSurface extends PApplet {
 		fill(255,0,0);
 		textSize(20);
 		text("FPS: " + averageFPS,0,30);
-		fill(0);
+		fill(225);
 		text("Lives: " + player.getLives(),0, 50);
 		textSize(10);
 		// scaling
@@ -214,7 +208,11 @@ public class DrawingSurface extends PApplet {
 			}
 
 			else if(lvl == 3) {
-				OptionPanel.level = 1;
+				OptionPanel.level = 4;
+			}
+			else if(lvl == 4)
+			{
+				OptionPanel.level  = 1;
 			}
 		}
 		Rectangle gl = (Rectangle) goal;
@@ -229,8 +227,19 @@ public class DrawingSurface extends PApplet {
 				rect(r.x,r.y,r.width,r.height);
 			}
 		}
+		
+		
+		
+		
 		pushStyle();
 		fill(0,0,255);
+		
+		
+		
+		
+		
+		
+		
 		for(Booster b : boosters) {
 			if(b != null) {
 				b.draw(this);
@@ -239,6 +248,15 @@ public class DrawingSurface extends PApplet {
 		popStyle();
 
 	
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		for(int i = 0; i < bullets.size(); i++) {
 			if(bullets.get(i) != null && bullets.get(i).getIsDead()) {
 				bullets.remove(i);
@@ -247,11 +265,17 @@ public class DrawingSurface extends PApplet {
 				bullets.get(i).move();
 			}
 		}
+		
+		
+		
+		
+		
+		
+		
+		
 		for(Bullet b : bullets) {
 			for(MeleeEnemy me : meleeEnemies) {
-				double xdif = b.getx() - (me.x+me.width/2);
-				double ydif = b.gety() - (me.y+me.height/2);
-				if((xdif < 30 && xdif > -30)&&(ydif < 30 && ydif > -30)) {
+				if(me.intersects(b)) {
 					me.damaged(b.getDamage());
 					b.setIsDead(true);
 
@@ -260,6 +284,9 @@ public class DrawingSurface extends PApplet {
 
 		}
 
+		
+		
+		
 		for(Bullet b : bullets) {
 			if(b!=null && !b.getIsDead()) {
 				b.draw(this);
@@ -269,6 +296,13 @@ public class DrawingSurface extends PApplet {
 		
 
 		player.draw(this);
+		
+		
+		
+		
+		
+		
+		
 		for(MeleeEnemy me : meleeEnemies) {
 			me.draw(this);
 		}
@@ -373,32 +407,60 @@ public class DrawingSurface extends PApplet {
 
 
 
-		fill(0);
+		fill(225);
 		
 		text("Dash",12+DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/12);
 		text("Launch",7 + 2*DRAWING_WIDTH/6, -4 + DRAWING_HEIGHT/12);
 		
 
-		
+		fill(0);
 		textSize(50);
 		text('Q',4 + DRAWING_WIDTH/6, 41 + DRAWING_HEIGHT/12);
 		text('W',4 + 2*DRAWING_WIDTH/6, 43 + DRAWING_HEIGHT/12);
 		popStyle();
-
-
-		// modifying stuff
-	
+		
+		if(player.getComboCount()>0)
+		{
+			g.fill(225);
+			g.textSize(30);
+			g.text("COMBO: " + player.getComboCount(), (float)500 ,(float)100 );
+		}
+		
+		
+		g.noFill();
+		g.stroke(225);
+		g.rect( DRAWING_WIDTH-200, (float)DRAWING_HEIGHT/10-10, (float)3*130/2, (float)15);
+		g.fill(255,158,0);
+		g.rect(DRAWING_WIDTH-200, (float)DRAWING_HEIGHT/10-10, (float) (3*130/2*player.getCBW()/player.getTBW()), (float)15);
+		
+		
+		textSize(20);
+		text("Rage: "+ player.getCBW(), DRAWING_WIDTH-175, (float)DRAWING_HEIGHT/10 - 20);	
+		
+		
+		
 		if(tSinceLast>0) {
 			tSinceLast--;
 		}
 		 
 		if (isPressed(KeyEvent.VK_R)) {
 			
-			if(tSinceLast == 0) {
-				bullets.add(new Bullet(player.x,player.y+player.height/2,8.0,20.0));
-				tSinceLast = 60;
+			if(tSinceLast == 0 && !player.energyReplenish()) {
+				
+				
+				bullets.add(new Bullet(player.x, player.y+player.height/2 , 10.0 , player.getLevel()*10.0));
+				tSinceLast = 30;
+				player.energyDepletion(10);
+
+			
 			}
 			 
+		}
+		if (isPressed(KeyEvent.VK_F)) {
+			
+			player.finisher(meleeEnemies);
+
+			
 		}
 		if (isPressed(KeyEvent.VK_LEFT)) {
 			player.walk(-1);
@@ -439,7 +501,9 @@ public class DrawingSurface extends PApplet {
 		else
 		{
 			attackRelease = true;
+			player.stopAttacking();
 		}
+		
 		if(isPressed(KeyEvent.VK_A)||isPressed(KeyEvent.VK_S))
 		{
 			if(skillRelease) {
@@ -459,8 +523,14 @@ public class DrawingSurface extends PApplet {
 		}
 
 		if (isPressed(KeyEvent.VK_T)) {
-			timeSpeed = 0.25;
-			player.energyDepletion(0.25);
+			if(!player.energyReplenish() && !player.getOnGround())	
+			{	timeSpeed = 0.025;
+				
+				player.energyDepletion(1);}
+			else
+			{
+				timeSpeed = 1;
+			}
 		}
 		else {
 			timeSpeed = 1;
@@ -481,6 +551,8 @@ public class DrawingSurface extends PApplet {
 				if(me.gety() < DRAWING_HEIGHT+200 && Math.abs(me.getDx()) +  Math.abs(me.getDy()) > 1) {
 					me.act(obstacles, meleeEnemies);
 				}
+				
+				me.moveToLocation(100, 10000);
 			}
 			
 			else {
@@ -511,6 +583,8 @@ public class DrawingSurface extends PApplet {
 			}
 		}
 
+		
+
 
 		if(player.gety() > DRAWING_HEIGHT || player.isGameOver()) {
 			player.lifeLost();
@@ -528,7 +602,6 @@ public class DrawingSurface extends PApplet {
 		
 		if(total > 1000000000) {
 			averageFPS = frameCount;
-			//System.out.println(averageFPS);
 			frameCount = 0;
 			total = 0;
 			start = System.nanoTime();
@@ -538,15 +611,18 @@ public class DrawingSurface extends PApplet {
 	}
 
 	public void setupNewLevel() {
+		
 		lvl = OptionPanel.level;
 		boosters = new ArrayList<Booster>();
 		obstacles = new ArrayList<Shape>();
 		platforms = new ArrayList<Platform>();
 		meleeEnemies = new ArrayList<MeleeEnemy>(); 
 		bullets = new ArrayList<Bullet>();
+		
 		initLevel("Levels" + fileSeparator + "Level " + lvl + ".txt");
 		respawnPlayer();
 	}
+	
 	public void keyPressed() {
 		keys.add(keyCode);
 	}

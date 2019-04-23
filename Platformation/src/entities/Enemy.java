@@ -17,7 +17,7 @@ public class Enemy extends Player implements Damageable {
 	
 
 	private double level;
-	private double attackStat;
+	private double attackStat, attackSecond;
 	private double defStat;
 	private double EXP;
 	private int c = 0;
@@ -34,7 +34,8 @@ public class Enemy extends Player implements Damageable {
 		attackCalculation(statPoints);
 		EPCalculation(statPoints);
 		isEnemy = true;
-		EXP = level*25;
+		EXP = level*10;
+		attackSecond = 0;
 	}
 	
 	
@@ -57,14 +58,14 @@ public class Enemy extends Player implements Damageable {
 	
 	private void defCalculation(double statPoints)
 	{
-		defStat = statPoints + (level*5);
+		defStat = statPoints + (level*10);
 	}
 	
 	
 	
 	private void attackCalculation(double statPoints)
 	{
-		 attackStat = statPoints + (level);
+		 attackStat = statPoints + (level*2);
 		
 	}
 	
@@ -92,8 +93,17 @@ public class Enemy extends Player implements Damageable {
 
 	
 	public void attack(Player p)
-	{
-		p.damaged(attackStat*TimeEntity.TIME_RATE);
+	{	
+			if(attackSecond%10== 0)
+			{
+				p.damaged(attackStat*TimeEntity.TIME_RATE);
+			}
+			
+			
+			attackSecond++;
+			
+	
+		
 	}
 
 	@Override
@@ -102,9 +112,9 @@ public class Enemy extends Player implements Damageable {
 		
 		super.damaged(damageTaken);
 		
-		if(getHP()<=0) {
-			disapear();
+		if(getHP() <= 0) {
 			setHP(0);
+			disapear();
 			attackStat = 0;
 		}
 				

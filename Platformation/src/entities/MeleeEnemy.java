@@ -11,7 +11,7 @@ import worldGeometry.Platform;
 public class MeleeEnemy extends Enemy {
 
 	private Rectangle2D sightBox;
-	private boolean moved;
+	private boolean moved ;
 	private boolean gaveEXP;
 	public MeleeEnemy( PImage img ,int x, int y, int lvl, int statPoint, PApplet marker)
 	{
@@ -25,7 +25,12 @@ public class MeleeEnemy extends Enemy {
 	public void actions(Player p, Shape plat)
 	{
 		// gotta reset the sight box every time because the enemy moves
-		sightBox = new Rectangle((int)x-200,(int)y-220,(int)PLAYER_WIDTH+400, (int)PLAYER_HEIGHT+250);
+		sightBox = new Rectangle((int)x-220,(int)y-220,(int)PLAYER_WIDTH+420, (int)PLAYER_HEIGHT+250);
+		if(super.getHP()<=0)
+		{
+			super.setHP(0);
+			super.disapear();
+		}
 		if(super.getIsDead() == false)
 		{
 			if(sightBox.contains(p) )
@@ -55,7 +60,7 @@ public class MeleeEnemy extends Enemy {
 
 	private void moveToPlayer(Player p)
 	{
-		if(isStunned	) {
+		if(isStunned) {
 			
 		}
 		
@@ -66,7 +71,7 @@ public class MeleeEnemy extends Enemy {
 				walk(-1);
 				accelerate(-super.getDx()/4,0);
 				if(p.gety() > this.gety()) {
-					jump();
+					//jump();
 				}
 
 
